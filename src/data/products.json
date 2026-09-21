@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-991sj",
+    "title": "مجلس ديوانية رسمية المطلاع",
+    "categorySlug": "majlis",
+    "price": 47,
+    "size": "للمتر",
+    "region": "الكويت / المطلاع",
+    "availability": "custom-order",
+    "shortDescription": "ديوانية رسمية اعمالنا",
+    "description": "خشب قشر جوز \nاسفنج البغلي",
+    "materials": [
+      "خشب قشر جوز - خام شانيل تركي - اسفنج بغلي دانلوب"
+    ],
+    "images": [
+      "/images/product-991sj/mubpzmuw-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-msanddecorrsmih",
     "title": "مجلس ديكور خشب رسمية",
     "categorySlug": "majlis",
