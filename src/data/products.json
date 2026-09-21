@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-04ghr",
+    "title": "مساند ظهر جابر الاحمد",
+    "categorySlug": "cushions",
+    "price": 11,
+    "size": "للمتر",
+    "region": "الكويت / جابر الأحمد",
+    "availability": "custom-order",
+    "shortDescription": "ديوانية و مقلط",
+    "description": "اسفنج الوطنية\nخام شانيل تركي",
+    "materials": [
+      "اسفنج الوطنية"
+    ],
+    "images": [
+      "/images/product-04ghr/mubq580h-0.webp",
+      "/images/product-04ghr/mubq580h-1.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-991sj",
     "title": "مجلس ديوانية رسمية المطلاع",
     "categorySlug": "majlis",
