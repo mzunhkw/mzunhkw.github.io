@@ -1,5 +1,27 @@
 [
   {
+    "slug": "product-cnbslwa1",
+    "title": "كنب مودرن تفصيل منطقة سلوى",
+    "categorySlug": "sofas",
+    "price": 37,
+    "size": "للمتر",
+    "region": "الكويت / سلوى",
+    "availability": "custom-order",
+    "shortDescription": "خام شانيل تركي",
+    "description": "الاسفنج المستخدم دانلوب البغلي \nالخام شانيل تركي \nالخشب مارلين",
+    "materials": [],
+    "images": [
+      "/images/product-cnbslwa1/mubpqccv-0.webp",
+      "/images/product-cnbslwa1/mubpqccv-1.webp",
+      "/images/product-cnbslwa1/mubpqccv-2.webp",
+      "/images/product-cnbslwa1/mubpqccv-3.webp",
+      "/images/product-cnbslwa1/mubpqccv-4.webp",
+      "/images/product-cnbslwa1/mubpqccv-5.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "sample-bed-frame",
     "title": "سرير خشب الزان — تصميم كلاسيكي",
     "categorySlug": "bedrooms",
@@ -9,7 +31,10 @@
     "availability": "custom-order",
     "shortDescription": "سرير خشب زان طبيعي بتشطيب يدوي.",
     "description": "سرير مصنوع من خشب الزان الطبيعي، بتشطيب يدوي ولمسة نهائية مقاومة للخدش. يتوفر بمقاسات مختلفة حسب الطلب.",
-    "materials": ["خشب زان", "قماش كتان"],
+    "materials": [
+      "خشب زان",
+      "قماش كتان"
+    ],
     "images": [],
     "featured": true,
     "published": true
@@ -24,7 +49,10 @@
     "availability": "ready-piece",
     "shortDescription": "طقم مجلس أرضي جاهز للتسليم الفوري.",
     "description": "طقم مجلس أرضي كامل من 8 قطع، حشوة إسفنج عالي الكثافة وقماش مقاوم للبقع.",
-    "materials": ["قماش مخملي", "إسفنج عالي الكثافة"],
+    "materials": [
+      "قماش مخملي",
+      "إسفنج عالي الكثافة"
+    ],
     "images": [],
     "featured": true,
     "published": true
@@ -39,7 +67,9 @@
     "availability": "ready-piece",
     "shortDescription": "",
     "description": "طاولة جانبية خشبية بتصميم بسيط، مناسبة لجانب الأريكة أو السرير.",
-    "materials": ["خشب MDF مغلف"],
+    "materials": [
+      "خشب MDF مغلف"
+    ],
     "images": [],
     "featured": false,
     "published": true
