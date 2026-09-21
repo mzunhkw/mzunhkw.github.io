@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { categories } from '@/data/categories';
 import { visibleProducts } from '@/data/products';
 import { getCategorySeo } from '@/data/category-seo';
+import { getServicesForCategory } from '@/data/services';
 import { siteConfig } from '@/data/site-config';
 import { breadcrumbLd, absoluteUrl } from '@/lib/seo';
 import ProductCard from '@/components/ProductCard';
@@ -43,6 +44,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
   const seo = getCategorySeo(category.slug, category.name);
   const items = visibleProducts.filter((p) => p.categorySlug === category.slug);
   const others = categories.filter((c) => c.slug !== category.slug);
+  const relatedServices = getServicesForCategory(category.slug);
   const path = `/category/${category.slug}/`;
   const whatsapp = `https://wa.me/${siteConfig.whatsappNumber}`;
 
@@ -64,9 +66,20 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
     isPartOf: { '@id': `${siteConfig.siteUrl}/#store` },
   };
 
+  const faqLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6 sm:py-12">
       <JsonLd data={collectionLd} />
+      <JsonLd data={faqLd} />
       <JsonLd
         data={breadcrumbLd([
           { name: 'الرئيسية', path: '/' },
@@ -126,6 +139,23 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
           ))}
         </div>
       </section>
+
+      {relatedServices.length > 0 && (
+        <section className="mt-16">
+          <h2 className="text-xl mb-4">خدمات ذات صلة</h2>
+          <div className="flex flex-wrap gap-3">
+            {relatedServices.map((s) => (
+              <Link
+                key={s.slug}
+                href={s.path}
+                className="border border-sand bg-white rounded-full px-4 py-2 text-sm hover:border-sage-soft"
+              >
+                {s.h1}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mt-16">
         <h2 className="text-xl mb-4">أقسام أخرى</h2>

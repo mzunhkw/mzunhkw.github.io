@@ -3,7 +3,24 @@
 import { useEffect, useRef, useState } from 'react';
 
 // معرض صور للجوال: سحب أفقي بالإصبع + نقاط + صور مصغّرة + تكبير بملء الشاشة.
-export default function Gallery({ images, title }: { images: string[]; title: string }) {
+// eagerFirst: حمّل أول صورة فورًا (eager) بدل lazy — يُستخدم فقط عندما يكون المعرض
+// أول عنصر مرئي أعلى الصفحة (مثل صفحة المنتج) ليكون هو عنصر LCP.
+// أي استخدام آخر للمعرض في وسط/أسفل الصفحة يجب أن يبقى eagerFirst=false حتى لا
+// ينافس صورة/نص LCP الفعلي على الموارد.
+export default function Gallery({
+  images,
+  title,
+  alts,
+  eagerFirst = true,
+}: {
+  images: string[];
+  title: string;
+  // نص alt وصفي لكل صورة بنفس ترتيب images. لو ما توفر أو كان أقصر من عدد
+  // الصور، الصور الناقصة ترجع للنمط العام (title — صورة N).
+  alts?: string[];
+  eagerFirst?: boolean;
+}) {
+  const altFor = (i: number) => alts?.[i] || (i === 0 ? title : `${title} — صورة ${i + 1}`);
   const [active, setActive] = useState(0);
   const [zoom, setZoom] = useState(false);
   const scroller = useRef<HTMLDivElement>(null);
@@ -67,8 +84,8 @@ export default function Gallery({ images, title }: { images: string[]; title: st
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={img}
-                alt={i === 0 ? title : `${title} — صورة ${i + 1}`}
-                loading={i === 0 ? 'eager' : 'lazy'}
+                alt={altFor(i)}
+                loading={i === 0 && eagerFirst ? 'eager' : 'lazy'}
                 className="w-full h-full object-cover"
               />
             </button>
@@ -130,7 +147,7 @@ export default function Gallery({ images, title }: { images: string[]; title: st
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={images[active]}
-            alt={title}
+            alt={altFor(active)}
             className="max-h-full max-w-full object-contain rounded-lg"
             onClick={(e) => e.stopPropagation()}
           />

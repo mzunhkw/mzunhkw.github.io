@@ -100,7 +100,15 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       </nav>
 
       <div className="grid sm:grid-cols-2 gap-6 sm:gap-10">
-      <Gallery images={product.images} title={product.title} />
+      {/* لا تتوفر أوصاف alt فريدة لكل صورة منتج (بعكس صور أعمال صفحات التنجيد) —
+          لذلك نبني عنوان alt أغنى من العنوان المجرد بإضافة القسم والخامة إن وجدت،
+          وهذا أفضل ما يمكن اشتقاقه تلقائيًا من بيانات المنتج الحالية. لإضافة alt
+          وصفي مختلف فعليًا لكل صورة، يلزم إضافة حقل بيانات جديد في products.json
+          (ولوحة الإدارة) لكل صورة على حدة. */}
+      <Gallery
+        images={product.images}
+        title={[product.title, category?.name, product.materials?.[0]].filter(Boolean).join(' — ')}
+      />
 
       <div>
         {category && <p className="text-sm text-sage">{category.name}</p>}

@@ -23,6 +23,12 @@ export default function Header() {
           <Link href="/products/" className="px-3 py-2 rounded-full hover:bg-sage-mist">
             المنتجات
           </Link>
+          <Link href="/#خدمات-التنجيد" className="px-3 py-2 rounded-full hover:bg-sage-mist">
+            خدمات التنجيد
+          </Link>
+          <Link href="/من-نحن/" className="px-3 py-2 rounded-full hover:bg-sage-mist">
+            من نحن
+          </Link>
         </nav>
       </div>
     </header>

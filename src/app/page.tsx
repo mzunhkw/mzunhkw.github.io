@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { visibleProducts } from '@/data/products';
 import { categories } from '@/data/categories';
 import { getCategorySeo } from '@/data/category-seo';
+import { services } from '@/data/services';
 import { siteConfig } from '@/data/site-config';
 import ProductCard from '@/components/ProductCard';
 
@@ -22,8 +23,14 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  const featured = visibleProducts.filter((p) => p.featured);
   const whatsapp = `https://wa.me/${siteConfig.whatsappNumber}`;
+  // آخر 3 منتجات (أعمال) من كل قسم — بترتيب الإضافة بملف products.json، والأحدث أولًا.
+  const categoryWorks = categories
+    .map((c) => ({
+      category: c,
+      items: visibleProducts.filter((p) => p.categorySlug === c.slug).slice(-3).reverse(),
+    }))
+    .filter((group) => group.items.length > 0);
 
   return (
     <div>
@@ -31,7 +38,7 @@ export default function HomePage() {
         <div className="bg-sand rounded-3xl px-5 py-8 sm:px-12 sm:py-14">
           <p className="text-sage text-sm">{siteConfig.nameEn}</p>
           <h1 className="text-2xl sm:text-5xl mt-2 max-w-3xl leading-snug sm:leading-tight">
-            كنب وقنفات ومجالس ومساند في الكويت
+            كنب وقنفات ومجالس ومساند وغرف نوم في الكويت
           </h1>
           <p className="text-ink/70 mt-3 max-w-xl text-sm sm:text-base leading-relaxed">{siteConfig.about}</p>
           <div className="flex flex-col sm:flex-row gap-3 mt-6">
@@ -72,12 +79,42 @@ export default function HomePage() {
         </div>
       </section>
 
-      {featured.length > 0 && (
+      <section id="خدمات-التنجيد" className="max-w-6xl mx-auto px-4 sm:px-8 pb-10 scroll-mt-20">
+        <h2 className="text-xl sm:text-2xl mb-4">خدمات التنجيد</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {services.map((s) => (
+            <Link
+              key={s.slug}
+              href={s.path}
+              className="border border-sand bg-white rounded-2xl p-4 hover:border-sage-soft"
+            >
+              <span className="block text-base sm:text-lg text-sage font-medium">{s.h1}</span>
+              <span className="block text-sm text-ink/60 mt-1">{s.description}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {categoryWorks.length > 0 && (
         <section className="max-w-6xl mx-auto px-4 sm:px-8 pb-10">
-          <h2 className="text-xl sm:text-2xl mb-4">مختارات</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
-            {featured.map((p) => (
-              <ProductCard key={p.slug} product={p} />
+          <h2 className="text-xl sm:text-2xl mb-4">أحدث الأعمال من كل قسم</h2>
+          <div className="space-y-8">
+            {categoryWorks.map(({ category, items }) => (
+              <div key={category.slug}>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-base sm:text-lg text-sage font-medium">{category.name}</h3>
+                  <Link href={`/category/${category.slug}/`} className="text-sm text-sage underline shrink-0">
+                    عرض الكل
+                  </Link>
+                </div>
+                <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth">
+                  {items.map((p) => (
+                    <div key={p.slug} className="w-40 sm:w-56 shrink-0 snap-start">
+                      <ProductCard product={p} />
+                    </div>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </section>
@@ -97,7 +134,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <h2 className="text-2xl mb-4">مزونة للكنب والمجالس والمساند في الكويت</h2>
+        <h2 className="text-2xl mb-4">مزونة للكنب والمجالس والمساند وغرف النوم في الكويت</h2>
         <div className="max-w-3xl space-y-4 text-ink/80 leading-relaxed">
           <p>
             مزونة منجرة ومعرض للأثاث والديكور في الكويت منذ {siteConfig.foundedYear}، ونفّذنا{' '}
@@ -108,10 +145,14 @@ export default function HomePage() {
             ،{' '}
             <Link href="/category/majlis/" className="text-sage underline">
               مجالس
-            </Link>{' '}
-            و
+            </Link>
+            ،{' '}
             <Link href="/category/cushions/" className="text-sage underline">
               مساند
+            </Link>{' '}
+            و
+            <Link href="/category/bedrooms/" className="text-sage underline">
+              غرف نوم
             </Link>{' '}
             جاهزة، ونفصّلها حسب الطلب بالمقاس والقماش واللون الذي يناسب بيتك.
           </p>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import JsonLd from '@/components/JsonLd';
 import { siteConfig } from '@/data/site-config';
 
@@ -50,6 +51,11 @@ const jsonLd = {
     opens: '09:00',
     closes: '23:00',
   },
+  // يُضافان تلقائيًا فقط بعد تعبئة geo / socialLinks في site-config.ts.
+  ...(siteConfig.geo
+    ? { geo: { '@type': 'GeoCoordinates', latitude: siteConfig.geo.lat, longitude: siteConfig.geo.lng } }
+    : {}),
+  ...(siteConfig.socialLinks.length ? { sameAs: siteConfig.socialLinks } : {}),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -60,6 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <FloatingWhatsApp />
       </body>
     </html>
   );
