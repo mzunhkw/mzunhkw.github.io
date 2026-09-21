@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: 'ar_KW',
     type: 'website',
+    images: ['/og-image.jpg'],
   },
 };
 

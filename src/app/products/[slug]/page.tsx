@@ -33,7 +33,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
       siteName: siteConfig.name,
       locale: 'ar_KW',
       type: 'website',
-      images: product.images[0] ? [product.images[0]] : undefined,
+      images: [product.images[0] || '/og-image.jpg'],
     },
   };
 }

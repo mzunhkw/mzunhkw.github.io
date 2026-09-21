@@ -14,8 +14,21 @@ export const metadata: Metadata = {
   description: siteConfig.seoDescription,
   applicationName: siteConfig.name,
   robots: { index: true, follow: true },
-  openGraph: { siteName: siteConfig.name, locale: 'ar_KW', type: 'website' },
-  twitter: { card: 'summary' },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+  },
+  openGraph: {
+    siteName: siteConfig.name,
+    locale: 'ar_KW',
+    type: 'website',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: `${siteConfig.name} — ${siteConfig.nameEn}` }],
+  },
+  twitter: { card: 'summary_large_image', images: ['/og-image.jpg'] },
 };
 
 const jsonLd = {
@@ -26,6 +39,8 @@ const jsonLd = {
   alternateName: siteConfig.nameEn,
   description: siteConfig.seoDescription,
   url: siteConfig.siteUrl,
+  logo: `${siteConfig.siteUrl}/icon-512.png`,
+  image: `${siteConfig.siteUrl}/og-image.jpg`,
   telephone: `+${siteConfig.whatsappNumber}`,
   foundingDate: String(siteConfig.foundedYear),
   areaServed: { '@type': 'Country', name: 'الكويت' },
