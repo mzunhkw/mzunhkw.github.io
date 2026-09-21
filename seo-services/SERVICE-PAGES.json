@@ -1,0 +1,45 @@
+{
+  "services": [
+    {
+      "path": "/تنجيد-كنب-الكويت/",
+      "title": "تنجيد كنب الكويت | تجديد وتغيير قماش الكنب | مزونة",
+      "h1": "تنجيد كنب في الكويت",
+      "keywords": [
+        "تنجيد كنب",
+        "تنجيد كنب الكويت",
+        "تجديد كنب",
+        "تغيير قماش كنب",
+        "تنجيد كنبات",
+        "تنجيد قنفات"
+      ],
+      "source_content": "seo-services/تنجيد-كنب-الكويت.md"
+    },
+    {
+      "path": "/تنجيد-مساند-الكويت/",
+      "title": "تنجيد مساند الكويت | تجديد وتفصيل المساند | مزونة",
+      "h1": "تنجيد مساند في الكويت",
+      "keywords": [
+        "تنجيد مساند",
+        "تنجيد مساند الكويت",
+        "مساند مجالس",
+        "تجديد مساند",
+        "مساند ظهر"
+      ],
+      "source_content": "seo-services/تنجيد-مساند-الكويت.md"
+    },
+    {
+      "path": "/تنجيد-مجالس-الكويت/",
+      "title": "تنجيد مجالس الكويت | تجديد وتغيير قماش المجالس | مزونة",
+      "h1": "تنجيد مجالس في الكويت",
+      "keywords": [
+        "تنجيد مجالس",
+        "تنجيد مجالس الكويت",
+        "تجديد مجالس",
+        "تغيير قماش مجالس",
+        "تنجيد ديوانيات"
+      ],
+      "source_content": "seo-services/تنجيد-مجالس-الكويت.md"
+    }
+  ],
+  "implementation_note": "These are independent commercial service intents. Build them as real site routes using the site's existing routing/components. Do not create duplicate spelling-only pages."
+}

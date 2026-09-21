@@ -1,0 +1,46 @@
+{
+  "services": [
+    {
+      "path": "/تنجيد-كنب-الكويت/",
+      "source": "seo-services/تنجيد-كنب-الكويت.md"
+    },
+    {
+      "path": "/تنجيد-مساند-الكويت/",
+      "source": "seo-services/تنجيد-مساند-الكويت.md"
+    },
+    {
+      "path": "/تنجيد-مجالس-الكويت/",
+      "source": "seo-services/تنجيد-مجالس-الكويت.md"
+    }
+  ],
+  "categories_superseded_by_existing_routes": {
+    "decision": "لن تُنشأ صفحات مستقلة بهذه الروابط. الكلمات المستهدفة أدناه تخدمها فعليًا صفحات /category/<slug>/ الموجودة حاليًا، وإنشاء صفحة ثانية بنفس الكلمة يعني Duplicate Content/Cannibalization (ممنوع بنص الخطة). قرار المالك.",
+    "entries": [
+      {
+        "originally_proposed_path": "/كنب-الكويت/",
+        "keyword": "كنب الكويت",
+        "existing_route": "/category/sofas/"
+      },
+      {
+        "originally_proposed_path": "/قنفات-الكويت/",
+        "keyword": "قنفات الكويت",
+        "existing_route": "/category/sofas/"
+      },
+      {
+        "originally_proposed_path": "/مجالس-الكويت/",
+        "keyword": "مجالس الكويت",
+        "existing_route": "/category/majlis/"
+      },
+      {
+        "originally_proposed_path": "/مساند-الكويت/",
+        "keyword": "مساند الكويت",
+        "existing_route": "/category/cushions/"
+      },
+      {
+        "originally_proposed_path": "/غرف-نوم-الكويت/",
+        "keyword": "غرف نوم الكويت",
+        "existing_route": "/category/bedrooms/"
+      }
+    ]
+  }
+}
