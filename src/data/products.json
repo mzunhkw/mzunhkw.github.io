@@ -20,22 +20,5 @@
     ],
     "featured": true,
     "published": true
-  },
-  {
-    "slug": "sample-side-table",
-    "title": "طاولة جانبية دائرية",
-    "categorySlug": "tables",
-    "price": 45,
-    "size": "قطر 40 سم × ارتفاع 50 سم",
-    "region": "الكويت",
-    "availability": "ready-piece",
-    "shortDescription": "",
-    "description": "طاولة جانبية خشبية بتصميم بسيط، مناسبة لجانب الأريكة أو السرير.",
-    "materials": [
-      "خشب MDF مغلف"
-    ],
-    "images": [],
-    "featured": false,
-    "published": true
   }
 ]
