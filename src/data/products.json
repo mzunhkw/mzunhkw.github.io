@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-msanddecorrsmih",
+    "title": "مجلس ديكور خشب رسمية",
+    "categorySlug": "majlis",
+    "price": 45,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "ديوانية رسمية",
+    "description": "الخشب قشر زان \nالاسفنج البغلي\nالخام شانيل تركي",
+    "materials": [
+      "شانيل تركي"
+    ],
+    "images": [
+      "/images/product-msanddecorrsmih/mubpwm6v-0.webp",
+      "/images/product-msanddecorrsmih/mubpwm6v-1.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-cnbslwa1",
     "title": "كنب مودرن تفصيل منطقة سلوى",
     "categorySlug": "sofas",
