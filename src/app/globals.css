@@ -1,0 +1,36 @@
+/* @import لازم يكون أول شيء بالملف، وإلا المتصفح يتجاهله والخط ما يتحمّل */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-arabic: 'Noto Kufi Arabic', Tahoma, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-arabic);
+}
+
+/* إخفاء شريط التمرير للصفوف الأفقية (تنسحب بالإصبع) */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* مساحة آمنة أسفل الشاشة للجوالات ذات الحواف */
+.pb-safe {
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
+
+:focus-visible {
+  outline: 2px solid #5E7A5A;
+  outline-offset: 2px;
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "sample-bed-frame",
+    "title": "سرير خشب الزان — تصميم كلاسيكي",
+    "categorySlug": "bedrooms",
+    "price": 250,
+    "size": "200 × 160 سم",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "سرير خشب زان طبيعي بتشطيب يدوي.",
+    "description": "سرير مصنوع من خشب الزان الطبيعي، بتشطيب يدوي ولمسة نهائية مقاومة للخدش. يتوفر بمقاسات مختلفة حسب الطلب.",
+    "materials": ["خشب زان", "قماش كتان"],
+    "images": [],
+    "featured": true,
+    "published": true
+  },
+  {
+    "slug": "sample-majlis-set",
+    "title": "طقم مجلس أرضي — 8 قطع",
+    "categorySlug": "majlis",
+    "price": 480,
+    "size": "يغطي مساحة 4 × 5 م تقريبًا",
+    "region": "الكويت",
+    "availability": "ready-piece",
+    "shortDescription": "طقم مجلس أرضي جاهز للتسليم الفوري.",
+    "description": "طقم مجلس أرضي كامل من 8 قطع، حشوة إسفنج عالي الكثافة وقماش مقاوم للبقع.",
+    "materials": ["قماش مخملي", "إسفنج عالي الكثافة"],
+    "images": [],
+    "featured": true,
+    "published": true
+  },
+  {
+    "slug": "sample-side-table",
+    "title": "طاولة جانبية دائرية",
+    "categorySlug": "tables",
+    "price": 45,
+    "size": "قطر 40 سم × ارتفاع 50 سم",
+    "region": "الكويت",
+    "availability": "ready-piece",
+    "shortDescription": "",
+    "description": "طاولة جانبية خشبية بتصميم بسيط، مناسبة لجانب الأريكة أو السرير.",
+    "materials": ["خشب MDF مغلف"],
+    "images": [],
+    "featured": false,
+    "published": true
+  }
+]

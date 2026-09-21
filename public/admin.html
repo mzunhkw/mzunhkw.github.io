@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="referrer" content="no-referrer" />
+<!-- سياسة أمان: لا سكربتات ولا اتصالات إلا من نفس الموقع ومن GitHub API فقط -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src https://api.github.com; base-uri 'none'; form-action 'none'; object-src 'none'" />
+<title>لوحة إدارة مزونة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<!-- ============ شاشة الدخول ============ -->
+<main id="login" class="gate">
+  <h2>لوحة إدارة مزونة</h2>
+  <p>الدخول يتم بـ GitHub Token — هو نفسه مفتاح الحماية الحقيقي. يُتحقق منه فورًا، ويُحفظ بهذا التبويب فقط ويُمسح عند إغلاقه.</p>
+  <form id="loginForm" novalidate>
+    <div class="field">
+      <label for="l_token">GitHub Token</label>
+      <input id="l_token" type="password" autocomplete="off" spellcheck="false" dir="ltr" required />
+    </div>
+    <details id="l_repoBox">
+      <summary>إعدادات المستودع</summary>
+      <div class="field"><label for="l_owner">owner</label><input id="l_owner" dir="ltr" autocomplete="off" /></div>
+      <div class="field"><label for="l_repo">repo</label><input id="l_repo" dir="ltr" autocomplete="off" /></div>
+      <div class="field"><label for="l_branch">branch</label><input id="l_branch" dir="ltr" autocomplete="off" /></div>
+    </details>
+    <button class="primary block" id="loginBtn" type="submit">دخول</button>
+    <div class="error" id="loginErr" role="alert"></div>
+  </form>
+  <ol>
+    <li>افتح github.com/settings/personal-access-tokens/new (Fine-grained token).</li>
+    <li>Repository access ← Only select repositories ← مستودع الموقع فقط.</li>
+    <li>Permissions ← Contents ← Read and write.</li>
+  </ol>
+</main>
+
+<!-- ============ التطبيق ============ -->
+<div id="app" hidden>
+  <header class="top">
+    <div>
+      <h1>إدارة مزونة</h1>
+      <div class="sub" id="repoLabel"></div>
+    </div>
+    <div class="actions">
+      <button id="refreshBtn" type="button">تحديث</button>
+      <button id="logoutBtn" type="button">خروج</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="tabBtn-products" data-tab="products" aria-selected="true">المنتجات</button>
+      <button type="button" role="tab" id="tabBtn-categories" data-tab="categories" aria-selected="false">التصنيفات</button>
+    </div>
+
+    <!-- ---- المنتجات ---- -->
+    <section id="tab-products" class="grid">
+      <div class="panel">
+        <div class="panel-head"><h2 id="formTitle">إضافة منتج</h2></div>
+        <form id="productForm" novalidate>
+          <div class="field">
+            <label for="f_title">اسم المنتج</label>
+            <input id="f_title" maxlength="120" autocomplete="off" />
+            <div class="err" id="e_title"></div>
+          </div>
+          <div class="field">
+            <label for="f_slug">الرابط المختصر (slug) — حروف إنجليزية صغيرة وأرقام وشرطات</label>
+            <input id="f_slug" dir="ltr" maxlength="80" autocomplete="off" placeholder="wooden-bed-01" />
+            <div class="err" id="e_slug"></div>
+          </div>
+          <div class="field">
+            <label for="f_category">التصنيف</label>
+            <select id="f_category"></select>
+            <div class="err" id="e_category"></div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="f_price">السعر (د.ك)</label>
+              <input id="f_price" inputmode="decimal" autocomplete="off" placeholder="250" />
+              <div class="err" id="e_price"></div>
+            </div>
+            <div class="field">
+              <label for="f_size">المقاس</label>
+              <input id="f_size" maxlength="120" autocomplete="off" />
+              <div class="err" id="e_size"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f_region">المنطقة</label>
+            <input id="f_region" maxlength="80" autocomplete="off" />
+            <div class="err" id="e_region"></div>
+          </div>
+          <div class="field">
+            <label for="f_availability">حالة المنتج</label>
+            <select id="f_availability"></select>
+            <div class="help" id="availHelp"></div>
+          </div>
+          <div class="field">
+            <label for="f_shortDescription">وصف مختصر <span class="counter" id="shortCount">0/160</span></label>
+            <input id="f_shortDescription" maxlength="160" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="f_description">الوصف الكامل</label>
+            <textarea id="f_description" maxlength="3000"></textarea>
+            <div class="err" id="e_description"></div>
+          </div>
+          <div class="field">
+            <label for="f_materials">الخامات (افصل بفاصلة)</label>
+            <input id="f_materials" autocomplete="off" placeholder="خشب زان، قماش كتان" />
+          </div>
+          <div class="field">
+            <label id="imgLabel" for="f_images">الصور — أول صورة هي الغلاف</label>
+            <div class="dropzone" id="dropzone">
+              اسحب الصور هنا أو اخترها — تتحول تلقائيًا إلى WebP وتُصغّر قبل الرفع (حد أقصى <span id="maxImgs">8</span> صور)
+              <input id="f_images" type="file" accept="image/*" multiple />
+            </div>
+            <div class="img-list" id="imgList"></div>
+            <div class="err" id="e_images"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label class="check"><input type="checkbox" id="f_featured" /> مميز (يظهر بالرئيسية)</label></div>
+            <div class="field"><label class="check"><input type="checkbox" id="f_published" checked /> منشور</label></div>
+          </div>
+          <div class="form-actions">
+            <button class="primary" id="saveBtn" type="submit">حفظ المنتج</button>
+            <button type="button" id="cancelBtn" hidden>إلغاء</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>المنتجات (<span id="countLabel">0</span>)</h2>
+        </div>
+        <div class="filters">
+          <input id="q" type="search" placeholder="بحث بالاسم أو الرابط…" aria-label="بحث" autocomplete="off" />
+          <select id="filterCat" aria-label="تصنيف"></select>
+          <select id="filterStatus" aria-label="الحالة">
+            <option value="">كل الحالات</option>
+            <option value="visible">ظاهر بالموقع</option>
+            <option value="draft">مسودة</option>
+            <option value="featured">مميز</option>
+            <option value="temporarily-unavailable">غير متاح مؤقتًا</option>
+            <option value="archived">مؤرشف</option>
+          </select>
+        </div>
+        <div id="list"></div>
+      </div>
+    </section>
+
+    <!-- ---- التصنيفات ---- -->
+    <section id="tab-categories" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>التصنيفات (<span id="catCount">0</span>)</h2>
+          <button class="primary" type="button" id="addCatBtn">إضافة تصنيف</button>
+        </div>
+        <p class="help">ترتيب التصنيفات هنا هو ترتيب ظهورها بالموقع. لا يمكن حذف تصنيف فيه منتجات.</p>
+        <div id="catList"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg-body">
+    <h3 id="dlgTitle"></h3>
+    <div id="dlgBody"></div>
+    <div class="dlg-err" id="dlgErr" role="alert"></div>
+  </div>
+  <div class="dlg-foot">
+    <button type="button" id="dlgOk" class="primary">تأكيد</button>
+    <button type="button" id="dlgCancel">إلغاء</button>
+  </div>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="admin.js" defer></script>
+</body>
+</html>
