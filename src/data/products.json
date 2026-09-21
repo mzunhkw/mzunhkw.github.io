@@ -22,24 +22,6 @@
     "published": true
   },
   {
-    "slug": "sample-majlis-set",
-    "title": "طقم مجلس أرضي — 8 قطع",
-    "categorySlug": "majlis",
-    "price": 480,
-    "size": "يغطي مساحة 4 × 5 م تقريبًا",
-    "region": "الكويت",
-    "availability": "ready-piece",
-    "shortDescription": "طقم مجلس أرضي جاهز للتسليم الفوري.",
-    "description": "طقم مجلس أرضي كامل من 8 قطع، حشوة إسفنج عالي الكثافة وقماش مقاوم للبقع.",
-    "materials": [
-      "قماش مخملي",
-      "إسفنج عالي الكثافة"
-    ],
-    "images": [],
-    "featured": true,
-    "published": true
-  },
-  {
     "slug": "sample-side-table",
     "title": "طاولة جانبية دائرية",
     "categorySlug": "tables",
