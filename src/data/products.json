@@ -22,24 +22,6 @@
     "published": true
   },
   {
-    "slug": "sample-bed-frame",
-    "title": "سرير خشب الزان — تصميم كلاسيكي",
-    "categorySlug": "bedrooms",
-    "price": 250,
-    "size": "200 × 160 سم",
-    "region": "الكويت",
-    "availability": "custom-order",
-    "shortDescription": "سرير خشب زان طبيعي بتشطيب يدوي.",
-    "description": "سرير مصنوع من خشب الزان الطبيعي، بتشطيب يدوي ولمسة نهائية مقاومة للخدش. يتوفر بمقاسات مختلفة حسب الطلب.",
-    "materials": [
-      "خشب زان",
-      "قماش كتان"
-    ],
-    "images": [],
-    "featured": true,
-    "published": true
-  },
-  {
     "slug": "sample-majlis-set",
     "title": "طقم مجلس أرضي — 8 قطع",
     "categorySlug": "majlis",
