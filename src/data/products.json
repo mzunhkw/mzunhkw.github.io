@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-t01cc",
+    "title": "كونسول مميز للمدخل",
+    "categorySlug": "decor",
+    "price": 160,
+    "size": "للقطعة",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "كونسول مميز لتجميل مدخل المنزل",
+    "description": "تنفيذ منجرة مزونه \nوتركيب ورشتنا المختصة \nنهتم بكل التفاصيل",
+    "materials": [
+      "خشب قشر زان / بلور هندي"
+    ],
+    "images": [
+      "/images/product-t01cc/muc0bzsj-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-4sz78",
     "title": "كونسول مدخل مميز",
     "categorySlug": "decor",
