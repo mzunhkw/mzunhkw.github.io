@@ -1,5 +1,27 @@
 [
   {
+    "slug": "product-uoflc",
+    "title": "طاولة صالة مزونه فاز نيو",
+    "categorySlug": "tables",
+    "price": 140,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "السعر يتغير حسب الطلب والابعاد",
+    "description": "تنفيذ منجرة مزونه",
+    "materials": [
+      "بلور ايطالي"
+    ],
+    "images": [
+      "/images/product-uoflc/muc1kqez-0.webp",
+      "/images/product-uoflc/muc1kqez-1.webp",
+      "/images/product-uoflc/muc1kqez-2.webp",
+      "/images/product-uoflc/muc1kqez-3.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-0bz14",
     "title": "كرسي زينة مدخل",
     "categorySlug": "decor",
