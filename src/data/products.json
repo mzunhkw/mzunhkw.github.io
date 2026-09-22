@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-ay3ke",
+    "title": "كرسي مودرن مارلينو مزونه",
+    "categorySlug": "decor",
+    "price": 65,
+    "size": "للقطعة",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "السعر يتغير حسب الطلب والابعاد",
+    "description": "تنفيذ مزونه الكويت",
+    "materials": [
+      "خشب قشر جوز"
+    ],
+    "images": [
+      "/images/product-ay3ke/muc1a7l8-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-kbfin",
     "title": "طاولة غرف نوم",
     "categorySlug": "tables",
