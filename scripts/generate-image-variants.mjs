@@ -23,6 +23,10 @@ const MANIFEST_PATH = join(ROOT, 'src', 'data', 'image-manifest.json');
 const WIDTHS = [400, 800, 1200];
 // لا يستاهل نولّد نسخة إذا كانت لا تصغّر الأصل بشكل ملموس (أقل من 15%).
 const MIN_SAVING_RATIO = 1.15;
+// أقصى عرض نسمح نفسه يُخدَم عبر srcset حتى لو الصورة الأصلية أكبر —
+// يمنع أن ينتهي الأمر بالمتصفح يطلب الملف الأصلي غير المضغوط (الذي قد
+// يكون بجودة تصدير أعلى من اللازم لعرضه بحجم بطاقة منتج) بدل نسخة مضغوطة.
+const MAX_SERVED_WIDTH = 1000;
 const VARIANT_QUALITY = 75;
 const VARIANT_MARKER = '@';
 
@@ -79,6 +83,26 @@ async function run() {
         skippedExisting++;
       }
       variants.push({ width, path: toPublicPath(outAbs) });
+    }
+
+    // سقف دائم: نضمن أن أكبر نسخة تُعرض عبر srcset مضغوطة دائمًا بجودتنا
+    // (VARIANT_QUALITY)، بدل أن ينتهي بها الحال ملف المصدر الخام كما رُفع
+    // (الذي قد يكون بإعدادات تصدير أثقل). لو الصورة أصلًا أصغر من السقف،
+    // هذا يعيد ضغطها بنفس أبعادها فقط (فرق بسيط)، بدون أي تصغير زائد.
+    const ceilingWidth = Math.min(originalWidth, MAX_SERVED_WIDTH);
+    const hasCeilingVariant = variants.some((v) => v.width === ceilingWidth);
+    if (!hasCeilingVariant && ceilingWidth > 0) {
+      const outAbs = variantPath(absOriginal, ceilingWidth);
+      if (!existsSync(outAbs)) {
+        await sharp(absOriginal)
+          .resize({ width: ceilingWidth, withoutEnlargement: true })
+          .webp({ quality: VARIANT_QUALITY })
+          .toFile(outAbs);
+        generated++;
+      } else {
+        skippedExisting++;
+      }
+      variants.push({ width: ceilingWidth, path: toPublicPath(outAbs) });
     }
 
     manifest[publicOriginal] = { width: originalWidth, height: originalHeight, variants };
