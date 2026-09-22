@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { getSrcSet } from '@/lib/image';
 
 // معرض صور للجوال: سحب أفقي بالإصبع + نقاط + صور مصغّرة + تكبير بملء الشاشة.
 // eagerFirst: حمّل أول صورة فورًا (eager) بدل lazy — يُستخدم فقط عندما يكون المعرض
@@ -84,6 +85,8 @@ export default function Gallery({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={img}
+                srcSet={getSrcSet(img)}
+                sizes="100vw"
                 alt={altFor(i)}
                 loading={i === 0 && eagerFirst ? 'eager' : 'lazy'}
                 className="w-full h-full object-cover"
@@ -117,7 +120,7 @@ export default function Gallery({
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img} alt="" loading="lazy" className="w-full h-full object-cover" />
+              <img src={img} srcSet={getSrcSet(img)} sizes="64px" alt="" loading="lazy" className="w-full h-full object-cover" />
             </button>
           ))}
         </div>

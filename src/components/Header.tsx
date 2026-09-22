@@ -8,10 +8,11 @@ export default function Header() {
         <Link href="/" className="brand-link" aria-label={`${siteConfig.name} — الرئيسية`}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo.png"
+            src="/logo.webp"
             alt={`شعار ${siteConfig.name} للأثاث والديكور`}
-            width={900}
-            height={194}
+            width={760}
+            height={694}
+            fetchPriority="high"
             className="brand-logo"
           />
         </Link>

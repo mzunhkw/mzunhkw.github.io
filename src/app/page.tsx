@@ -68,10 +68,11 @@ export default function HomePage() {
           <div className="hero-brand" aria-label={siteConfig.name}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
+              src="/logo.webp"
               alt={`شعار ${siteConfig.name}`}
-              width={900}
-              height={194}
+              width={760}
+              height={694}
+              fetchPriority="high"
               className="hero-logo"
             />
             <span>للديكور الحديث</span>

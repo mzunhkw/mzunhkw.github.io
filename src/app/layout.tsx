@@ -1,5 +1,13 @@
 import type { Metadata } from 'next';
+import { Noto_Kufi_Arabic } from 'next/font/google';
 import './globals.css';
+
+const notoKufiArabic = Noto_Kufi_Arabic({
+  subsets: ['arabic'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-arabic',
+});
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
@@ -63,7 +71,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar" dir="rtl" className={notoKufiArabic.variable}>
       <body className="bg-cream text-ink min-h-screen flex flex-col antialiased">
         <JsonLd data={jsonLd} />
         <Header />

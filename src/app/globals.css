@@ -1,12 +1,8 @@
-/* @import must remain first so the Arabic font loads correctly. */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-arabic: 'Noto Kufi Arabic', Tahoma, sans-serif;
   --mazuna-ink: #4f4a40;
   --mazuna-muted: #777064;
   --mazuna-sage: #657d5f;
@@ -22,7 +18,7 @@ html {
 }
 
 body {
-  font-family: var(--font-arabic);
+  font-family: var(--font-arabic), Tahoma, sans-serif;
   background: var(--mazuna-cream);
   color: var(--mazuna-ink);
 }

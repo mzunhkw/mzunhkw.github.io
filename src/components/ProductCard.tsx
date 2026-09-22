@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Product, availabilityLabels } from '@/lib/types';
 import { formatPrice } from '@/lib/catalog';
+import { getSrcSet } from '@/lib/image';
 
 type ProductCardProps = {
   product: Product;
@@ -21,11 +22,18 @@ export default function ProductCard({ product, featured = false, compact = false
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={image}
+            srcSet={getSrcSet(image)}
+            sizes={
+              featured
+                ? '(max-width: 640px) 100vw, (max-width: 1024px) 55vw, 620px'
+                : '(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 300px'
+            }
             alt={product.title}
             width={900}
             height={900}
+            // لا نرفع أولوية هذه الصورة: عنصر LCP الفعلي بالصفحة هو شعار الهيرو،
+            // ورفع أولوية صورة أخرى تنافسه على الشبكة وتؤخره.
             loading={featured ? 'eager' : 'lazy'}
-            fetchPriority={featured ? 'high' : 'auto'}
             className="product-image"
           />
         ) : (
