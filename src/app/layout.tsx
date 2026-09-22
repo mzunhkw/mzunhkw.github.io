@@ -72,6 +72,12 @@ const jsonLd = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ar" dir="rtl" className={notoKufiArabic.variable}>
+      <head>
+        {/* تحميل مسبق صريح لصورة الشعار — هي عنصر LCP بالصفحة الرئيسية على الجوال.
+            هذا يضمن أن المتصفح يبدأ تحميلها فور قراءة الرأس، بدل الاعتماد فقط
+            على fetchPriority على وسم <img> الذي قد يتأخر خلف طلبات أخرى. */}
+        <link rel="preload" as="image" href="/logo.webp" fetchPriority="high" />
+      </head>
       <body className="bg-cream text-ink min-h-screen flex flex-col antialiased">
         <JsonLd data={jsonLd} />
         <Header />
