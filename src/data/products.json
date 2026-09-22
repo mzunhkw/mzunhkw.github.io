@@ -1,5 +1,27 @@
 [
   {
+    "slug": "product-8clbw",
+    "title": "كنب صالة تركيب منطقة سلوى",
+    "categorySlug": "sofas",
+    "price": 37,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "اعمالنا في منطقة سلوى",
+    "description": "تفصيل وتصميم مزونه",
+    "materials": [
+      "خشب مارلين / اسفنج البغلي وردي"
+    ],
+    "images": [
+      "/images/product-8clbw/mubz7l5h-0.webp",
+      "/images/product-8clbw/mubz7l5h-1.webp",
+      "/images/product-8clbw/mubz7l5h-2.webp",
+      "/images/product-8clbw/mubz7l5h-3.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-nwa4p",
     "title": "كنب مجلس نساء",
     "categorySlug": "sofas",
