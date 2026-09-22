@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-4sz78",
+    "title": "كونسول مدخل مميز",
+    "categorySlug": "decor",
+    "price": 130,
+    "size": "للقطعة",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "تم دراسة كل تفصيلة بعناية",
+    "description": "تنفيذ منجرة مزونة \nمقاس 1.80x1 80",
+    "materials": [
+      "خشب قشر زان بلور هندي"
+    ],
+    "images": [
+      "/images/product-4sz78/muc0a0am-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-cdsc9",
     "title": "مرايا مدخل",
     "categorySlug": "decor",
