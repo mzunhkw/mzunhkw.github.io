@@ -1,5 +1,30 @@
 [
   {
+    "slug": "product-s6ti9",
+    "title": "طاولة مميزة خشب مارلين",
+    "categorySlug": "tables",
+    "price": 35,
+    "size": "حسب المقاسات",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "طاولة استقبال وطعام مميزة",
+    "description": "طاولة تفصيل منجرة ومشغل مزونه",
+    "materials": [
+      "خشب مارلين"
+    ],
+    "images": [
+      "/images/product-s6ti9/muc0gbp8-0.webp",
+      "/images/product-s6ti9/muc0gbp8-1.webp",
+      "/images/product-s6ti9/muc0gbp8-2.webp",
+      "/images/product-s6ti9/muc0gbp8-3.webp",
+      "/images/product-s6ti9/muc0gbp8-4.webp",
+      "/images/product-s6ti9/muc0gbp8-5.webp",
+      "/images/product-s6ti9/muc0gbp8-6.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-cjz9c",
     "title": "كونسول مدخل منزلي",
     "categorySlug": "decor",
