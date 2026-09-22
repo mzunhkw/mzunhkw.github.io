@@ -1,5 +1,31 @@
 [
   {
+    "slug": "product-wp31n",
+    "title": "كنب مودرن خاص سلوى",
+    "categorySlug": "sofas",
+    "price": 42,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "تصميم مدروس بعناية",
+    "description": "تفصيل وتصميم منجرة مزونه",
+    "materials": [
+      "خشب مارلين / اسفنج البغلي وردي"
+    ],
+    "images": [
+      "/images/product-wp31n/muc01jnf-0.webp",
+      "/images/product-wp31n/muc01jnf-1.webp",
+      "/images/product-wp31n/muc01jnf-2.webp",
+      "/images/product-wp31n/muc01jnf-3.webp",
+      "/images/product-wp31n/muc01jnf-4.webp",
+      "/images/product-wp31n/muc01jnf-5.webp",
+      "/images/product-wp31n/muc01jnf-6.webp",
+      "/images/product-wp31n/muc01jnf-7.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-3vvu1",
     "title": "غرفة نوم ملكية زان",
     "categorySlug": "bedrooms",
