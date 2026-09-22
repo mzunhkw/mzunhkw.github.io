@@ -3,8 +3,3 @@ node_modules/
 out/
 .DS_Store
 *.log
-
-# نسخ الصور المصغّرة (srcset) وخريطتها — تتولّد تلقائيًا في كل بناء
-# عبر scripts/generate-image-variants.mjs، ما نحتاج نلتزمها بالمستودع.
-public/images/**/*@*w.webp
-src/data/image-manifest.json

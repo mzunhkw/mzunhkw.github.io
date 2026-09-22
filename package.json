@@ -4,9 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
-    "predev": "node scripts/generate-image-variants.mjs",
     "validate": "node scripts/validate-data.mjs",
-    "prebuild": "node scripts/generate-image-variants.mjs && node scripts/validate-data.mjs",
+    "prebuild": "node scripts/validate-data.mjs",
     "build": "next build",
     "start": "next start"
   },
@@ -21,7 +20,6 @@
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.39",
-    "sharp": "^0.35.4",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.5.3"
   }
