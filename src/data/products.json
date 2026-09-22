@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-r8q8u",
+    "title": "طاولة استقبال ابيض و اسود",
+    "categorySlug": "tables",
+    "price": 75,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "تفصيل دقيق وعناية",
+    "description": "اعمالنا في منطقة كيفان",
+    "materials": [
+      "خشب قشر جوز"
+    ],
+    "images": [
+      "/images/product-r8q8u/muc0uvau-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-b7n96",
     "title": "طاولة مجلس خاصة مارلين مزونة",
     "categorySlug": "tables",
