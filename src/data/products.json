@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-0bz14",
+    "title": "كرسي زينة مدخل",
+    "categorySlug": "decor",
+    "price": 75,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "السعر يتغير حسب الطلب والابعاد",
+    "description": "تنفيذ منجرة مزونة",
+    "materials": [
+      "اسفنج البغلي"
+    ],
+    "images": [
+      "/images/product-0bz14/muc1ixbr-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-626gd",
     "title": "غرفة نوم مزونه فاز",
     "categorySlug": "bedrooms",
