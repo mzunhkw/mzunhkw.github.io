@@ -1,5 +1,31 @@
 [
   {
+    "slug": "product-4wkw9",
+    "title": "مجلس كنب رسمي استقبال",
+    "categorySlug": "majlis",
+    "price": 65,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "استقبال كنب رسمي",
+    "description": "خشب زان 100%",
+    "materials": [
+      "القماش مخمل كتان"
+    ],
+    "images": [
+      "/images/product-4wkw9/mucxj9lq-0.webp",
+      "/images/product-4wkw9/mucxj9lq-1.webp",
+      "/images/product-4wkw9/mucxj9lq-2.webp",
+      "/images/product-4wkw9/mucxj9lq-3.webp",
+      "/images/product-4wkw9/mucxj9lq-4.webp",
+      "/images/product-4wkw9/mucxj9lq-5.webp",
+      "/images/product-4wkw9/mucxj9lq-6.webp",
+      "/images/product-4wkw9/mucxj9lq-7.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-n70lv",
     "title": "طاولة صالة من مزونه",
     "categorySlug": "tables",
