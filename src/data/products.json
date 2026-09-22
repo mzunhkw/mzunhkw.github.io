@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-rw2u9",
+    "title": "طاولة مودرن فاز نيو",
+    "categorySlug": "tables",
+    "price": 145,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "السعر يتغير حسب الطلب والابعاد",
+    "description": "تنفذ ورشتنا في منطقة كيفان",
+    "materials": [
+      "خشب مارلين"
+    ],
+    "images": [
+      "/images/product-rw2u9/muc1mmlt-0.webp"
+    ],
+    "featured": false,
+    "published": true
+  },
+  {
     "slug": "product-uoflc",
     "title": "طاولة صالة مزونه فاز نيو",
     "categorySlug": "tables",
