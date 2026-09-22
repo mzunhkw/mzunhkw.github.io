@@ -1,5 +1,28 @@
 [
   {
+    "slug": "product-btc7z",
+    "title": "كنب كورنر باندا",
+    "categorySlug": "sofas",
+    "price": 37,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "كنب كورنر باندا",
+    "description": "تنفيذ وتفصيل مشغل مزونه للاثاث والديكور",
+    "materials": [
+      "خام كتان / اسفنج البغلي"
+    ],
+    "images": [
+      "/images/product-btc7z/mucxlyz4-0.webp",
+      "/images/product-btc7z/mucxlyz4-1.webp",
+      "/images/product-btc7z/mucxlyz4-2.webp",
+      "/images/product-btc7z/mucxlyz4-3.webp",
+      "/images/product-btc7z/mucxlyz4-4.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-4wkw9",
     "title": "مجلس كنب رسمي استقبال",
     "categorySlug": "majlis",
