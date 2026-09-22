@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-cdsc9",
+    "title": "مرايا مدخل",
+    "categorySlug": "decor",
+    "price": 130,
+    "size": "للقطعة",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "كونسول مميز لمدخل المنزل",
+    "description": "تصميم وتنفيذ منجرة مزونه",
+    "materials": [
+      "خشب قشر جوز / بلور هندي"
+    ],
+    "images": [
+      "/images/product-cdsc9/muc085kt-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-di3d2",
     "title": "كنب مزونه ماريانا",
     "categorySlug": "sofas",
