@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-9bdts",
+    "title": "كرسي مدخل",
+    "categorySlug": "sofas",
+    "price": 45,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "تفصيل حسب رغبة العميل",
+    "description": "تنفيذ منطقة سلوى \nورشتنا",
+    "materials": [
+      "قماش كتان"
+    ],
+    "images": [
+      "/images/product-9bdts/muc0xzx8-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-aukc0",
     "title": "طاولة مميزة مخصصة لعميلنا",
     "categorySlug": "tables",
