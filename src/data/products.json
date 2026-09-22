@@ -1,5 +1,31 @@
 [
   {
+    "slug": "product-wpuvo",
+    "title": "مجلس رسمي كنب ديوانية",
+    "categorySlug": "majlis",
+    "price": 70,
+    "size": "للمتر",
+    "region": "الكويت / اشبيلية",
+    "availability": "custom-order",
+    "shortDescription": "اعمالنا",
+    "description": "خشب زان نوع روماني احمر \nاسفنج البغلي \nخام شانيل تركي",
+    "materials": [
+      "خشب زان / اسفنج البغلي"
+    ],
+    "images": [
+      "/images/product-wpuvo/mubzn5ga-0.webp",
+      "/images/product-wpuvo/mubzn5ga-1.webp",
+      "/images/product-wpuvo/mubzn5ga-2.webp",
+      "/images/product-wpuvo/mubzn5ga-3.webp",
+      "/images/product-wpuvo/mubzn5ga-4.webp",
+      "/images/product-wpuvo/mubzn5ga-5.webp",
+      "/images/product-wpuvo/mubzn5ga-6.webp",
+      "/images/product-wpuvo/mubzn5ga-7.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-8clbw",
     "title": "كنب صالة تركيب منطقة سلوى",
     "categorySlug": "sofas",
