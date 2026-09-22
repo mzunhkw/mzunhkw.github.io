@@ -1,5 +1,29 @@
 [
   {
+    "slug": "product-626gd",
+    "title": "غرفة نوم مزونه فاز",
+    "categorySlug": "sofas",
+    "price": 115,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "السعر يتغير حسب الطلب والابعاد",
+    "description": "تنفيذ ورشة مزونة لاعمال النجارة",
+    "materials": [
+      "خشب زان /"
+    ],
+    "images": [
+      "/images/product-626gd/muc1dr17-0.webp",
+      "/images/product-626gd/muc1dr17-1.webp",
+      "/images/product-626gd/muc1dr17-2.webp",
+      "/images/product-626gd/muc1dr17-3.webp",
+      "/images/product-626gd/muc1dr17-4.webp",
+      "/images/product-626gd/muc1dr17-5.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-ay3ke",
     "title": "كرسي مودرن مارلينو مزونه",
     "categorySlug": "decor",
