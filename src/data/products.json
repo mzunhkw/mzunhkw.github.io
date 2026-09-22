@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-97tlo",
+    "title": "طاولات للتحف والمزهرية",
+    "categorySlug": "tables",
+    "price": 45,
+    "size": "للقطعة",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "طاولات زينة",
+    "description": "طاولة من تصميم ورشة مزونه",
+    "materials": [
+      "خشب MDF قشر جوز"
+    ],
+    "images": [
+      "/images/product-97tlo/muc157gg-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-ul5oz",
     "title": "طاولة مودرن مميزة",
     "categorySlug": "tables",
