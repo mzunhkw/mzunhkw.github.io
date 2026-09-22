@@ -1,5 +1,31 @@
 [
   {
+    "slug": "product-di3d2",
+    "title": "كنب مزونه ماريانا",
+    "categorySlug": "sofas",
+    "price": 44,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "كنب مصمم خصيصا لعميلنا",
+    "description": "تصميم وتفصيل منجرة مزونه",
+    "materials": [
+      "خشب مارلين / اسفنج البغلي"
+    ],
+    "images": [
+      "/images/product-di3d2/muc04njy-0.webp",
+      "/images/product-di3d2/muc04njy-1.webp",
+      "/images/product-di3d2/muc04njy-2.webp",
+      "/images/product-di3d2/muc04njy-3.webp",
+      "/images/product-di3d2/muc04njy-4.webp",
+      "/images/product-di3d2/muc04njy-5.webp",
+      "/images/product-di3d2/muc04njy-6.webp",
+      "/images/product-di3d2/muc04njy-7.webp"
+    ],
+    "featured": false,
+    "published": true
+  },
+  {
     "slug": "product-wp31n",
     "title": "كنب مودرن خاص سلوى",
     "categorySlug": "sofas",
