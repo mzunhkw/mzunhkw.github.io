@@ -25,7 +25,9 @@ export default function ProductCard({ product, featured = false, compact = false
             srcSet={getSrcSet(image)}
             sizes={
               featured
-                ? '(max-width: 640px) 100vw, (max-width: 1024px) 55vw, 620px'
+                ? // نطرح padding الحاوية (32px على الجوال) عشان لا نبالغ في
+                  // العرض المطلوب فيختار المتصفح نسخة أكبر من اللازم.
+                  '(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) 55vw, 620px'
                 : '(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 300px'
             }
             alt={product.title}

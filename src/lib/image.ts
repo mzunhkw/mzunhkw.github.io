@@ -11,10 +11,12 @@ const imageManifest = manifest as Manifest;
 export function getSrcSet(src: string): string | undefined {
   const entry = imageManifest[src];
   if (!entry || entry.variants.length === 0) return undefined;
-  const parts = entry.variants.map((v) => `${v.path} ${v.width}w`);
-  // نضيف الأصل نفسه كأكبر خيار بعرضه الحقيقي.
-  parts.push(`${src} ${entry.width}w`);
-  return parts.join(', ');
+  // نعتمد فقط على النسخ المولَّدة (كلها مضغوطة بجودة موحّدة عبر
+  // generate-image-variants.mjs، وتشمل دائمًا نسخة بأقصى عرض مسموح
+  // به). لا نضيف الملف الأصلي كما رُفع: قد يكون بجودة تصدير أعلى
+  // بكثير مما تحتاجه بطاقة منتج، وإضافته كخيار كانت تجعل المتصفح
+  // يختاره أحيانًا بدل النسخة المضغوطة على الجوال بسبب كثافة البكسل.
+  return entry.variants.map((v) => `${v.path} ${v.width}w`).join(', ');
 }
 
 export function getImageDimensions(src: string): { width: number; height: number } | undefined {
