@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-aukc0",
+    "title": "طاولة مميزة مخصصة لعميلنا",
+    "categorySlug": "tables",
+    "price": 70,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "مصممة لعميلنا منطقة كيفان",
+    "description": "تنفيذ منجرة مزونه للديكور",
+    "materials": [
+      "خشب قشر زان"
+    ],
+    "images": [
+      "/images/product-aukc0/muc0wgsr-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-r8q8u",
     "title": "طاولة استقبال ابيض و اسود",
     "categorySlug": "tables",
