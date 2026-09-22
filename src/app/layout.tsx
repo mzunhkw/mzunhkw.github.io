@@ -6,6 +6,8 @@ import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import JsonLd from '@/components/JsonLd';
 import { siteConfig } from '@/data/site-config';
 
+const ICON_VERSION = '3';
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),
   title: {
@@ -17,11 +19,13 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: `/favicon.ico?v=${ICON_VERSION}`, sizes: 'any' },
+      { url: `/favicon-32.png?v=${ICON_VERSION}`, sizes: '32x32', type: 'image/png' },
+      { url: `/favicon-48.png?v=${ICON_VERSION}`, sizes: '48x48', type: 'image/png' },
+      { url: `/icon-192.png?v=${ICON_VERSION}`, sizes: '192x192', type: 'image/png' },
+      { url: `/icon-512.png?v=${ICON_VERSION}`, sizes: '512x512', type: 'image/png' },
     ],
-    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+    apple: [{ url: `/apple-touch-icon.png?v=${ICON_VERSION}`, sizes: '180x180' }],
   },
   openGraph: {
     siteName: siteConfig.name,
@@ -40,7 +44,7 @@ const jsonLd = {
   alternateName: siteConfig.nameEn,
   description: siteConfig.seoDescription,
   url: siteConfig.siteUrl,
-  logo: `${siteConfig.siteUrl}/icon-512.png`,
+  logo: `${siteConfig.siteUrl}/icon-512.png?v=${ICON_VERSION}`,
   image: `${siteConfig.siteUrl}/og-image.jpg`,
   telephone: `+${siteConfig.whatsappNumber}`,
   foundingDate: String(siteConfig.foundedYear),
@@ -51,7 +55,6 @@ const jsonLd = {
     opens: '09:00',
     closes: '23:00',
   },
-  // يُضافان تلقائيًا فقط بعد تعبئة geo / socialLinks في site-config.ts.
   ...(siteConfig.geo
     ? { geo: { '@type': 'GeoCoordinates', latitude: siteConfig.geo.lat, longitude: siteConfig.geo.lng } }
     : {}),
