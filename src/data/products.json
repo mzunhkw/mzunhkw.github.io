@@ -1,5 +1,27 @@
 [
   {
+    "slug": "product-nwa4p",
+    "title": "كنب مجلس نساء",
+    "categorySlug": "sofas",
+    "price": 37,
+    "size": "للمتر",
+    "region": "الكويت / خيطان",
+    "availability": "custom-order",
+    "shortDescription": "كنب صالة استقبال نساء",
+    "description": "تصميم وتفصيل منجرة مزونة",
+    "materials": [
+      "خشب قشر جوز / اسفنج دانلوب البغلي"
+    ],
+    "images": [
+      "/images/product-nwa4p/mubz5dj6-0.webp",
+      "/images/product-nwa4p/mubz5dj6-1.webp",
+      "/images/product-nwa4p/mubz5dj6-2.webp",
+      "/images/product-nwa4p/mubz5dj6-3.webp"
+    ],
+    "featured": false,
+    "published": true
+  },
+  {
     "slug": "product-5ttjv",
     "title": "كنب استقبال تصميم مزونة مخصص",
     "categorySlug": "sofas",
