@@ -1,5 +1,22 @@
 [
   {
+    "slug": "product-swe6o",
+    "title": "مساند ظهر ديوانية",
+    "categorySlug": "cushions",
+    "price": 9,
+    "size": "للمتر",
+    "region": "الكويت / الجهراء",
+    "availability": "custom-order",
+    "shortDescription": "تفصيلنا منطقة الجهراء",
+    "description": "خام شانيل تركي \nاسفنج الوطنية",
+    "materials": [],
+    "images": [
+      "/images/product-swe6o/mubyws8d-0.webp"
+    ],
+    "featured": false,
+    "published": true
+  },
+  {
     "slug": "product-v4cug",
     "title": "كنب استقبال مودرن",
     "categorySlug": "sofas",
