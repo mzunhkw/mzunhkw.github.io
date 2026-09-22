@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-ul5oz",
+    "title": "طاولة مودرن مميزة",
+    "categorySlug": "tables",
+    "price": 165,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "مصممة بعناية لكل تفصيلة",
+    "description": "تنفيذ ورشتنا الخاصة مزونه",
+    "materials": [
+      "بلور هندي"
+    ],
+    "images": [
+      "/images/product-ul5oz/muc133ei-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-bucdn",
     "title": "كرسي استقبال مدخل خاص",
     "categorySlug": "decor",
