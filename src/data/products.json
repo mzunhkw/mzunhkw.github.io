@@ -1,5 +1,27 @@
 [
   {
+    "slug": "product-m1srt",
+    "title": "طاولات زينة مستطيلة",
+    "categorySlug": "tables",
+    "price": 65,
+    "size": "للقطعة",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "طاولات للمزهرية والتحف",
+    "description": "مصممة بعناية",
+    "materials": [
+      "خشب قشر جوز"
+    ],
+    "images": [
+      "/images/product-m1srt/muc0lgto-0.webp",
+      "/images/product-m1srt/muc0lgto-1.webp",
+      "/images/product-m1srt/muc0lgto-2.webp",
+      "/images/product-m1srt/muc0lgto-3.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-2iwj1",
     "title": "طاولة خشب معتق",
     "categorySlug": "tables",
