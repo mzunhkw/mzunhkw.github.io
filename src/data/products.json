@@ -1,5 +1,29 @@
 [
   {
+    "slug": "product-5ttjv",
+    "title": "كنب استقبال تصميم مزونة مخصص",
+    "categorySlug": "sofas",
+    "price": 43,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "كنب مخصص لعميلنا",
+    "description": "كنب صالة استقبال \nمنطقة الكويت / الرميثية",
+    "materials": [
+      "خشب مارلين / خام شانيل / اسفنج دانلوب اخضر البغلي"
+    ],
+    "images": [
+      "/images/product-5ttjv/mubz1p2a-0.webp",
+      "/images/product-5ttjv/mubz1p2a-1.webp",
+      "/images/product-5ttjv/mubz1p2a-2.webp",
+      "/images/product-5ttjv/mubz1p2a-3.webp",
+      "/images/product-5ttjv/mubz1p2a-4.webp",
+      "/images/product-5ttjv/mubz1p2a-5.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-swe6o",
     "title": "مساند ظهر ديوانية",
     "categorySlug": "cushions",
