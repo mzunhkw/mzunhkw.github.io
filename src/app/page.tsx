@@ -24,94 +24,162 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   const whatsapp = `https://wa.me/${siteConfig.whatsappNumber}`;
-  // آخر 3 منتجات (أعمال) من كل قسم — بترتيب الإضافة بملف products.json، والأحدث أولًا.
+
+  // products.json is maintained newest-first by the existing admin workflow.
+  // Keeping the data source unchanged preserves the existing SEO/product URLs.
+  const latestProducts = visibleProducts.slice(0, 8);
+  const heroProduct = latestProducts[0];
+  const supportingProducts = latestProducts.slice(1, 5);
+
   const categoryWorks = categories
     .map((c) => ({
       category: c,
-      items: visibleProducts.filter((p) => p.categorySlug === c.slug).slice(-3).reverse(),
+      items: visibleProducts.filter((p) => p.categorySlug === c.slug).slice(0, 4),
     }))
     .filter((group) => group.items.length > 0);
 
   return (
-    <div>
-      <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-4 sm:pt-10 pb-8">
-        <div className="bg-sand rounded-3xl px-5 py-8 sm:px-12 sm:py-14">
-          <p className="text-sage text-sm">{siteConfig.nameEn}</p>
-          <h1 className="text-2xl sm:text-5xl mt-2 max-w-3xl leading-snug sm:leading-tight">
-            كنب وقنفات ومجالس ومساند وغرف نوم في الكويت
-          </h1>
-          <p className="text-ink/70 mt-3 max-w-xl text-sm sm:text-base leading-relaxed">{siteConfig.about}</p>
-          <div className="flex flex-col sm:flex-row gap-3 mt-6">
-            <Link
-              href="/products/"
-              className="min-h-12 px-6 grid place-items-center bg-sage text-white rounded-full"
-            >
-              تصفح المنتجات
-            </Link>
-            <a
-              href={whatsapp}
-              target="_blank"
-              rel="noreferrer"
-              className="min-h-12 px-6 grid place-items-center bg-white/70 border border-sage/30 rounded-full"
-            >
-              تواصل عبر واتساب
-            </a>
+    <div className="home-page">
+      {/* SEO-friendly H1 remains a real heading and the page remains fully server-rendered. */}
+      <section className="home-hero max-w-6xl mx-auto px-4 sm:px-8 pt-5 sm:pt-8">
+        <div className="hero-panel">
+          <div className="hero-copy">
+            <span className="eyebrow">مزونة للأثاث والديكور · الكويت</span>
+            <h1>كنب وقنفات ومجالس ومساند وغرف نوم في الكويت</h1>
+            <p>{siteConfig.about}</p>
+
+            <div className="hero-actions">
+              <Link href="/products/" className="primary-cta">
+                استكشف المنتجات
+                <span aria-hidden="true">←</span>
+              </Link>
+              <a href={whatsapp} target="_blank" rel="noreferrer" className="secondary-cta">
+                تواصل عبر واتساب
+              </a>
+            </div>
+
+            <div className="hero-trust">
+              <span><b>{siteConfig.projectsCount}</b> مشروع</span>
+              <span><b>{siteConfig.foundedYear}</b> منذ التأسيس</span>
+              <span>تفصيل حسب الطلب</span>
+            </div>
+          </div>
+
+          <div className="hero-brand" aria-label={siteConfig.name}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt={`شعار ${siteConfig.name}`}
+              width={900}
+              height={194}
+              className="hero-logo"
+            />
+            <span>للديكور الحديث</span>
           </div>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-8 pb-10">
-        <h2 className="text-xl sm:text-2xl mb-4">أقسام المعرض</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      {/* Main product discovery block: the first product gets visual priority without hiding links from crawlers. */}
+      {heroProduct && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-14" aria-labelledby="latest-products-title">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">مختارات من المعرض</span>
+              <h2 id="latest-products-title">أحدث الأعمال</h2>
+            </div>
+            <Link href="/products/" className="section-link">
+              عرض كل المنتجات <span aria-hidden="true">←</span>
+            </Link>
+          </div>
+
+          <div className="latest-showcase">
+            <div className="featured-product">
+              <ProductCard product={heroProduct} featured />
+            </div>
+
+            <div className="latest-grid">
+              {supportingProducts.map((product) => (
+                <ProductCard key={product.slug} product={product} compact />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16" aria-labelledby="categories-title">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">تصفح حسب النوع</span>
+            <h2 id="categories-title">أقسام المعرض</h2>
+          </div>
+          <Link href="/products/" className="section-link">
+            كل المنتجات <span aria-hidden="true">←</span>
+          </Link>
+        </div>
+
+        <div className="category-grid">
           {categories.map((c) => {
             const seo = getCategorySeo(c.slug, c.name);
             return (
-              <Link
-                key={c.slug}
-                href={`/category/${c.slug}/`}
-                className="border border-sand bg-white rounded-2xl p-4 hover:border-sage-soft"
-              >
-                <span className="block text-base sm:text-lg text-sage font-medium">{c.name}</span>
-                {seo.short && <span className="block text-sm text-ink/60 mt-1">{seo.short}</span>}
+              <Link key={c.slug} href={`/category/${c.slug}/`} className="category-tile">
+                <span className="category-number" aria-hidden="true">
+                  {String(categories.indexOf(c) + 1).padStart(2, '0')}
+                </span>
+                <span>
+                  <strong>{c.name}</strong>
+                  {seo.short && <small>{seo.short}</small>}
+                </span>
+                <span className="tile-arrow" aria-hidden="true">←</span>
               </Link>
             );
           })}
         </div>
       </section>
 
-      <section id="خدمات-التنجيد" className="max-w-6xl mx-auto px-4 sm:px-8 pb-10 scroll-mt-20">
-        <h2 className="text-xl sm:text-2xl mb-4">خدمات التنجيد</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {services.map((s) => (
-            <Link
-              key={s.slug}
-              href={s.path}
-              className="border border-sand bg-white rounded-2xl p-4 hover:border-sage-soft"
-            >
-              <span className="block text-base sm:text-lg text-sage font-medium">{s.h1}</span>
-              <span className="block text-sm text-ink/60 mt-1">{s.description}</span>
-            </Link>
-          ))}
+      <section id="خدمات-التنجيد" className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16 scroll-mt-24" aria-labelledby="upholstery-title">
+        <div className="upholstery-panel">
+          <div className="upholstery-intro">
+            <span className="eyebrow">تفصيل وتجديد</span>
+            <h2 id="upholstery-title">خدمات التنجيد</h2>
+            <p>نجدد الكنب والمجالس والمساند مع اختيار القماش والحشوة والتفاصيل المناسبة للمكان.</p>
+          </div>
+
+          <div className="service-list">
+            {services.map((s) => (
+              <Link key={s.slug} href={s.path} className="service-item">
+                <span>
+                  <strong>{s.h1}</strong>
+                  <small>{s.description}</small>
+                </span>
+                <span aria-hidden="true">←</span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
+      {/* Category product links remain in the HTML for discoverability and internal linking. */}
       {categoryWorks.length > 0 && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-8 pb-10">
-          <h2 className="text-xl sm:text-2xl mb-4">أحدث الأعمال من كل قسم</h2>
-          <div className="space-y-8">
+        <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16" aria-labelledby="category-works-title">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">المعرض</span>
+              <h2 id="category-works-title">أعمال مختارة حسب القسم</h2>
+            </div>
+          </div>
+
+          <div className="category-work-sections">
             {categoryWorks.map(({ category, items }) => (
-              <div key={category.slug}>
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-base sm:text-lg text-sage font-medium">{category.name}</h3>
-                  <Link href={`/category/${category.slug}/`} className="text-sm text-sage underline shrink-0">
-                    عرض الكل
+              <div key={category.slug} className="category-work-row">
+                <div className="category-work-heading">
+                  <h3>{category.name}</h3>
+                  <Link href={`/category/${category.slug}/`} className="section-link">
+                    عرض القسم <span aria-hidden="true">←</span>
                   </Link>
                 </div>
-                <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth">
-                  {items.map((p) => (
-                    <div key={p.slug} className="w-40 sm:w-56 shrink-0 snap-start">
-                      <ProductCard product={p} />
-                    </div>
+                <div className="category-work-grid">
+                  {items.map((product) => (
+                    <ProductCard key={product.slug} product={product} compact />
                   ))}
                 </div>
               </div>
@@ -120,50 +188,28 @@ export default function HomePage() {
         </section>
       )}
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-8 pb-16">
-        <div className="grid grid-cols-2 gap-3 max-w-xl mb-8">
-          <div className="bg-sage-mist rounded-2xl p-5 text-center">
-            <p className="text-2xl sm:text-3xl text-sage" dir="ltr">
-              {siteConfig.projectsCount}
-            </p>
-            <p className="text-sm text-ink/65 mt-1">مشروع منفّذ</p>
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
+        <div className="home-about">
+          <div className="stats-grid">
+            <div><b>{siteConfig.projectsCount}</b><span>مشروع منفّذ</span></div>
+            <div><b>{siteConfig.foundedYear}</b><span>منذ التأسيس</span></div>
           </div>
-          <div className="bg-sage-mist rounded-2xl p-5 text-center">
-            <p className="text-2xl sm:text-3xl text-sage">{siteConfig.foundedYear}</p>
-            <p className="text-sm text-ink/65 mt-1">سنة التأسيس</p>
-          </div>
-        </div>
 
-        <h2 className="text-2xl mb-4">مزونة للكنب والمجالس والمساند وغرف النوم في الكويت</h2>
-        <div className="max-w-3xl space-y-4 text-ink/80 leading-relaxed">
-          <p>
-            مزونة منجرة ومعرض للأثاث والديكور في الكويت منذ {siteConfig.foundedYear}، ونفّذنا{' '}
-            {siteConfig.projectsText}. نوفّر{' '}
-            <Link href="/category/sofas/" className="text-sage underline">
-              كنب وقنفات
-            </Link>
-            ،{' '}
-            <Link href="/category/majlis/" className="text-sage underline">
-              مجالس
-            </Link>
-            ،{' '}
-            <Link href="/category/cushions/" className="text-sage underline">
-              مساند
-            </Link>{' '}
-            و
-            <Link href="/category/bedrooms/" className="text-sage underline">
-              غرف نوم
-            </Link>{' '}
-            جاهزة، ونفصّلها حسب الطلب بالمقاس والقماش واللون الذي يناسب بيتك.
-          </p>
-          <p>
-            معرضنا في {siteConfig.address}، والدوام {siteConfig.hours}. للاستفسار عن أي قطعة أو طلب تفصيل،
-            راسلنا عبر{' '}
-            <a href={whatsapp} target="_blank" rel="noreferrer" className="text-sage underline">
-              واتساب
-            </a>{' '}
-            على الرقم <span dir="ltr">{siteConfig.phoneDisplay}</span>.
-          </p>
+          <div className="about-copy">
+            <span className="eyebrow">عن مزونة</span>
+            <h2>أثاث وديكور بتفاصيل تناسب بيتك</h2>
+            <p>
+              مزونة منجرة ومعرض للأثاث والديكور في الكويت منذ {siteConfig.foundedYear}، ونفّذنا {siteConfig.projectsText}.
+              نوفّر <Link href="/category/sofas/">كنب وقنفات</Link>، <Link href="/category/majlis/">مجالس</Link>،
+              <Link href="/category/cushions/"> مساند</Link> و<Link href="/category/bedrooms/"> غرف نوم</Link>،
+              جاهزة أو بالتفصيل حسب الطلب بالمقاس والقماش واللون المناسب.
+            </p>
+            <p>
+              معرضنا في {siteConfig.address}، والدوام {siteConfig.hours}. للاستفسار عن أي قطعة أو طلب تفصيل،
+              راسلنا عبر <a href={whatsapp} target="_blank" rel="noreferrer">واتساب</a> على الرقم{' '}
+              <span dir="ltr">{siteConfig.phoneDisplay}</span>.
+            </p>
+          </div>
         </div>
       </section>
     </div>
