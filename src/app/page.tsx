@@ -68,7 +68,9 @@ export default function HomePage() {
           <div className="hero-brand" aria-label={siteConfig.name}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.webp"
+              src="/logo-hero@760w.webp"
+              srcSet="/logo-hero@600w.webp 600w, /logo-hero@760w.webp 760w"
+              sizes="(max-width: 600px) 300px, 410px"
               alt={`شعار ${siteConfig.name}`}
               width={760}
               height={694}
