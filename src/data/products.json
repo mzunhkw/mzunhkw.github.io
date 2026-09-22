@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-t777j",
+    "title": "مساند ديوانية ظهر",
+    "categorySlug": "cushions",
+    "price": 11,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "مساند ظهر",
+    "description": "تفصيل مشغل مزونه \nمساند ديوانية و مقلط",
+    "materials": [
+      "اسفنج الوطنية / خام شانيل تركي"
+    ],
+    "images": [
+      "/images/product-t777j/muc1p3ob-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-rw2u9",
     "title": "طاولة مودرن فاز نيو",
     "categorySlug": "tables",
