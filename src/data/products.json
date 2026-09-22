@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-ky7wr",
+    "title": "مساند ظهر تركيب صباح الناصر",
+    "categorySlug": "cushions",
+    "price": 11,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "مساند ظهر اسفنج",
+    "description": "تفصيل مشغل مزونة \nديوانية منطقة صباح الناصر",
+    "materials": [
+      "اسفنج الوطنية / خام شانيل تركي"
+    ],
+    "images": [
+      "/images/product-ky7wr/muc1s8to-0.webp",
+      "/images/product-ky7wr/muc1s8to-1.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-t777j",
     "title": "مساند ديوانية ظهر",
     "categorySlug": "cushions",
