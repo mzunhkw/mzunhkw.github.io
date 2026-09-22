@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-vlh4z",
+    "title": "طاولة صالة مارينا",
+    "categorySlug": "tables",
+    "price": 140,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "السعر متغير حسب الطلب والمقاسات",
+    "description": "تصميم وتنفيذ مزونه",
+    "materials": [
+      "بلور ايطالي"
+    ],
+    "images": [
+      "/images/product-vlh4z/muc16uxw-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-97tlo",
     "title": "طاولات للتحف والمزهرية",
     "categorySlug": "tables",
