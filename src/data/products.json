@@ -1,5 +1,24 @@
 [
   {
+    "slug": "product-kbfin",
+    "title": "طاولة غرف نوم",
+    "categorySlug": "tables",
+    "price": 75,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "السعر يتغير حسب الطلب والابعاد",
+    "description": "تنفيذ ورشة مزونه",
+    "materials": [
+      "بلور هندي"
+    ],
+    "images": [
+      "/images/product-kbfin/muc18hvt-0.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-vlh4z",
     "title": "طاولة صالة مارينا",
     "categorySlug": "tables",
