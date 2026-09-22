@@ -1,5 +1,29 @@
 [
   {
+    "slug": "product-v7vak",
+    "title": "غرفة نوم تصميم خاص مزونه",
+    "categorySlug": "bedrooms",
+    "price": 110,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "تفصيل غرف نوم راقية",
+    "description": "خشب زان و جوز \nالاسفنج البغلي و دانلوب \nتصميم خاص",
+    "materials": [
+      "خشب زان"
+    ],
+    "images": [
+      "/images/product-v7vak/mubzt140-0.webp",
+      "/images/product-v7vak/mubzt140-1.webp",
+      "/images/product-v7vak/mubzt140-2.webp",
+      "/images/product-v7vak/mubzt140-3.webp",
+      "/images/product-v7vak/mubzt140-4.webp",
+      "/images/product-v7vak/mubzt140-5.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-wpuvo",
     "title": "مجلس رسمي كنب ديوانية",
     "categorySlug": "majlis",
