@@ -1,5 +1,30 @@
 [
   {
+    "slug": "product-3vvu1",
+    "title": "غرفة نوم ملكية زان",
+    "categorySlug": "bedrooms",
+    "price": 110,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "تم دراسة كل زاوية وتفصيل",
+    "description": "تصميم خاص من مزونه حصرا \nغرف نوم ملكية",
+    "materials": [
+      "خشب زان"
+    ],
+    "images": [
+      "/images/product-3vvu1/mubzwgl1-0.webp",
+      "/images/product-3vvu1/mubzwgl1-1.webp",
+      "/images/product-3vvu1/mubzwgl1-2.webp",
+      "/images/product-3vvu1/mubzwgl1-3.webp",
+      "/images/product-3vvu1/mubzwgl1-4.webp",
+      "/images/product-3vvu1/mubzwgl1-5.webp",
+      "/images/product-3vvu1/mubzwgl1-6.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-v7vak",
     "title": "غرفة نوم تصميم خاص مزونه",
     "categorySlug": "bedrooms",
