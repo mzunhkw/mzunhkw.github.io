@@ -1,5 +1,30 @@
 [
   {
+    "slug": "product-2iwj1",
+    "title": "طاولة خشب معتق",
+    "categorySlug": "tables",
+    "price": 45,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "طاولة محورية مميزة",
+    "description": "تنفيذ منجرة ومشغل مزونه",
+    "materials": [
+      "خشب معتق"
+    ],
+    "images": [
+      "/images/product-2iwj1/muc0iv8s-0.webp",
+      "/images/product-2iwj1/muc0iv8s-1.webp",
+      "/images/product-2iwj1/muc0iv8s-2.webp",
+      "/images/product-2iwj1/muc0iv8s-3.webp",
+      "/images/product-2iwj1/muc0iv8s-4.webp",
+      "/images/product-2iwj1/muc0iv8s-5.webp",
+      "/images/product-2iwj1/muc0iv8s-6.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-s6ti9",
     "title": "طاولة مميزة خشب مارلين",
     "categorySlug": "tables",
