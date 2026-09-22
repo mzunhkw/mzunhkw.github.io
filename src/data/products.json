@@ -1,5 +1,27 @@
 [
   {
+    "slug": "product-bucdn",
+    "title": "كرسي استقبال مدخل خاص",
+    "categorySlug": "decor",
+    "price": 45,
+    "size": "للمتر",
+    "region": "الكويت / كيفان",
+    "availability": "custom-order",
+    "shortDescription": "مخصصة لعميلنا منطقة كيفان",
+    "description": "تنفيذ ورشتنا",
+    "materials": [
+      "خام كتان / خشب قشر جوز"
+    ],
+    "images": [
+      "/images/product-bucdn/muc116rh-0.webp",
+      "/images/product-bucdn/muc116rh-1.webp",
+      "/images/product-bucdn/muc116rh-2.webp",
+      "/images/product-bucdn/muc116rh-3.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-9bdts",
     "title": "كرسي مدخل",
     "categorySlug": "decor",
