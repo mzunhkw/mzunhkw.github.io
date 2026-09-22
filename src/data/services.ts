@@ -34,8 +34,8 @@ export type ServicePage = {
 
 export const services: ServicePage[] = [
   {
-    slug: 'تنجيد-كنب-الكويت',
-    path: '/تنجيد-كنب-الكويت/',
+    slug: 'tanjeed-sofa-kuwait',
+    path: '/tanjeed-sofa-kuwait/',
     title: 'تنجيد كنب الكويت | تجديد وتغيير قماش الكنب | مزونة',
     h1: 'تنجيد كنب في الكويت',
     description:
@@ -90,8 +90,8 @@ export const services: ServicePage[] = [
     relatedCategorySlug: 'sofas',
   },
   {
-    slug: 'تنجيد-مساند-الكويت',
-    path: '/تنجيد-مساند-الكويت/',
+    slug: 'tanjeed-cushions-kuwait',
+    path: '/tanjeed-cushions-kuwait/',
     title: 'تنجيد مساند الكويت | تجديد وتفصيل المساند | مزونة',
     h1: 'تنجيد مساند في الكويت',
     description:
@@ -150,8 +150,8 @@ export const services: ServicePage[] = [
     relatedCategorySlug: 'cushions',
   },
   {
-    slug: 'تنجيد-مجالس-الكويت',
-    path: '/تنجيد-مجالس-الكويت/',
+    slug: 'tanjeed-majlis-kuwait',
+    path: '/tanjeed-majlis-kuwait/',
     title: 'تنجيد مجالس الكويت | تجديد وتغيير قماش المجالس | مزونة',
     h1: 'تنجيد مجالس في الكويت',
     description:
