@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-d5psd",
+    "title": "تفصيل كنب مودرن كورنر",
+    "categorySlug": "sofas",
+    "price": 39,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "كورنر مودرن",
+    "description": "تنفيذ مشغل",
+    "materials": [
+      "خام كتان"
+    ],
+    "images": [
+      "/images/product-d5psd/mucxu5sz-0.webp",
+      "/images/product-d5psd/mucxu5sz-1.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-btc7z",
     "title": "كنب كورنر باندا",
     "categorySlug": "sofas",
