@@ -1,5 +1,27 @@
 [
   {
+    "slug": "product-v4cug",
+    "title": "كنب استقبال مودرن",
+    "categorySlug": "sofas",
+    "price": 42,
+    "size": "للمتر",
+    "region": "الكويت / صباح السالم",
+    "availability": "custom-order",
+    "shortDescription": "كنب مودرن لصالة استقبال",
+    "description": "تفصيل لدى منجرة مزونة",
+    "materials": [
+      "خشب مارلي اسفنج بغلي خام شانيل"
+    ],
+    "images": [
+      "/images/product-v4cug/mubyszu4-0.webp",
+      "/images/product-v4cug/mubyszu4-1.webp",
+      "/images/product-v4cug/mubyszu4-2.webp",
+      "/images/product-v4cug/mubyszu4-3.webp"
+    ],
+    "featured": true,
+    "published": true
+  },
+  {
     "slug": "product-04ghr",
     "title": "مساند ظهر جابر الاحمد",
     "categorySlug": "cushions",
