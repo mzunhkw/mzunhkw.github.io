@@ -34,7 +34,7 @@ export default function Footer() {
         </ul>
       </div>
       <nav aria-label="أقسام الموقع" className="max-w-6xl mx-auto px-4 sm:px-8 pb-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-        <Link href="/من-نحن/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
+        <Link href="/about/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
           من نحن
         </Link>
         {categories.map((c) => (
