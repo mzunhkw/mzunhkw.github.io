@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticUrls: MetadataRoute.Sitemap = [
     { url: `${base}/`, changeFrequency: 'weekly', priority: 1 },
     { url: `${base}/products/`, changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${base}/من-نحن/`, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${base}/about/`, changeFrequency: 'monthly', priority: 0.6 },
   ];
 
   const categoryUrls: MetadataRoute.Sitemap = categories.map((c) => ({
