@@ -73,13 +73,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ar" dir="rtl" className={notoKufiArabic.variable}>
       <head>
-        {/* تحميل مسبق صريح لشعار الهيدر الصغير — يظهر في أعلى كل صفحة بالموقع
-            (وهو عنصر LCP الفعلي في صفحات المنتجات والتصنيفات التي لا تحتوي
-            شعار الهيرو الكبير). الشعار الكبير بالصفحة الرئيسية (hero-logo)
-            لا يحتاج preload منفصل: fetchPriority="high" على وسمه مباشرة
-            كافٍ لأن ماسح الأولوية بالمتصفح يكتشفه فور تحليل HTML، وتحديد
-            preload هنا لملف واحد صغير بدل الملف الكبير يقلّل التنافس على
-            الشبكة المحدودة في أول ثانيتين من تحميل أي صفحة. */}
+        {/* تحميل مسبق صريح لشعار الهيدر الصغير — يظهر في أعلى كل صفحة بالموقع،
+            وهو عنصر LCP الفعلي في كل صفحات الموقع بعد حذف شعار الهيرو الكبير
+            من الصفحة الرئيسية (كان هو عنصر LCP على الجوال بسبب ترتيبه أول
+            عنصر مرئي هناك). */}
         <link rel="preload" as="image" href="/logo-header.webp" fetchPriority="high" />
       </head>
       <body className="bg-cream text-ink min-h-screen flex flex-col antialiased">

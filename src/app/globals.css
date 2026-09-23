@@ -152,7 +152,6 @@ body {
     radial-gradient(circle at 12% 18%, rgba(255,255,255,.78), transparent 34%),
     linear-gradient(135deg, #eeeae1 0%, #ded8cc 100%);
   display: grid;
-  grid-template-columns: 1.15fr .85fr;
   align-items: center;
   gap: 20px;
   padding: clamp(30px, 6vw, 70px);
@@ -225,29 +224,6 @@ body {
 
 .hero-trust b {
   color: var(--mazuna-ink);
-}
-
-.hero-brand {
-  display: grid;
-  place-items: center;
-  min-height: 270px;
-  border-radius: 28px;
-  background: rgba(255,255,255,.34);
-  border: 1px solid rgba(255,255,255,.65);
-  padding: 30px;
-}
-
-.hero-logo {
-  width: min(100%, 410px);
-  height: auto;
-  display: block;
-  filter: drop-shadow(0 16px 28px rgba(79,74,64,.08));
-}
-
-.hero-brand span {
-  color: rgba(79,74,64,.55);
-  font-size: 11px;
-  margin-top: -2px;
 }
 
 /* Latest products */
@@ -610,14 +586,8 @@ body {
   }
 
   .hero-panel {
-    grid-template-columns: 1fr;
     min-height: auto;
     padding: 28px 24px 24px;
-  }
-
-  .hero-brand {
-    min-height: 190px;
-    order: -1;
   }
 
   .hero-copy h1 {
@@ -660,15 +630,6 @@ body {
 
   .hero-panel {
     border-radius: 26px;
-  }
-
-  .hero-brand {
-    min-height: 145px;
-    padding: 20px;
-  }
-
-  .hero-logo {
-    width: min(100%, 300px);
   }
 
   .hero-actions {
