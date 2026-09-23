@@ -25,12 +25,6 @@ export const metadata: Metadata = {
 export default function HomePage() {
   const whatsapp = `https://wa.me/${siteConfig.whatsappNumber}`;
 
-  // products.json is maintained newest-first by the existing admin workflow.
-  // Keeping the data source unchanged preserves the existing SEO/product URLs.
-  const latestProducts = visibleProducts.slice(0, 8);
-  const heroProduct = latestProducts[0];
-  const supportingProducts = latestProducts.slice(1, 5);
-
   const categoryWorks = categories
     .map((c) => ({
       category: c,
@@ -82,32 +76,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Main product discovery block: the first product gets visual priority without hiding links from crawlers. */}
-      {heroProduct && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-14" aria-labelledby="latest-products-title">
-          <div className="section-heading">
-            <div>
-              <span className="eyebrow">مختارات من المعرض</span>
-              <h2 id="latest-products-title">أحدث الأعمال</h2>
-            </div>
-            <Link href="/products/" className="section-link">
-              عرض كل المنتجات <span aria-hidden="true">←</span>
-            </Link>
+      {/* Text-only CTA on purpose: no product images here, so this block never
+          loads extra bytes now or for any product added in the future. The
+          actual product photos live on /products/ and the category pages. */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-14" aria-labelledby="latest-products-title">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">مختارات من المعرض</span>
+            <h2 id="latest-products-title">أحدث الأعمال</h2>
           </div>
+        </div>
 
-          <div className="latest-showcase">
-            <div className="featured-product">
-              <ProductCard product={heroProduct} featured />
-            </div>
-
-            <div className="latest-grid">
-              {supportingProducts.map((product) => (
-                <ProductCard key={product.slug} product={product} compact />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+        <Link href="/products/" className="primary-cta">
+          استعرض أحدث الأعمال
+          <span aria-hidden="true">←</span>
+        </Link>
+      </section>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16" aria-labelledby="categories-title">
         <div className="section-heading">
