@@ -27,7 +27,7 @@ export default function Header() {
           <Link href="/" className="nav-link">الرئيسية</Link>
           <Link href="/products/" className="nav-link">المنتجات</Link>
           <Link href="/#خدمات-التنجيد" className="nav-link">التنجيد</Link>
-          <Link href="/من-نحن/" className="nav-link">من نحن</Link>
+          <Link href="/about/" className="nav-link">من نحن</Link>
         </nav>
 
         <Link href="/products/" className="header-cta">
