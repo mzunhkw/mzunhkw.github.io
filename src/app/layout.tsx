@@ -5,7 +5,7 @@ import './globals.css';
 const notoKufiArabic = Noto_Kufi_Arabic({
   subsets: ['arabic'],
   weight: ['400', '500', '600', '700'],
-  display: 'swap',
+  display: 'optional',
   variable: '--font-arabic',
 });
 import Header from '@/components/Header';
