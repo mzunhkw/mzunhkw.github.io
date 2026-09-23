@@ -58,21 +58,6 @@ export default function HomePage() {
               <span>تفصيل حسب الطلب</span>
             </div>
           </div>
-
-          <div className="hero-brand" aria-label={siteConfig.name}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo-hero@760w.webp"
-              srcSet="/logo-hero@508w.webp 508w, /logo-hero@600w.webp 600w, /logo-hero@760w.webp 760w"
-              sizes="(max-width: 600px) 300px, 410px"
-              alt={`شعار ${siteConfig.name}`}
-              width={760}
-              height={694}
-              fetchPriority="high"
-              className="hero-logo"
-            />
-            <span>للديكور الحديث</span>
-          </div>
         </div>
       </section>
 
