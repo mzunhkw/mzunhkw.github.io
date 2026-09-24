@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # سجل Git كامل — يلزم sitemap.ts لحساب lastmod من تاريخ آخر Commit لكل ملف
 
       - name: Setup Node
         uses: actions/setup-node@v4
