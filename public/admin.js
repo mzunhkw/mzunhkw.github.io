@@ -882,6 +882,7 @@ function buildProduct(v, images) {
     images,
     featured: v.featured,
     published: v.published,
+    updatedAt: new Date().toISOString(),
   };
 }
 
@@ -978,7 +979,7 @@ async function togglePublished(slug) {
       message: `${target ? 'نشر' : 'إخفاء'} منتج: ${p.title}`,
       mutate: ({ products }) => {
         if (!products.some((x) => x.slug === slug)) throw new Error('هذا المنتج انحذف من مكان ثاني. حدّث الصفحة.');
-        return { products: products.map((x) => (x.slug === slug ? { ...x, published: target } : x)) };
+        return { products: products.map((x) => (x.slug === slug ? { ...x, published: target, updatedAt: new Date().toISOString() } : x)) };
       },
     });
     state.products = result.products;
@@ -1057,7 +1058,7 @@ async function addCategory() {
     },
   });
   if (!ok) return;
-  const entry = { slug: slug.value.trim(), name: name.value.trim() };
+  const entry = { slug: slug.value.trim(), name: name.value.trim(), updatedAt: new Date().toISOString() };
   await commitCategories(`إضافة تصنيف: ${entry.name}`, (cats) => {
     if (cats.some((c) => c.slug === entry.slug)) throw new Error('هذا الرابط صار مستخدمًا للتو بتصنيف ثاني.');
     return [...cats, entry];
@@ -1075,7 +1076,7 @@ async function editCategory(slug) {
   if (newName === cat.name) return;
   await commitCategories(`تعديل تصنيف: ${newName}`, (cats) => {
     if (!cats.some((c) => c.slug === slug)) throw new Error('هذا التصنيف انحذف من مكان ثاني. حدّث الصفحة.');
-    return cats.map((c) => (c.slug === slug ? { ...c, name: newName } : c));
+    return cats.map((c) => (c.slug === slug ? { ...c, name: newName, updatedAt: new Date().toISOString() } : c));
   });
 }
 
