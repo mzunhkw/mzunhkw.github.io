@@ -15,6 +15,7 @@ export type Category = {
   slug: string;
   name: string;
   description?: string;
+  updatedAt?: string; // ISO date — يُحدَّث تلقائيًا من لوحة الإدارة عند كل إضافة/تعديل/ترتيب
 };
 
 export type Product = {
@@ -31,4 +32,5 @@ export type Product = {
   images: string[];
   featured?: boolean;
   published: boolean;
+  updatedAt?: string; // ISO date — يُحدَّث تلقائيًا من لوحة الإدارة عند كل حفظ/نشر/إخفاء
 };
