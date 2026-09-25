@@ -31,6 +31,17 @@ export default function Footer() {
               {siteConfig.phoneDisplay}
             </a>
           </li>
+          <li>
+            <span className="text-ink/55">انستقرام: </span>
+            <a
+              href="https://www.instagram.com/mazunhkw"
+              target="_blank"
+              rel="me noreferrer"
+              className="text-sage underline"
+            >
+              mazunhkw@
+            </a>
+          </li>
         </ul>
       </div>
       <nav aria-label="أقسام الموقع" className="max-w-6xl mx-auto px-4 sm:px-8 pb-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
