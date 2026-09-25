@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-nim7g",
+    "title": "طاولة رخام غيمة",
+    "categorySlug": "tables",
+    "price": 40,
+    "size": "حسب الطلب",
+    "region": "الكويت / الجهراء",
+    "availability": "custom-order",
+    "shortDescription": "طاولة رخام",
+    "description": "طاولة من الرخام الطبيعي \nمدروسة بادق التفاصيل",
+    "materials": [
+      "رخام طبيعي"
+    ],
+    "images": [
+      "/images/product-nim7g/muhcgi1s-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:18:50.487Z"
+  },
+  {
     "slug": "product-tpakq",
     "title": "طاولة نخلة اربع اشخاص",
     "categorySlug": "tables",
