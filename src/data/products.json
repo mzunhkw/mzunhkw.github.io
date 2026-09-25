@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-3mr32",
+    "title": "طاولة اصيل سبع اشخاص",
+    "categorySlug": "tables",
+    "price": 40,
+    "size": "حسب الطلب",
+    "region": "الكويت / صباح الاحمد",
+    "availability": "custom-order",
+    "shortDescription": "طاولة لسبع اشخاص",
+    "description": "مصممة بعناية",
+    "materials": [
+      "خشب قشر جوز"
+    ],
+    "images": [
+      "/images/product-3mr32/muhckafy-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:21:47.250Z"
+  },
+  {
     "slug": "product-x4wzs",
     "title": "طاولة طعام زاهية",
     "categorySlug": "tables",
