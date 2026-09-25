@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-x4wzs",
+    "title": "طاولة طعام زاهية",
+    "categorySlug": "tables",
+    "price": 35,
+    "size": "حسب الطلب",
+    "region": "الكويت / الاحمدي",
+    "availability": "custom-order",
+    "shortDescription": "طاولة ست اشخاص",
+    "description": "طاولة طعام مصممة بتصميم خاص من مزونة",
+    "materials": [
+      "خشب طبيعي"
+    ],
+    "images": [
+      "/images/product-x4wzs/muhciifd-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:20:24.288Z"
+  },
+  {
     "slug": "product-nim7g",
     "title": "طاولة رخام غيمة",
     "categorySlug": "tables",
