@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-mtx8g",
+    "title": "طاولة طعام نخلة",
+    "categorySlug": "tables",
+    "price": 45,
+    "size": "حسب الطلب",
+    "region": "الكويت / العاصمة",
+    "availability": "custom-order",
+    "shortDescription": "طاولة لستة اشخاص مودرن",
+    "description": "مصممة بعناية",
+    "materials": [
+      "خشب طبيعي خام كتان"
+    ],
+    "images": [
+      "/images/product-mtx8g/muhcd3ho-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:16:11.649Z"
+  },
+  {
     "slug": "product-wmpc9",
     "title": "طاولات كافيه نوع اريج",
     "categorySlug": "tables",
