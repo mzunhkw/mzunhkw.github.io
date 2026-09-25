@@ -61,24 +61,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Text-only CTA on purpose: no product images here, so this block never
-          loads extra bytes now or for any product added in the future. The
-          actual product photos live on /products/ and the category pages. */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-14" aria-labelledby="latest-products-title">
-        <div className="section-heading">
-          <div>
-            <span className="eyebrow">مختارات من المعرض</span>
-            <h2 id="latest-products-title">أحدث الأعمال</h2>
-          </div>
-        </div>
-
-        <Link href="/products/" className="primary-cta">
-          استعرض أحدث الأعمال
-          <span aria-hidden="true">←</span>
-        </Link>
-      </section>
-
-      <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16" aria-labelledby="categories-title">
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-14" aria-labelledby="categories-title">
         <div className="section-heading">
           <div>
             <span className="eyebrow">تصفح حسب النوع</span>
