@@ -57,9 +57,16 @@ const jsonLd = {
   telephone: `+${siteConfig.whatsappNumber}`,
   foundingDate: String(siteConfig.foundedYear),
   areaServed: { '@type': 'Country', name: 'الكويت' },
-  address: { '@type': 'PostalAddress', streetAddress: siteConfig.address, addressCountry: 'KW' },
+  priceRange: '5 - 28 KWD',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'مجمع علي عبدالوهاب',
+    addressLocality: 'الضجيج',
+    addressCountry: 'KW',
+  },
   openingHoursSpecification: {
     '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     opens: '09:00',
     closes: '23:00',
   },
