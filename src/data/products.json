@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-jempp",
+    "title": "طاولة كافيه شراع",
+    "categorySlug": "tables",
+    "price": 45,
+    "size": "حسب الطلب",
+    "region": "الكويت / السالمية",
+    "availability": "custom-order",
+    "shortDescription": "طاولة مصممة بعناية",
+    "description": "لكافيه شراع منطقة السالمية \nتنفيذ ورشتنا",
+    "materials": [
+      "خام كتان"
+    ],
+    "images": [
+      "/images/product-jempp/muhc1qsf-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:07:21.969Z"
+  },
+  {
     "slug": "product-gzgvi",
     "title": "طاولة واحة",
     "categorySlug": "tables",
