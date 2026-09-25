@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-j26sc",
+    "title": "طاولة مرجان مزونة",
+    "categorySlug": "tables",
+    "price": 65,
+    "size": "للمتر",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "طاولة مرجان خاص مزونة",
+    "description": "تنفيذ مزونة للاثاث\nطاولات للجلسات الخاصة \nالكافيهات \nالمواقع",
+    "materials": [
+      "قماش كاتم"
+    ],
+    "images": [
+      "/images/product-j26sc/muhbvrsp-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:02:43.335Z"
+  },
+  {
     "slug": "product-pn1ck",
     "title": "طاولة طعام روطان بمقعد",
     "categorySlug": "tables",
