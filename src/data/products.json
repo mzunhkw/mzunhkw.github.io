@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-pn1ck",
+    "title": "طاولة طعام روطان بمقعد",
+    "categorySlug": "tables",
+    "price": 120,
+    "size": "حسب الطلب",
+    "region": "الكويت / الجهراء",
+    "availability": "custom-order",
+    "shortDescription": "طاولة طعام دافئة",
+    "description": "خشب طبيعي \nخام تركي نوع اول",
+    "materials": [
+      "خشب طبيعي"
+    ],
+    "images": [
+      "/images/product-pn1ck/muhbtckh-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:00:50.290Z"
+  },
+  {
     "slug": "product-n1ue1",
     "title": "طاولة مودرن قشر زان",
     "categorySlug": "tables",
