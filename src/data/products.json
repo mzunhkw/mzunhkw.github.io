@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-tpakq",
+    "title": "طاولة نخلة اربع اشخاص",
+    "categorySlug": "tables",
+    "price": 35,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "طاولة لاربع اشخاص",
+    "description": "مصممة بافضل انواع الخشب الطبيعي",
+    "materials": [
+      "خشب طبيعي"
+    ],
+    "images": [
+      "/images/product-tpakq/muhcen37-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:17:23.707Z"
+  },
+  {
     "slug": "product-mtx8g",
     "title": "طاولة طعام نخلة",
     "categorySlug": "tables",
