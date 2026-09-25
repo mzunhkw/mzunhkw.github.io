@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-ty1zz",
+    "title": "طاولة سلوى",
+    "categorySlug": "tables",
+    "price": 45,
+    "size": "حسب الطلب",
+    "region": "الكويت / الاحمدي",
+    "availability": "custom-order",
+    "shortDescription": "طاولة سلوى مزونة",
+    "description": "تم تفصيلها وتنفيذها لمشروع مقهى راقي",
+    "materials": [
+      "خشب و رخام و خام كتان"
+    ],
+    "images": [
+      "/images/product-ty1zz/muhc8ve0-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:12:54.528Z"
+  },
+  {
     "slug": "product-yoc8v",
     "title": "طاولة روضة",
     "categorySlug": "tables",
