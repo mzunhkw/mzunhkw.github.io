@@ -18,7 +18,7 @@ export const siteConfig = {
   // روابط حسابات التواصل الاجتماعي الخاصة بمزونة (إن وجدت) — تُستخدم في sameAs
   // بالـ Schema لتقوية الثقة المحلية وربط الهوية عبر المصادر. أضف فقط الحسابات
   // الفعلية والنشطة؛ لا تُضاف قائمة فارغة لبيانات Schema.
-  socialLinks: [] as string[],
+  socialLinks: ['https://www.instagram.com/mazunhkw'] as string[],
   foundedYear: 2009,
   projectsText: 'أكثر من 112 ألف مشروع',
   // عناوين ووصف محركات البحث للصفحة الرئيسية
