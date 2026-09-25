@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-6mdur",
+    "title": "طاولة كافي مودرن مزونة",
+    "categorySlug": "tables",
+    "price": 35,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "طاولة كافي",
+    "description": "مصممة خصيصا من مزونة",
+    "materials": [
+      "خشب قشر زان"
+    ],
+    "images": [
+      "/images/product-6mdur/muhclx79-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:23:03.406Z"
+  },
+  {
     "slug": "product-3mr32",
     "title": "طاولة اصيل سبع اشخاص",
     "categorySlug": "tables",
