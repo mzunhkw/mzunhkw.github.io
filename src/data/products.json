@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-0hzqc",
+    "title": "طاولة سدرة مودرن",
+    "categorySlug": "sofas",
+    "price": 45,
+    "size": "حسب الطلب",
+    "region": "الكويت / مبارك الكبير",
+    "availability": "custom-order",
+    "shortDescription": "سدرة مزونة تصميم خاص",
+    "description": "خشب زان طبيعي \nمصممة بكل عناية وبأدق التفاصيل",
+    "materials": [
+      "قماش كتان تركي"
+    ],
+    "images": [
+      "/images/product-0hzqc/muhbxms1-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:04:10.159Z"
+  },
+  {
     "slug": "product-j26sc",
     "title": "طاولة مرجان مزونة",
     "categorySlug": "tables",
