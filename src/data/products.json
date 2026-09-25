@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-yoc8v",
+    "title": "طاولة روضة",
+    "categorySlug": "tables",
+    "price": 45,
+    "size": "حسب الطلب",
+    "region": "الكويت / الفروانية",
+    "availability": "custom-order",
+    "shortDescription": "طاولة روضة مزونة",
+    "description": "مصممة بدقة عالية وتم التركيز على ادق التفاصيل",
+    "materials": [
+      "خشب طبيعي / خام كتان"
+    ],
+    "images": [
+      "/images/product-yoc8v/muhc6wsp-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:11:23.038Z"
+  },
+  {
     "slug": "product-yu4ea",
     "title": "طاولة لؤلؤة مزونة",
     "categorySlug": "tables",
