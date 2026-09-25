@@ -8,6 +8,7 @@
     "validate": "node scripts/validate-data.mjs",
     "prebuild": "node scripts/generate-image-variants.mjs && node scripts/validate-data.mjs",
     "build": "next build",
+    "postbuild": "node scripts/inline-critical-css.mjs",
     "start": "next start"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.19",
+    "critters": "^0.0.20",
     "postcss": "^8.4.39",
     "sharp": "^0.35.4",
     "tailwindcss": "^3.4.4",
