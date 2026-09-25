@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-wmpc9",
+    "title": "طاولات كافيه نوع اريج",
+    "categorySlug": "tables",
+    "price": 29,
+    "size": "حسب الطلب",
+    "region": "الكويت / الدوحة",
+    "availability": "custom-order",
+    "shortDescription": "طاولة كافيه",
+    "description": "مصممة بعناية",
+    "materials": [
+      "رخام"
+    ],
+    "images": [
+      "/images/product-wmpc9/muhcb26o-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:14:36.642Z"
+  },
+  {
     "slug": "product-ty1zz",
     "title": "طاولة سلوى",
     "categorySlug": "tables",
