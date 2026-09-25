@@ -54,6 +54,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     name: product.title,
     description: product.shortDescription || product.description,
     url: absoluteUrl(path),
+    sku: product.slug,
     brand: { '@type': 'Brand', name: siteConfig.name },
     ...(category ? { category: category.name } : {}),
     ...(product.images.length ? { image: product.images.map(absoluteUrl) } : {}),
