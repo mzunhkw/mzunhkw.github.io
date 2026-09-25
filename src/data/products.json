@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-gzgvi",
+    "title": "طاولة واحة",
+    "categorySlug": "tables",
+    "price": 40,
+    "size": "حسب الطلب",
+    "region": "الكويت / حولي",
+    "availability": "custom-order",
+    "shortDescription": "طاولة واحة مزونة",
+    "description": "مصممة بعناية تم التنفيذ لكافيه في منطقة حولي",
+    "materials": [
+      "جودة عالية"
+    ],
+    "images": [
+      "/images/product-gzgvi/muhbzrax-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T19:05:49.326Z"
+  },
+  {
     "slug": "product-0hzqc",
     "title": "طاولة سدرة مودرن",
     "categorySlug": "sofas",
