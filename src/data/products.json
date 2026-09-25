@@ -1,5 +1,25 @@
 [
   {
+    "slug": "product-n1ue1",
+    "title": "طاولة مودرن قشر زان",
+    "categorySlug": "tables",
+    "price": 175,
+    "size": "حسب الطلب",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "تفصيل طاولات مودرن و كلاسيك حسب طلب الزبون",
+    "description": "طاولة خشب قشر زان \nمودرن",
+    "materials": [
+      "قشر زان / خام تركي"
+    ],
+    "images": [
+      "/images/product-n1ue1/muhbld7v-0.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-09-25T18:54:37.884Z"
+  },
+  {
     "slug": "product-d5psd",
     "title": "تفصيل كنب مودرن كورنر",
     "categorySlug": "sofas",
