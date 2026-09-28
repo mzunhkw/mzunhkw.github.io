@@ -1,12 +1,21 @@
 import Link from 'next/link';
 import { visibleProducts } from '@/data/products';
-import { categories } from '@/data/categories';
 import { services } from '@/data/services';
 import { areaPages, AreaPage } from '@/data/area-pages';
 import { siteConfig, whatsappLink } from '@/data/site-config';
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
 import ProductCard from '@/components/ProductCard';
+
+// الأعمال التي تنفذها منجرة مزونة فعليًا (بدون أبواب أو مطابخ)
+const AREA_SERVICES = [
+  { name: 'كنب وقنفات', href: '/category/sofas/' },
+  { name: 'غرف نوم', href: '/category/bedrooms/' },
+  { name: 'كبتات ملابس', href: '/category/bedrooms/' },
+  { name: 'طاولات', href: '/category/tables/' },
+  { name: 'مجالس وديوانيات', href: '/category/majlis/' },
+  { name: 'مساند عربية', href: '/category/cushions/' },
+];
 
 export default function AreaLandingPage({ area }: { area: AreaPage }) {
   // أعمالنا الفعلية المنفذة في مناطق المحافظة (حسب حقل region بالمنتج)
@@ -53,9 +62,9 @@ export default function AreaLandingPage({ area }: { area: AreaPage }) {
       <section className="mt-12" aria-labelledby="services-title">
         <h2 id="services-title" className="text-xl sm:text-2xl mb-4">خدماتنا في {area.governorate}</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {categories.map((c) => (
-            <Link key={c.slug} href={`/category/${c.slug}/`} className="block bg-white border border-sand rounded-2xl p-4 hover:border-sage-soft">
-              <strong>تفصيل {c.name}</strong>
+          {AREA_SERVICES.map((sv) => (
+            <Link key={sv.name} href={sv.href} className="block bg-white border border-sand rounded-2xl p-4 hover:border-sage-soft">
+              <strong>تفصيل {sv.name}</strong>
               <span className="block text-sm text-ink/60 mt-1">في {area.governorate} حسب المقاس</span>
             </Link>
           ))}
