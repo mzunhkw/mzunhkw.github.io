@@ -846,3 +846,13 @@ body {
   .works-marquee-track { animation: none; }
   .works-marquee-group[aria-hidden] { display: none; }
 }
+
+/* روابط التواصل بالفوتر مع أيقونات */
+.social-link { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px 5px 10px; border-radius: 999px;
+  border: 1px solid rgba(79,74,64,.14); color: inherit; font-size: 13px; transition: background .2s, color .2s, border-color .2s; vertical-align: middle; }
+.social-link svg { flex: 0 0 auto; }
+.social-whatsapp svg { color: #25D366; }
+.social-instagram svg { color: #C13584; }
+.social-whatsapp:hover { background: #25D366; border-color: #25D366; color: #fff; }
+.social-instagram:hover { background: #C13584; border-color: #C13584; color: #fff; }
+.social-link:hover svg { color: #fff; }

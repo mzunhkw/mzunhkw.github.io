@@ -28,10 +28,11 @@ export const metadata: Metadata = {
 export default function HomePage() {
   const whatsapp = `https://wa.me/${siteConfig.whatsappNumber}`;
 
-  // آخر 3 منتجات مضافة — تظهر بشريط "أعمال مختارة" المتحرك
-  const featuredWorks = [...visibleProducts]
-    .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''))
-    .slice(0, 3);
+  // آخر منتج من كل قسم — تظهر بشريط "أعمال مختارة" المتحرك
+  const byNewest = [...visibleProducts].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+  const featuredWorks = categories
+    .map((c) => byNewest.find((p) => p.categorySlug === c.slug))
+    .filter((p): p is (typeof visibleProducts)[number] => !!p);
 
   const coverOf = (slug: string) => visibleProducts.find((p) => p.categorySlug === slug && p.images[0])?.images[0];
   const countOf = (slug: string) => visibleProducts.filter((p) => p.categorySlug === slug).length;

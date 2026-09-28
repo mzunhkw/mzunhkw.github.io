@@ -28,7 +28,17 @@ export const siteConfig = {
   projectsCount: '+112,000',
 };
 
-export function whatsappLinkForProduct(title: string) {
-  const message = encodeURIComponent(`مرحبًا، أستفسر عن: ${title}`);
-  return `https://wa.me/${siteConfig.whatsappNumber}?text=${message}`;
+// رسالة واتساب موحّدة: «مرحبا اريد الاستفسار عن منتجات منجرة مزونة - القسم - الرابط»
+export function whatsappMessage(label?: string, url?: string) {
+  return ['مرحبا اريد الاستفسار عن منتجات منجرة مزونة', label, url].filter(Boolean).join(' - ');
+}
+
+export function whatsappLink(label?: string, path?: string) {
+  const url = path ? siteConfig.siteUrl.replace(/\/$/, '') + path : undefined;
+  return `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(whatsappMessage(label, url))}`;
+}
+
+// توافق مع الاستخدامات القديمة
+export function whatsappLinkForProduct(label: string, path?: string) {
+  return whatsappLink(label, path);
 }

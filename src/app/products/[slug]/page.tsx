@@ -97,7 +97,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-8 pt-4 pb-28 sm:py-12">
+    <div className="max-w-5xl mx-auto px-4 sm:px-8 pt-4 pb-28 sm:py-12" data-wa-label={category?.name || product.title}>
       <JsonLd data={productLd} />
       <JsonLd data={breadcrumbLd(crumbs)} />
 
@@ -153,7 +153,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         )}
 
         <a
-          href={whatsappLinkForProduct(product.title)}
+          href={whatsappLinkForProduct(category?.name || product.title, path)}
           target="_blank"
           rel="noreferrer"
           className="hidden sm:inline-grid mt-8 min-h-12 px-8 place-items-center bg-sage text-white rounded-full"
@@ -175,7 +175,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       )}
       <div className="sm:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur border-t border-sand px-4 pt-3 pb-safe">
         <a
-          href={whatsappLinkForProduct(product.title)}
+          href={whatsappLinkForProduct(category?.name || product.title, path)}
           target="_blank"
           rel="noreferrer"
           className="min-h-12 grid place-items-center bg-sage text-white rounded-full font-medium"

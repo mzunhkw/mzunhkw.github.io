@@ -1,14 +1,24 @@
-import { siteConfig } from '@/data/site-config';
+'use client';
+
+import type React from 'react';
+import { siteConfig, whatsappMessage } from '@/data/site-config';
 
 // زر واتساب عائم يظهر بكل صفحات الموقع (مُضاف في layout.tsx).
 // ثابت أسفل الشاشة، فوق أي محتوى، بدون أن يغطي الفوتر (z-40).
 export default function FloatingWhatsApp() {
-  const message = encodeURIComponent('مرحبًا، أستفسر عن منتجات مزونة.');
-  const href = `https://wa.me/${siteConfig.whatsappNumber}?text=${message}`;
+  const href = `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(whatsappMessage())}`;
+
+  // عند الضغط: نضيف اسم القسم (من data-wa-label بالصفحة) ورابط الصفحة الحالية للرسالة
+  const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const label = (document.querySelector('[data-wa-label]') as HTMLElement | null)?.dataset.waLabel;
+    const url = window.location.pathname === '/' ? undefined : window.location.href.split('#')[0];
+    e.currentTarget.href = `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(whatsappMessage(label, url))}`;
+  };
 
   return (
     <a
       href={href}
+      onClick={onClick}
       target="_blank"
       rel="noreferrer"
       aria-label="تواصل معنا عبر واتساب"

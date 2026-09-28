@@ -5,7 +5,7 @@ import { categories } from '@/data/categories';
 import { visibleProducts } from '@/data/products';
 import { getCategorySeo } from '@/data/category-seo';
 import { getServicesForCategory } from '@/data/services';
-import { siteConfig } from '@/data/site-config';
+import { siteConfig, whatsappLink } from '@/data/site-config';
 import { breadcrumbLd, absoluteUrl } from '@/lib/seo';
 import ProductCard from '@/components/ProductCard';
 import JsonLd from '@/components/JsonLd';
@@ -46,7 +46,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
   const others = categories.filter((c) => c.slug !== category.slug);
   const relatedServices = getServicesForCategory(category.slug);
   const path = `/category/${category.slug}/`;
-  const whatsapp = `https://wa.me/${siteConfig.whatsappNumber}`;
+  const whatsapp = whatsappLink(category.name, `/category/${category.slug}/`);
 
   const faqs = [
     ...seo.faqs,
@@ -77,7 +77,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6 sm:py-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6 sm:py-12" data-wa-label={category.name}>
       <JsonLd data={collectionLd} />
       <JsonLd data={faqLd} />
       <JsonLd
