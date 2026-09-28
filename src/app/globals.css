@@ -830,3 +830,19 @@ body {
   .category-card-body strong { font-size: 14px; }
   .product-rail { grid-auto-columns: 62%; gap: 10px; }
 }
+
+/* شريط "أعمال مختارة" المتحرك تلقائيًا — CSS فقط */
+.works-marquee { overflow: hidden; direction: ltr; padding: 4px 0 12px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.works-marquee-track { display: flex; width: max-content; animation: works-slide 28s linear infinite; will-change: transform; }
+.works-marquee:hover .works-marquee-track, .works-marquee:focus-within .works-marquee-track { animation-play-state: paused; }
+.works-marquee-group { display: flex; gap: 14px; padding-inline-end: 14px; }
+.works-marquee-item { width: 280px; flex: 0 0 auto; direction: rtl; }
+@keyframes works-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (max-width: 600px) { .works-marquee-item { width: 220px; } .works-marquee-group { gap: 10px; padding-inline-end: 10px; } }
+@media (prefers-reduced-motion: reduce) {
+  .works-marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .works-marquee-track { animation: none; }
+  .works-marquee-group[aria-hidden] { display: none; }
+}

@@ -28,17 +28,10 @@ export const metadata: Metadata = {
 export default function HomePage() {
   const whatsapp = `https://wa.me/${siteConfig.whatsappNumber}`;
 
-  const categoryWorks = categories
-    .map((c) => ({
-      category: c,
-      items: visibleProducts.filter((p) => p.categorySlug === c.slug).slice(0, 8),
-    }))
-    .filter((group) => group.items.length > 0);
-
-  // أحدث الأعمال عبر كل الأقسام — شريط تمرير أفقي سلس
-  const latest = [...visibleProducts]
+  // آخر 3 منتجات مضافة — تظهر بشريط "أعمال مختارة" المتحرك
+  const featuredWorks = [...visibleProducts]
     .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''))
-    .slice(0, 10);
+    .slice(0, 3);
 
   const coverOf = (slug: string) => visibleProducts.find((p) => p.categorySlug === slug && p.images[0])?.images[0];
   const countOf = (slug: string) => visibleProducts.filter((p) => p.categorySlug === slug).length;
@@ -115,25 +108,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {latest.length > 0 && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16" aria-labelledby="latest-title">
-          <div className="section-heading">
-            <div>
-              <span className="eyebrow">جديد المعرض</span>
-              <h2 id="latest-title">أحدث أعمالنا</h2>
-            </div>
-            <Link href="/products/" className="section-link">
-              كل المنتجات <span aria-hidden="true">←</span>
-            </Link>
-          </div>
-          <div className="product-rail">
-            {latest.map((product) => (
-              <ProductCard key={product.slug} product={product} compact />
-            ))}
-          </div>
-        </section>
-      )}
-
       <section id="خدمات-التنجيد" className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16 scroll-mt-24" aria-labelledby="upholstery-title">
         <div className="upholstery-panel">
           <div className="upholstery-intro">
@@ -156,32 +130,30 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Category product links remain in the HTML for discoverability and internal linking. */}
-      {categoryWorks.length > 0 && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16" aria-labelledby="category-works-title">
+      {/* شريط يتحرك تلقائيًا بـ CSS فقط (transform) — بدون JavaScript وبصور lazy وبأبعاد ثابتة، فلا يؤثر على LCP أو CLS */}
+      {featuredWorks.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16" aria-labelledby="featured-works-title">
           <div className="section-heading">
             <div>
               <span className="eyebrow">المعرض</span>
-              <h2 id="category-works-title">أعمال مختارة حسب القسم</h2>
+              <h2 id="featured-works-title">أعمال مختارة</h2>
             </div>
+            <Link href="/products/" className="section-link">
+              كل المنتجات <span aria-hidden="true">←</span>
+            </Link>
           </div>
-
-          <div className="category-work-sections">
-            {categoryWorks.map(({ category, items }) => (
-              <div key={category.slug} className="category-work-row">
-                <div className="category-work-heading">
-                  <h3>{category.name}</h3>
-                  <Link href={`/category/${category.slug}/`} className="section-link">
-                    عرض القسم <span aria-hidden="true">←</span>
-                  </Link>
-                </div>
-                <div className="category-work-grid product-rail">
-                  {items.map((product) => (
-                    <ProductCard key={product.slug} product={product} compact />
+          <div className="works-marquee">
+            <div className="works-marquee-track">
+              {[0, 1].map((copy) => (
+                <div key={copy} className="works-marquee-group" aria-hidden={copy === 1 ? true : undefined}>
+                  {featuredWorks.map((product) => (
+                    <div key={product.slug} className="works-marquee-item">
+                      <ProductCard product={product} compact />
+                    </div>
                   ))}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
       )}
