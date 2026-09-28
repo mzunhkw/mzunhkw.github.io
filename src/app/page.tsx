@@ -11,11 +11,11 @@ import { visibleOffers } from '@/data/offers';
 import { getSrcSet } from '@/lib/image';
 
 export const metadata: Metadata = {
-  title: { absolute: `${siteConfig.name} — ${siteConfig.seoTitle}` },
+  title: { absolute: `منجرة ${siteConfig.name} — ${siteConfig.seoTitle}` },
   description: siteConfig.seoDescription,
   alternates: { canonical: '/' },
   openGraph: {
-    title: `${siteConfig.name} — ${siteConfig.seoTitle}`,
+    title: `منجرة ${siteConfig.name} — ${siteConfig.seoTitle}`,
     description: siteConfig.seoDescription,
     url: '/',
     siteName: siteConfig.name,
@@ -43,8 +43,8 @@ export default function HomePage() {
       <section className="home-hero max-w-6xl mx-auto px-4 sm:px-8 pt-5 sm:pt-8">
         <div className="hero-panel">
           <div className="hero-copy">
-            <span className="eyebrow">مزونة للأثاث والديكور · الكويت</span>
-            <h1>كنب وقنفات ومجالس ومساند وغرف نوم في الكويت</h1>
+            <span className="eyebrow">منجرة مزونة · نجار وتفصيل أثاث في الكويت منذ {siteConfig.foundedYear}</span>
+            <h1>منجرة مزونة: تفصيل أثاث وتنجيد كنب في الكويت</h1>
             <p>{siteConfig.about}</p>
 
             <div className="hero-actions">
