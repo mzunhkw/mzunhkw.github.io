@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { categories } from '@/data/categories';
 import { siteConfig, whatsappLink } from '@/data/site-config';
+import { areaPages } from '@/data/area-pages';
 
 export default function Footer() {
   return (
@@ -54,6 +55,11 @@ export default function Footer() {
         {categories.map((c) => (
           <Link key={c.slug} href={`/category/${c.slug}/`} className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
             {c.name}
+          </Link>
+        ))}
+        {areaPages.map((a) => (
+          <Link key={a.slug} href={a.path} className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
+            نجار {a.governorate}
           </Link>
         ))}
       </nav>

@@ -3,6 +3,7 @@ import { execSync } from 'node:child_process';
 import { visibleProducts } from '@/data/products';
 import { categories } from '@/data/categories';
 import { services } from '@/data/services';
+import { areaPages } from '@/data/area-pages';
 import { siteConfig } from '@/data/site-config';
 
 // مطلوب مع output: 'export' (تصدير ساكن)
@@ -81,5 +82,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticUrls, ...categoryUrls, ...serviceUrls, ...productUrls];
+  const areaUrls: MetadataRoute.Sitemap = areaPages.map((a) => ({
+    url: `${base}${a.path}`,
+    lastModified: gitLastModified('src/data/area-pages.ts'),
+    changeFrequency: 'monthly',
+    priority: 0.8,
+  }));
+
+  return [...staticUrls, ...categoryUrls, ...serviceUrls, ...areaUrls, ...productUrls];
 }
