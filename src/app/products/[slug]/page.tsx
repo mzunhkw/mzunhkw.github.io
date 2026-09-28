@@ -21,7 +21,16 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const product = visibleProducts.find((p) => p.slug === params.slug);
   if (!product) return {};
-  const description = (product.shortDescription || product.description).slice(0, 160);
+  const category = categories.find((c) => c.slug === product.categorySlug);
+  const short = (product.shortDescription || '').trim();
+  const base =
+    short.length >= 70
+      ? short
+      : [product.title, short, product.description, category ? `${category.name} في الكويت من مزونة` : '']
+          .map((x) => x.trim().replace(/[.،\s]+$/, ''))
+          .filter(Boolean)
+          .join('. ');
+  const description = base.length > 160 ? base.slice(0, 157).replace(/\s+\S*$/, '') + '…' : base;
   return {
     title: product.title,
     description,
