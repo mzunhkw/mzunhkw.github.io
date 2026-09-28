@@ -6,6 +6,8 @@ import { getCategorySeo } from '@/data/category-seo';
 import { services } from '@/data/services';
 import { siteConfig } from '@/data/site-config';
 import ProductCard from '@/components/ProductCard';
+import OffersStrip from '@/components/OffersStrip';
+import { visibleOffers } from '@/data/offers';
 
 export const metadata: Metadata = {
   title: { absolute: `${siteConfig.name} — ${siteConfig.seoTitle}` },
@@ -60,6 +62,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <OffersStrip offers={visibleOffers} />
 
       <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-14" aria-labelledby="categories-title">
         <div className="section-heading">

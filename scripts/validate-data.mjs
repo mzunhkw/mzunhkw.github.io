@@ -27,6 +27,7 @@ function load(rel) {
 const isStr = (v) => typeof v === 'string';
 const categories = load('src/data/categories.json');
 const products = load('src/data/products.json');
+const offers = load('src/data/offers.json');
 
 // ---- التصنيفات
 const catSlugs = new Set();
@@ -66,6 +67,29 @@ products.forEach((p, i) => {
   }
 });
 
+// ---- العروض
+const offerIds = new Set();
+offers.forEach((o, i) => {
+  const at = `offers[${i}]`;
+  if (!isStr(o.id) || !SLUG_RE.test(o.id)) err(`${at}: id غير صالح.`);
+  if (offerIds.has(o.id)) err(`${at}: id مكرر «${o.id}».`);
+  offerIds.add(o.id);
+  if (!isStr(o.title) || !o.title.trim()) err(`${at}: العنوان فارغ.`);
+  if (typeof o.price !== 'number' || !Number.isFinite(o.price) || o.price <= 0) err(`${at}: السعر لازم يكون رقمًا أكبر من صفر.`);
+  if (o.originalPrice !== null && (typeof o.originalPrice !== 'number' || !Number.isFinite(o.originalPrice) || o.originalPrice < 0)) {
+    err(`${at}: originalPrice لازم يكون رقمًا ≥ 0 أو null.`);
+  }
+  if (!isStr(o.image) || !o.image) {
+    err(`${at}: الصورة مطلوبة.`);
+  } else if (!o.image.startsWith('/images/') || o.image.includes('..')) {
+    err(`${at}: مسار الصورة «${o.image}» لازم يبدأ بـ /images/.`);
+  } else if (!existsSync(join(root, 'public', o.image))) {
+    err(`${at}: ملف الصورة غير موجود بالمستودع: public${o.image}`);
+  }
+  if (o.productSlug && !seen.has(o.productSlug)) err(`${at}: productSlug «${o.productSlug}» غير موجود بالمنتجات.`);
+  if (typeof o.published !== 'boolean') err(`${at}: published لازم true/false.`);
+});
+
 // ---- تنبيهات (ما توقف البناء)
 try {
   const cfg = readFileSync(join(root, 'src/data/site-config.ts'), 'utf8');
@@ -81,4 +105,4 @@ if (errors.length) {
   errors.forEach((e) => console.error(` • ${e}`));
   process.exit(1);
 }
-console.log(`✅ فحص البيانات: ${categories.length} تصنيف، ${products.length} منتج — سليم.`);
+console.log(`✅ فحص البيانات: ${categories.length} تصنيف، ${products.length} منتج، ${offers.length} عرض — سليم.`);

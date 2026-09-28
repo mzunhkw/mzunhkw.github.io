@@ -11,6 +11,17 @@ export const availabilityLabels: Record<Availability, string> = {
   archived: 'مؤرشف',
 };
 
+export type Offer = {
+  id: string;
+  title: string;
+  price: number;
+  originalPrice: number | null;
+  image: string;
+  productSlug: string; // فارغ = بدون ربط بمنتج (يفتح واتساب بدلًا من ذلك)
+  published: boolean;
+  updatedAt?: string; // ISO date — يُحدَّث تلقائيًا من لوحة الإدارة
+};
+
 export type Category = {
   slug: string;
   name: string;

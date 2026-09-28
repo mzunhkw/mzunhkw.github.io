@@ -15,6 +15,7 @@ const LS_KEYS = { owner: 'mazuna_gh_owner', repo: 'mazuna_gh_repo', branch: 'maz
 const DEFAULTS = { owner: 'mzunhkw', repo: 'mzunhkw.github.io', branch: 'main' };
 const PRODUCTS_PATH = 'src/data/products.json';
 const CATEGORIES_PATH = 'src/data/categories.json';
+const OFFERS_PATH = 'src/data/offers.json';
 const IMAGES_DIR = 'public/images';
 const MAX_IMAGES = 8;
 const MAX_INPUT_MB = 25;
@@ -89,6 +90,13 @@ function orphanPaths(urls, products) {
   return [...new Set(urls)].filter((u) => !used.has(u)).map(urlToRepoPath).filter(Boolean);
 }
 
+// مسارات صور العروض اللي ما عاد يستخدمها أي عرض (آمن للحذف)
+function orphanOfferPaths(urls, offers) {
+  const used = new Set();
+  for (const o of offers) if (o.image) used.add(o.image);
+  return [...new Set(urls)].filter((u) => !used.has(u)).map(urlToRepoPath).filter(Boolean);
+}
+
 function toJson(value) {
   return JSON.stringify(value, null, 2) + '\n';
 }
@@ -119,6 +127,18 @@ function validateProduct(v, ctx) {
 // ---------------------------------------------------------------------------
 // طبقة GitHub
 // ---------------------------------------------------------------------------
+function validateOffer(v) {
+  const e = {};
+  if (v.title.length < 2) e.offerTitle = 'اكتب اسم العرض (حرفان على الأقل).';
+  if (!SLUG_RE.test(v.id)) e.offerTitle = 'اكتب اسم العرض (يحتاج حروفًا إنجليزية ليتولّد له معرّف صالح).';
+  if (!(v.price > 0)) e.offerPrice = 'اكتب سعر العرض — أرقام فقط وحتى 3 خانات عشرية.';
+  if (v.originalPriceRaw && (Number.isNaN(v.originalPrice) || !(v.originalPrice > v.price))) {
+    e.offerOriginalPrice = 'اتركه فارغًا أو اكتب سعرًا أعلى من سعر العرض (يظهر مشطوبًا كخصم).';
+  }
+  if (!v.hasImage) e.offerImage = 'أضف صورة للعرض.';
+  return e;
+}
+
 class AuthError extends Error {
   constructor(message) {
     super(message);
@@ -219,9 +239,9 @@ async function filterExistingPaths(paths, treeSha) {
 }
 
 /**
- * Commit ذري واحد: صور جديدة + products.json + categories.json + حذف صور يتيمة.
- * mutate({products, categories}) تُستدعى على أحدث نسخة من المستودع (تفادي الكتابة فوق تعديلات أخرى)
- * وترجع { products?, categories?, deletePaths? } أو ترمي Error.
+ * Commit ذري واحد: صور جديدة + products.json + categories.json + offers.json + حذف صور يتيمة.
+ * mutate({products, categories, offers}) تُستدعى على أحدث نسخة من المستودع (تفادي الكتابة فوق تعديلات أخرى)
+ * وترجع { products?, categories?, offers?, deletePaths? } أو ترمي Error.
  */
 async function commitData({ message, images = [], mutate }) {
   const blobEntries = [];
@@ -234,15 +254,17 @@ async function commitData({ message, images = [], mutate }) {
   let lastErr;
   for (let attempt = 0; attempt < 3; attempt++) {
     const head = await getHead();
-    const [products, categories] = await Promise.all([
+    const [products, categories, offers] = await Promise.all([
       readJson(PRODUCTS_PATH, head.commitSha),
       readJson(CATEGORIES_PATH, head.commitSha),
+      readJson(OFFERS_PATH, head.commitSha),
     ]);
-    const result = mutate({ products, categories });
+    const result = mutate({ products, categories, offers });
 
     const tree = [...blobEntries];
     if (result.products) tree.push({ path: PRODUCTS_PATH, mode: '100644', type: 'blob', content: toJson(result.products) });
     if (result.categories) tree.push({ path: CATEGORIES_PATH, mode: '100644', type: 'blob', content: toJson(result.categories) });
+    if (result.offers) tree.push({ path: OFFERS_PATH, mode: '100644', type: 'blob', content: toJson(result.offers) });
     const toDelete = await filterExistingPaths(result.deletePaths || [], head.treeSha);
     for (const p of toDelete) tree.push({ path: p, mode: '100644', type: 'blob', sha: null });
 
@@ -256,6 +278,7 @@ async function commitData({ message, images = [], mutate }) {
       return {
         products: result.products || products,
         categories: result.categories || categories,
+        offers: result.offers || offers,
         sha: commit.sha,
         deleted: toDelete.length,
       };
@@ -351,12 +374,17 @@ async function processImage(file) {
 const state = {
   products: [],
   categories: [],
+  offers: [],
   tab: 'products',
   editing: null, // slug المنتج قيد التعديل
   images: [], // عناصر: {kind:'existing', url, key} | {kind:'new', blob, ext, size, previewUrl, key}
   slugTouched: false,
   slugSeed: randomSeed(),
   dirty: false,
+  editingOffer: null, // id العرض قيد التعديل
+  offerImage: null, // {kind:'existing', url} | {kind:'new', blob, ext, size, previewUrl} | null
+  offerSlugSeed: randomSeed(),
+  offerDirty: false,
   busy: false,
   filters: { q: '', cat: '', status: '' },
 };
@@ -590,12 +618,14 @@ function publishedNote() {
 // ---------------------------------------------------------------------------
 async function loadData() {
   const head = await getHead();
-  const [products, categories] = await Promise.all([
+  const [products, categories, offers] = await Promise.all([
     readJson(PRODUCTS_PATH, head.commitSha),
     readJson(CATEGORIES_PATH, head.commitSha),
+    readJson(OFFERS_PATH, head.commitSha),
   ]);
   state.products = products;
   state.categories = categories;
+  state.offers = offers;
   renderAll();
 }
 
@@ -620,6 +650,17 @@ function fillCategorySelects() {
   if (state.categories.some((c) => c.slug === prevForm)) formSel.value = prevForm;
   if (state.categories.some((c) => c.slug === prevFilter)) filterSel.value = prevFilter;
   else state.filters.cat = '';
+}
+
+// اختيار المنتج (اختياري) اللي يفتحه العرض الحصري عند الضغط عليه
+function fillOfferProductSelect() {
+  const sel = $('f_offerProduct');
+  const prev = sel.value;
+  sel.replaceChildren(
+    h('option', { value: '', text: '— بدون ربط (يفتح واتساب) —' }),
+    ...state.products.map((p) => h('option', { value: p.slug, text: p.title }))
+  );
+  if (state.products.some((p) => p.slug === prev)) sel.value = prev;
 }
 
 function matchesStatus(p, status) {
@@ -1102,11 +1143,284 @@ async function deleteCategory(slug) {
 }
 
 // ---------------------------------------------------------------------------
+// العروض الحصرية
+// ---------------------------------------------------------------------------
+const OFFER_FIELD_INPUT = { offerTitle: 'f_offerTitle', offerPrice: 'f_offerPrice', offerOriginalPrice: 'f_offerOriginalPrice', offerImage: 'offerDropzone' };
+
+function showOfferErrors(errors) {
+  for (const key of Object.keys(OFFER_FIELD_INPUT)) {
+    const msg = errors[key] || '';
+    const errEl = $('e_' + key);
+    if (errEl) errEl.textContent = msg;
+  }
+}
+
+function releaseOfferPreview() {
+  if (state.offerImage && state.offerImage.kind === 'new') URL.revokeObjectURL(state.offerImage.previewUrl);
+}
+
+function renderOfferImage() {
+  const it = state.offerImage;
+  $('offerImgList').replaceChildren(
+    ...(it
+      ? [
+          h(
+            'div',
+            { class: 'img-card' },
+            h('img', { src: it.kind === 'new' ? it.previewUrl : it.url, alt: '' }),
+            it.kind === 'new' && h('span', { class: 'tag new', text: 'جديدة' }),
+            it.kind === 'new' && h('div', { class: 'size', text: fmtKB(it.size) }),
+            h('div', { class: 'ctl' }, h('button', { type: 'button', class: 'wide', text: 'حذف', onclick: () => { releaseOfferPreview(); state.offerImage = null; state.offerDirty = true; renderOfferImage(); } }))
+          ),
+        ]
+      : [])
+  );
+}
+
+async function addOfferFile(fileList) {
+  const file = (fileList || [])[0];
+  if (!file) return;
+  toast('جارٍ تجهيز الصورة…', 'busy');
+  try {
+    releaseOfferPreview();
+    state.offerImage = await processImage(file);
+    state.offerDirty = true;
+    renderOfferImage();
+    toast('', '');
+  } catch (e) {
+    toast(e.message, 'error');
+  } finally {
+    $('f_offerImage').value = '';
+  }
+}
+
+function fillOfferForm(o, opts) {
+  const op = opts || {};
+  releaseOfferPreview();
+  state.editingOffer = op.editing ? o.id : null;
+  state.offerImage = o.image ? { kind: 'existing', url: o.image } : null;
+  state.offerSlugSeed = randomSeed();
+  $('f_offerTitle').value = o.title || '';
+  $('f_offerPrice').value = o.price != null ? String(o.price) : '';
+  $('f_offerOriginalPrice').value = o.originalPrice != null ? String(o.originalPrice) : '';
+  $('f_offerProduct').value = state.products.some((p) => p.slug === o.productSlug) ? o.productSlug : '';
+  $('f_offerPublished').checked = o.published !== false;
+  $('offerFormTitle').textContent = op.editing ? 'تعديل: ' + o.title : 'إضافة عرض حصري';
+  $('offerCancelBtn').hidden = !op.editing;
+  showOfferErrors({});
+  renderOfferImage();
+  renderOffers();
+  state.offerDirty = false;
+}
+
+function resetOfferForm() {
+  fillOfferForm({ published: true }, { editing: false });
+}
+
+function readOfferForm() {
+  const title = $('f_offerTitle').value.trim();
+  const originalRaw = $('f_offerOriginalPrice').value.trim();
+  return {
+    id: state.editingOffer || autoSlug(title, state.offerSlugSeed).replace(/^product-/, 'offer-'),
+    title,
+    price: parsePrice($('f_offerPrice').value),
+    originalPriceRaw: originalRaw,
+    originalPrice: originalRaw ? parsePrice(originalRaw) : null,
+    productSlug: $('f_offerProduct').value,
+    published: $('f_offerPublished').checked,
+    hasImage: !!state.offerImage,
+  };
+}
+
+async function confirmDiscardOffer() {
+  if (!state.offerDirty) return true;
+  return confirmAction('تعديلات غير محفوظة', 'عندك تعديلات غير محفوظة بنموذج العروض. تبي تتجاهلها؟', 'تجاهل', true);
+}
+
+async function startEditOffer(id) {
+  const o = state.offers.find((x) => x.id === id);
+  if (!o || !(await confirmDiscardOffer())) return;
+  fillOfferForm(o, { editing: true });
+  setTab('offers');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildOffer(v, image) {
+  return {
+    id: v.id,
+    title: v.title,
+    price: v.price,
+    originalPrice: v.originalPrice,
+    image,
+    productSlug: v.productSlug || '',
+    published: v.published,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+async function saveOffer() {
+  if (state.busy) return;
+  const values = readOfferForm();
+  const errors = validateOffer(values);
+  showOfferErrors(errors);
+  const firstBad = Object.keys(OFFER_FIELD_INPUT).find((k) => errors[k]);
+  if (firstBad) {
+    toast('راجع الحقول المظللة بالأحمر.', 'error');
+    return;
+  }
+  const isEdit = !!state.editingOffer;
+  await runBusy('جارٍ تجهيز الصورة…', async () => {
+    const stamp = Date.now().toString(36);
+    const uploads = [];
+    let imageUrl;
+    const img = state.offerImage;
+    if (img.kind === 'existing') {
+      imageUrl = img.url;
+    } else {
+      const path = `${IMAGES_DIR}/offers/${values.id}-${stamp}.${img.ext}`;
+      uploads.push({ path, base64: await blobToBase64(img.blob) });
+      imageUrl = '/' + path.replace(/^public\//, '');
+    }
+    const original = isEdit ? (state.offers.find((o) => o.id === values.id) || {}).image : null;
+    const removed = original && original !== imageUrl ? [original] : [];
+    const offer = buildOffer(values, imageUrl);
+
+    toast('جارٍ الحفظ على GitHub (Commit واحد)…', 'busy');
+    const result = await commitData({
+      message: `${isEdit ? 'تعديل' : 'إضافة'} عرض: ${values.title}`,
+      images: uploads,
+      mutate: ({ offers }) => {
+        if (offer.productSlug && !state.products.some((p) => p.slug === offer.productSlug)) {
+          throw new Error('المنتج المرتبط انحذف من مكان ثاني. حدّث الصفحة واختر منتجًا آخر.');
+        }
+        const idx = offers.findIndex((o) => o.id === offer.id);
+        let next;
+        if (isEdit) {
+          if (idx < 0) throw new Error('هذا العرض انحذف من مكان ثاني. حدّث الصفحة.');
+          next = offers.map((o, i) => (i === idx ? offer : o));
+        } else {
+          if (idx >= 0) throw new Error('هذا المعرّف صار مستخدمًا للتو بعرض ثاني. غيّر العنوان قليلًا وحاول ثانية.');
+          next = [offer, ...offers];
+        }
+        return { offers: next, deletePaths: orphanOfferPaths(removed, next) };
+      },
+    });
+    state.products = result.products;
+    state.categories = result.categories;
+    state.offers = result.offers;
+    resetOfferForm();
+    renderAll();
+    toast(publishedNote(), 'ok');
+  });
+}
+
+async function deleteOffer(id) {
+  const o = state.offers.find((x) => x.id === id);
+  if (!o) return;
+  const ok = await confirmAction('حذف عرض', `حذف عرض «${o.title}» نهائيًا؟ وتنحذف معه صورته من المستودع.`, 'حذف نهائي', true);
+  if (!ok) return;
+  await runBusy('جارٍ الحذف…', async () => {
+    const result = await commitData({
+      message: `حذف عرض: ${o.title}`,
+      mutate: ({ offers }) => {
+        const gone = offers.find((x) => x.id === id);
+        const next = offers.filter((x) => x.id !== id);
+        return { offers: next, deletePaths: gone ? orphanOfferPaths([gone.image], next) : [] };
+      },
+    });
+    state.products = result.products;
+    state.categories = result.categories;
+    state.offers = result.offers;
+    if (state.editingOffer === id) resetOfferForm();
+    renderAll();
+    toast(publishedNote(), 'ok');
+  });
+}
+
+async function toggleOfferPublished(id) {
+  const o = state.offers.find((x) => x.id === id);
+  if (!o) return;
+  const target = !o.published;
+  await runBusy(target ? 'جارٍ النشر…' : 'جارٍ الإخفاء…', async () => {
+    const result = await commitData({
+      message: `${target ? 'نشر' : 'إخفاء'} عرض: ${o.title}`,
+      mutate: ({ offers }) => {
+        if (!offers.some((x) => x.id === id)) throw new Error('هذا العرض انحذف من مكان ثاني. حدّث الصفحة.');
+        return { offers: offers.map((x) => (x.id === id ? { ...x, published: target, updatedAt: new Date().toISOString() } : x)) };
+      },
+    });
+    state.products = result.products;
+    state.categories = result.categories;
+    state.offers = result.offers;
+    renderAll();
+    toast(publishedNote(), 'ok');
+  });
+}
+
+async function moveOffer(id, delta) {
+  await runBusy('جارٍ الترتيب…', async () => {
+    const result = await commitData({
+      message: 'ترتيب العروض',
+      mutate: ({ offers }) => {
+        const i = offers.findIndex((o) => o.id === id);
+        const j = i + delta;
+        if (i < 0 || j < 0 || j >= offers.length) return {};
+        const next = [...offers];
+        [next[i], next[j]] = [next[j], next[i]];
+        return { offers: next };
+      },
+    });
+    state.products = result.products;
+    state.categories = result.categories;
+    state.offers = result.offers;
+    renderAll();
+    toast(publishedNote(), 'ok');
+  });
+}
+
+function offerRow(o, i) {
+  const linkedProduct = o.productSlug ? state.products.find((p) => p.slug === o.productSlug) : null;
+  const badges = h('div', { class: 'badges' }, !o.published && h('span', { class: 'badge draft', text: 'مسودة' }));
+  const priceLine = o.originalPrice ? `${o.price} د.ك (بدل ${o.originalPrice} د.ك)` : `${o.price} د.ك`;
+  return h(
+    'div',
+    { class: 'list-item' + (state.editingOffer === o.id ? ' is-editing' : '') },
+    o.image ? h('img', { class: 'thumb', src: o.image, alt: '', loading: 'lazy' }) : h('div', { class: 'thumb-empty' }),
+    h(
+      'div',
+      { class: 'meta' },
+      h('strong', { text: o.title, title: o.title }),
+      h('div', { class: 'line', text: `${priceLine} · ${linkedProduct ? 'مرتبط بـ: ' + linkedProduct.title : 'بدون ربط (واتساب)'}` }),
+      badges
+    ),
+    h(
+      'div',
+      { class: 'btns' },
+      h('button', { type: 'button', class: 'small', text: 'تقديم', disabled: i === 0, onclick: () => moveOffer(o.id, -1) }),
+      h('button', { type: 'button', class: 'small', text: 'تأخير', disabled: i === state.offers.length - 1, onclick: () => moveOffer(o.id, 1) }),
+      h('button', { type: 'button', class: 'small', text: 'تعديل', onclick: () => startEditOffer(o.id) }),
+      h('button', { type: 'button', class: 'small', text: o.published ? 'إخفاء' : 'نشر', onclick: () => toggleOfferPublished(o.id) }),
+      h('button', { type: 'button', class: 'small danger', text: 'حذف', onclick: () => deleteOffer(o.id) })
+    )
+  );
+}
+
+function renderOffers() {
+  $('offerCount').textContent = String(state.offers.length);
+  const list = $('offerList');
+  if (!state.offers.length) {
+    list.replaceChildren(h('p', { class: 'empty', text: 'ما فيه عروض بعد — عبّي النموذج وابدأ.' }));
+    return;
+  }
+  list.replaceChildren(...state.offers.map((o, i) => offerRow(o, i)));
+}
+
+// ---------------------------------------------------------------------------
 // التبويبات والتشغيل
 // ---------------------------------------------------------------------------
 function setTab(tab) {
   state.tab = tab;
-  for (const t of ['products', 'categories']) {
+  for (const t of ['products', 'categories', 'offers']) {
     $('tab-' + t).hidden = t !== tab;
     $('tabBtn-' + t).setAttribute('aria-selected', String(t === tab));
   }
@@ -1114,8 +1428,10 @@ function setTab(tab) {
 
 function renderAll() {
   fillCategorySelects();
+  fillOfferProductSelect();
   renderProducts();
   renderCategories();
+  renderOffers();
   updateRepoLabel();
 }
 
@@ -1125,6 +1441,25 @@ function wire() {
   $('refreshBtn').addEventListener('click', () => runBusy('جارٍ التحديث…', async () => { await loadData(); toast('تم التحديث.', 'ok'); }));
   document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab)));
   $('addCatBtn').addEventListener('click', addCategory);
+
+  const offerForm = $('offerForm');
+  offerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    saveOffer();
+  });
+  offerForm.addEventListener('input', () => (state.offerDirty = true));
+  offerForm.addEventListener('change', () => (state.offerDirty = true));
+  $('offerCancelBtn').addEventListener('click', async () => {
+    if (await confirmDiscardOffer()) {
+      resetOfferForm();
+      toast('', '');
+    }
+  });
+  $('f_offerImage').addEventListener('change', (e) => addOfferFile(e.target.files));
+  const odz = $('offerDropzone');
+  ['dragenter', 'dragover'].forEach((ev) => odz.addEventListener(ev, (e) => { e.preventDefault(); odz.classList.add('drag'); }));
+  ['dragleave', 'drop'].forEach((ev) => odz.addEventListener(ev, (e) => { e.preventDefault(); odz.classList.remove('drag'); }));
+  odz.addEventListener('drop', (e) => addOfferFile(e.dataTransfer && e.dataTransfer.files));
 
   $('f_availability').replaceChildren(...AVAILABILITY.map((a) => h('option', { value: a.value, text: a.label })));
   $('f_availability').addEventListener('change', updateAvailHelp);
@@ -1164,7 +1499,7 @@ function wire() {
 
   ['pointerdown', 'keydown'].forEach((ev) => document.addEventListener(ev, resetIdle, { passive: true }));
   window.addEventListener('beforeunload', (e) => {
-    if (state.dirty) {
+    if (state.dirty || state.offerDirty) {
       e.preventDefault();
       e.returnValue = '';
     }
@@ -1175,6 +1510,7 @@ async function init() {
   localStorage.removeItem('mazuna_admin_pw_hash'); // بقايا كلمة المرور المحلية القديمة (ما عادت مستخدمة)
   wire();
   resetForm();
+  resetOfferForm();
   if (sessionStorage.getItem(TOKEN_KEY)) {
     $('login').hidden = true;
     toast('جارٍ التحقق من الجلسة…', 'busy');

@@ -57,6 +57,7 @@
     <div class="tabs" role="tablist">
       <button type="button" role="tab" id="tabBtn-products" data-tab="products" aria-selected="true">المنتجات</button>
       <button type="button" role="tab" id="tabBtn-categories" data-tab="categories" aria-selected="false">التصنيفات</button>
+      <button type="button" role="tab" id="tabBtn-offers" data-tab="offers" aria-selected="false">العروض</button>
     </div>
 
     <!-- ---- المنتجات ---- -->
@@ -163,6 +164,59 @@
         </div>
         <p class="help">ترتيب التصنيفات هنا هو ترتيب ظهورها بالموقع. لا يمكن حذف تصنيف فيه منتجات.</p>
         <div id="catList"></div>
+      </div>
+    </section>
+
+    <!-- ---- العروض الحصرية ---- -->
+    <section id="tab-offers" class="grid" hidden>
+      <div class="panel">
+        <div class="panel-head"><h2 id="offerFormTitle">إضافة عرض حصري</h2></div>
+        <p class="help">تظهر العروض بشريط أفقي صغير بأعلى الصفحة الرئيسية. اسم قصير وصورة واضحة كافيين.</p>
+        <form id="offerForm" novalidate>
+          <div class="field">
+            <label for="f_offerTitle">اسم العرض</label>
+            <input id="f_offerTitle" maxlength="80" autocomplete="off" placeholder="مثال: خصم كنب ركنة" />
+            <div class="err" id="e_offerTitle"></div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="f_offerPrice">سعر العرض (د.ك)</label>
+              <input id="f_offerPrice" inputmode="decimal" autocomplete="off" placeholder="250" />
+              <div class="err" id="e_offerPrice"></div>
+            </div>
+            <div class="field">
+              <label for="f_offerOriginalPrice">السعر قبل الخصم (اختياري)</label>
+              <input id="f_offerOriginalPrice" inputmode="decimal" autocomplete="off" placeholder="320" />
+              <div class="err" id="e_offerOriginalPrice"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f_offerProduct">يفتح عند الضغط عليه</label>
+            <select id="f_offerProduct"></select>
+          </div>
+          <div class="field">
+            <label for="f_offerImage">صورة العرض</label>
+            <div class="dropzone" id="offerDropzone">
+              اسحب صورة هنا أو اخترها — تتحول تلقائيًا إلى WebP وتُصغّر قبل الرفع
+              <input id="f_offerImage" type="file" accept="image/*" />
+            </div>
+            <div class="img-list" id="offerImgList"></div>
+            <div class="err" id="e_offerImage"></div>
+          </div>
+          <div class="field"><label class="check"><input type="checkbox" id="f_offerPublished" checked /> منشور</label></div>
+          <div class="form-actions">
+            <button class="primary" id="offerSaveBtn" type="submit">حفظ العرض</button>
+            <button type="button" id="offerCancelBtn" hidden>إلغاء</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>العروض (<span id="offerCount">0</span>)</h2>
+        </div>
+        <p class="help">التقديم/التأخير هنا يغيّر ترتيب ظهور العروض بالشريط الأفقي بالرئيسية.</p>
+        <div id="offerList"></div>
       </div>
     </section>
   </div>
