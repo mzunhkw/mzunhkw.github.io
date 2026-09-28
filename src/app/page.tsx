@@ -8,6 +8,7 @@ import { siteConfig } from '@/data/site-config';
 import ProductCard from '@/components/ProductCard';
 import OffersStrip from '@/components/OffersStrip';
 import { visibleOffers } from '@/data/offers';
+import { getSrcSet } from '@/lib/image';
 
 export const metadata: Metadata = {
   title: { absolute: `${siteConfig.name} — ${siteConfig.seoTitle}` },
@@ -30,9 +31,17 @@ export default function HomePage() {
   const categoryWorks = categories
     .map((c) => ({
       category: c,
-      items: visibleProducts.filter((p) => p.categorySlug === c.slug).slice(0, 4),
+      items: visibleProducts.filter((p) => p.categorySlug === c.slug).slice(0, 8),
     }))
     .filter((group) => group.items.length > 0);
+
+  // أحدث الأعمال عبر كل الأقسام — شريط تمرير أفقي سلس
+  const latest = [...visibleProducts]
+    .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''))
+    .slice(0, 10);
+
+  const coverOf = (slug: string) => visibleProducts.find((p) => p.categorySlug === slug && p.images[0])?.images[0];
+  const countOf = (slug: string) => visibleProducts.filter((p) => p.categorySlug === slug).length;
 
   return (
     <div className="home-page">
@@ -53,6 +62,12 @@ export default function HomePage() {
                 تواصل عبر واتساب
               </a>
             </div>
+
+            <nav className="hero-chips" aria-label="تصفح سريع للأقسام">
+              {categories.map((c) => (
+                <Link key={c.slug} href={`/category/${c.slug}/`}>{c.name}</Link>
+              ))}
+            </nav>
 
             <div className="hero-trust">
               <span><b>{siteConfig.projectsCount}</b> مشروع</span>
@@ -76,24 +91,48 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="category-grid">
+        <div className="category-grid visual">
           {categories.map((c) => {
             const seo = getCategorySeo(c.slug, c.name);
+            const cover = coverOf(c.slug);
+            const count = countOf(c.slug);
             return (
-              <Link key={c.slug} href={`/category/${c.slug}/`} className="category-tile">
-                <span className="category-number" aria-hidden="true">
-                  {String(categories.indexOf(c) + 1).padStart(2, '0')}
+              <Link key={c.slug} href={`/category/${c.slug}/`} className="category-card">
+                <span className="category-card-media">
+                  {cover && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={cover} srcSet={getSrcSet(cover)} sizes="(max-width: 640px) 45vw, 190px" alt={c.name} width={400} height={300} loading="lazy" decoding="async" />
+                  )}
                 </span>
-                <span>
+                <span className="category-card-body">
                   <strong>{c.name}</strong>
                   {seo.short && <small>{seo.short}</small>}
+                  {count > 0 && <em>{count} تصميم</em>}
                 </span>
-                <span className="tile-arrow" aria-hidden="true">←</span>
               </Link>
             );
           })}
         </div>
       </section>
+
+      {latest.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16" aria-labelledby="latest-title">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">جديد المعرض</span>
+              <h2 id="latest-title">أحدث أعمالنا</h2>
+            </div>
+            <Link href="/products/" className="section-link">
+              كل المنتجات <span aria-hidden="true">←</span>
+            </Link>
+          </div>
+          <div className="product-rail">
+            {latest.map((product) => (
+              <ProductCard key={product.slug} product={product} compact />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section id="خدمات-التنجيد" className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16 scroll-mt-24" aria-labelledby="upholstery-title">
         <div className="upholstery-panel">
@@ -136,7 +175,7 @@ export default function HomePage() {
                     عرض القسم <span aria-hidden="true">←</span>
                   </Link>
                 </div>
-                <div className="category-work-grid">
+                <div className="category-work-grid product-rail">
                   {items.map((product) => (
                     <ProductCard key={product.slug} product={product} compact />
                   ))}

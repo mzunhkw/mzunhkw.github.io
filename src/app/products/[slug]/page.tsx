@@ -69,7 +69,22 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               ? { availability: 'https://schema.org/InStock' }
               : product.availability === 'temporarily-unavailable'
                 ? { availability: 'https://schema.org/OutOfStock' }
-                : {}),
+                : product.availability === 'custom-order'
+                  ? { availability: 'https://schema.org/MadeToOrder' }
+                  : {}),
+            ...(/للمتر|المتر/.test(product.size || '')
+              ? {
+                  priceSpecification: {
+                    '@type': 'UnitPriceSpecification',
+                    price: formatPrice(product.price),
+                    priceCurrency: 'KWD',
+                    unitCode: 'MTR',
+                    unitText: 'متر',
+                  },
+                }
+              : {}),
+            seller: { '@type': 'Organization', name: siteConfig.name },
+            areaServed: { '@type': 'Country', name: 'الكويت' },
           },
         }
       : {}),
