@@ -16,7 +16,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        arabic: ['var(--font-arabic)', 'Tahoma', 'sans-serif'],
+        arabic: ['var(--font-arabic)', 'var(--font-latin)', 'Tahoma', 'sans-serif'],
       },
     },
   },

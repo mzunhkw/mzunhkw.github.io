@@ -1,12 +1,57 @@
 import type { Metadata } from 'next';
-import { Noto_Kufi_Arabic } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 
-const notoKufiArabic = Noto_Kufi_Arabic({
-  subsets: ['arabic'],
-  weight: ['400', '500', '600', '700'],
+/*
+ * خط Noto Kufi Arabic مستضاف محليًا (من حزمة @fontsource/noto-kufi-arabic)
+ * بدل next/font/google — لا يوجد أي طلب لـ fonts.googleapis.com أو fonts.gstatic.com.
+ *
+ * - الأوزان المستخدمة فعليًا فقط: 400 (النص)، 500 (font-medium)، 600 (أزرار وعناوين البطاقات)،
+ *   700 (strong/b والأسعار). باقي الأوزان (100–300، 800، 900) غير مضمّنة.
+ * - الـ subset العربي فقط يُحمَّل مسبقًا (preload) كما كان سابقًا، فلا يتغير سلوك LCP.
+ * - ملفات latin (أرقام وحروف لاتينية) بدون preload ومقيدة بـ unicode-range،
+ *   فلا تُحمَّل إلا إذا احتاجتها الصفحة.
+ * - display: optional يمنع أي swap متأخر (لا CLS)، و adjustFontFallback معطّل
+ *   حتى لا يلتقط الخط الاحتياطي الحروف قبل ملفات latin (نفس الترتيب في globals.css).
+ */
+const notoKufiArabic = localFont({
+  src: [
+    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-arabic-400-normal.woff2', weight: '400', style: 'normal' },
+    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-arabic-500-normal.woff2', weight: '500', style: 'normal' },
+    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-arabic-600-normal.woff2', weight: '600', style: 'normal' },
+    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-arabic-700-normal.woff2', weight: '700', style: 'normal' },
+  ],
   display: 'optional',
+  preload: true,
+  adjustFontFallback: false,
   variable: '--font-arabic',
+  declarations: [
+    {
+      prop: 'unicode-range',
+      value:
+        'U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC',
+    },
+  ],
+});
+
+const notoKufiLatin = localFont({
+  src: [
+    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-latin-400-normal.woff2', weight: '400', style: 'normal' },
+    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-latin-500-normal.woff2', weight: '500', style: 'normal' },
+    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-latin-600-normal.woff2', weight: '600', style: 'normal' },
+    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-latin-700-normal.woff2', weight: '700', style: 'normal' },
+  ],
+  display: 'optional',
+  preload: false,
+  adjustFontFallback: false,
+  variable: '--font-latin',
+  declarations: [
+    {
+      prop: 'unicode-range',
+      value:
+        'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD',
+    },
+  ],
 });
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -78,7 +123,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ar" dir="rtl" className={notoKufiArabic.variable}>
+    <html lang="ar" dir="rtl" className={`${notoKufiArabic.variable} ${notoKufiLatin.variable}`}>
       <head>
         {/* تحميل مسبق صريح لشعار الهيدر الصغير — يظهر في أعلى كل صفحة بالموقع،
             وهو عنصر LCP الفعلي في كل صفحات الموقع بعد حذف شعار الهيرو الكبير

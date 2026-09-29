@@ -4,6 +4,7 @@ import { visibleProducts } from '@/data/products';
 import { categories } from '@/data/categories';
 import { services } from '@/data/services';
 import { areaPages } from '@/data/area-pages';
+import { articles } from '@/data/articles';
 import { siteConfig } from '@/data/site-config';
 
 // مطلوب مع output: 'export' (تصدير ساكن)
@@ -89,5 +90,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticUrls, ...categoryUrls, ...serviceUrls, ...areaUrls, ...productUrls];
+  // المرحلة 3: قسم المقالات — dateModified المكتوب بكل مقال هو التاريخ الفعلي لآخر تحديث للمحتوى
+  const articleUrls: MetadataRoute.Sitemap = [
+    {
+      url: `${base}/articles/`,
+      lastModified: gitLastModified('src/data/articles.ts'),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    ...articles.map((a) => ({
+      url: `${base}${a.path}`,
+      lastModified: new Date(a.dateModified),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
+  ];
+
+  return [...staticUrls, ...categoryUrls, ...serviceUrls, ...areaUrls, ...articleUrls, ...productUrls];
 }
