@@ -36,14 +36,24 @@ function gitLastModified(relativePath: string): Date {
   }
 }
 
+// أحدث تاريخ من عدة مصادر — الصفحة تتغير فعليًا عند تعديل أي ملف أو منتج يظهر فيها
+const latest = (...dates: (Date | undefined)[]) =>
+  new Date(Math.max(...dates.filter((d): d is Date => !!d && !isNaN(+d)).map((d) => +d)));
+const newestProduct = (list: typeof visibleProducts) =>
+  list.reduce<Date | undefined>((acc, p) => {
+    const d = p.updatedAt ? new Date(p.updatedAt) : undefined;
+    return d && (!acc || d > acc) ? d : acc;
+  }, undefined);
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteConfig.siteUrl.replace(/\/$/, '');
+  const allNewest = newestProduct(visibleProducts);
 
   const staticUrls: MetadataRoute.Sitemap = [
-    { url: `${base}/`, lastModified: gitLastModified('src/app/page.tsx'), changeFrequency: 'weekly', priority: 1 },
+    { url: `${base}/`, lastModified: latest(gitLastModified('src/app/page.tsx'), gitLastModified('src/data/site-config.ts'), gitLastModified('src/data/offers.json'), allNewest), changeFrequency: 'weekly', priority: 1 },
     {
       url: `${base}/products/`,
-      lastModified: gitLastModified('src/app/products/page.tsx'),
+      lastModified: latest(gitLastModified('src/app/products/page.tsx'), allNewest),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
@@ -59,7 +69,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${base}/category/${c.slug}/`,
     // تاريخ حقيقي من لوحة الإدارة إذا موجود (تصنيفات معدَّلة بعد هذا التحديث)،
     // وإلا آخر تعديل فعلي على ملف بيانات التصنيفات كامل عبر Git.
-    lastModified: c.updatedAt ? new Date(c.updatedAt) : gitLastModified('src/data/categories.json'),
+    lastModified: latest(
+      c.updatedAt ? new Date(c.updatedAt) : gitLastModified('src/data/categories.json'),
+      gitLastModified('src/data/category-seo.ts'),
+      gitLastModified('src/data/articles.ts'),
+      newestProduct(visibleProducts.filter((p) => p.categorySlug === c.slug))
+    ),
     changeFrequency: 'weekly',
     priority: 0.9,
   }));
@@ -78,14 +93,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${base}${s.path}`,
     // صفحات الخدمات مكتوبة يدويًا بالكود (src/data/services.ts) — تاريخ
     // تعديل الملف كامل عبر Git هو أدق مصدر متاح حاليًا لكل الخدمات مجتمعة.
-    lastModified: gitLastModified('src/data/services.ts'),
+    lastModified: latest(gitLastModified('src/data/services.ts'), gitLastModified('src/components/ServiceLandingPage.tsx'), gitLastModified('src/data/articles.ts')),
     changeFrequency: 'monthly',
     priority: 0.8,
   }));
 
   const areaUrls: MetadataRoute.Sitemap = areaPages.map((a) => ({
     url: `${base}${a.path}`,
-    lastModified: gitLastModified('src/data/area-pages.ts'),
+    lastModified: latest(
+      gitLastModified('src/data/area-pages.ts'),
+      gitLastModified('src/components/AreaLandingPage.tsx'),
+      newestProduct(visibleProducts.filter((p) => a.districts.some((d) => (p.region || '').includes(d))))
+    ),
     changeFrequency: 'monthly',
     priority: 0.8,
   }));
