@@ -4,6 +4,7 @@ import { visibleProducts } from '@/data/products';
 import { categories } from '@/data/categories';
 import { availabilityLabels } from '@/lib/types';
 import { formatPrice } from '@/lib/catalog';
+import { woodTiers, woodMin, woodMax, woodAvg, woodPricedCategories } from '@/data/wood-tiers';
 import { whatsappLinkForProduct } from '@/data/site-config';
 import Gallery from '@/components/Gallery';
 import Link from 'next/link';
@@ -67,6 +68,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     url: absoluteUrl(path),
     sku: product.slug,
     brand: { '@type': 'Brand', name: siteConfig.name },
+    ...(product.materials?.length ? { material: product.materials[0] } : {}),
     ...(product.images.length ? { image: product.images.map(absoluteUrl) } : {}),
     ...(product.price > 0
       ? {
@@ -92,6 +94,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                   },
                 }
               : {}),
+            itemCondition: 'https://schema.org/NewCondition',
             seller: { '@type': 'Organization', name: siteConfig.name },
             // التوصيل مجاني داخل الكويت
             shippingDetails: {
@@ -112,6 +115,43 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       : {}),
   };
 
+  // غرف النوم: كل نوع خشب = متغيّر (variant) بسعره، ضمن ProductGroup يفهمه Google كمنتج احترافي بخيارات
+  const woodPriced = woodPricedCategories.includes(product.categorySlug);
+  const baseOffer = (productLd.offers || {}) as Record<string, unknown>;
+  const structuredData: Record<string, unknown> = woodPriced
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'ProductGroup',
+        name: product.title,
+        description: productLd.description,
+        url: absoluteUrl(path),
+        productGroupID: product.slug,
+        brand: productLd.brand,
+        ...(productLd.image ? { image: productLd.image } : {}),
+        variesBy: 'https://schema.org/material',
+        hasVariant: woodTiers.map((t) => ({
+          '@type': 'Product',
+          name: `${product.title} — ${t.name}`,
+          sku: `${product.slug}-${t.id}`,
+          inProductGroupWithID: product.slug,
+          material: t.name,
+          ...(productLd.image ? { image: productLd.image } : {}),
+          offers: {
+            ...baseOffer,
+            url: `${absoluteUrl(path)}?wood=${t.id}`,
+            price: formatPrice(t.price),
+            priceSpecification: {
+              '@type': 'UnitPriceSpecification',
+              price: formatPrice(t.price),
+              priceCurrency: 'KWD',
+              unitCode: 'MTR',
+              unitText: 'متر',
+            },
+          },
+        })),
+      }
+    : productLd;
+
   const crumbs = [
     { name: 'الرئيسية', path: '/' },
     ...(category ? [{ name: category.name, path: `/category/${category.slug}/` }] : []),
@@ -124,7 +164,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-8 pt-4 pb-28 sm:py-12" data-wa-label={category?.name || product.title}>
-      <JsonLd data={productLd} />
+      <JsonLd data={structuredData} />
       <JsonLd data={breadcrumbLd(crumbs)} />
 
       <nav aria-label="مسار التنقل" className="text-sm text-ink/55 mb-4">
@@ -155,7 +195,10 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       <div>
         {category && <p className="text-sm text-sage">{category.name}</p>}
         <h1 className="text-xl sm:text-3xl mt-1 leading-snug">{product.title}</h1>
-        <p className="text-2xl mt-2 text-sage font-medium">{formatPrice(product.price)} د.ك</p>
+        <p className="text-2xl mt-2 text-sage font-medium">
+            {woodPriced ? `من ${woodMin} إلى ${woodMax} د.ك للمتر` : `${formatPrice(product.price)} د.ك`}
+          </p>
+          {woodPriced && <p className="text-sm text-ink/60 mt-1">متوسط السعر {formatPrice(woodAvg)} د.ك للمتر حسب نوع الخشب</p>}
         <p className="text-sm text-ink/60 mt-1">
           {product.size} · {product.region}
         </p>
@@ -177,6 +220,33 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
             </div>
           </div>
         )}
+
+        {woodPriced && (
+          <div className="mt-6">
+            <h2 className="text-base font-medium mb-2">السعر حسب نوع الخشب (للمتر)</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border border-sand rounded-xl overflow-hidden">
+                <tbody>
+                  {woodTiers.map((t) => (
+                    <tr key={t.id} className="border-b border-sand last:border-0">
+                      <th scope="row" className="text-start font-medium px-3 py-2 bg-cream">{t.name}</th>
+                      <td className="px-3 py-2 text-ink/60">{t.note}</td>
+                      <td className="px-3 py-2 text-sage font-medium whitespace-nowrap">{t.price} د.ك</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-ink/55 mt-2">الإجمالي = عدد الأمتار × سعر المتر للخشب المختار. نحدد المقاسات بدقة في زيارة القياس.</p>
+          </div>
+        )}
+
+        <ul className="mt-6 grid gap-2 text-sm text-ink/75">
+          <li>✓ تفصيل حسب المقاس والتصميم الذي تختاره</li>
+          <li>✓ زيارة لأخذ المقاسات ومعاينة العينات</li>
+          <li>✓ توصيل مجاني داخل الكويت</li>
+          <li>✓ الإرجاع في حالة العيوب المصنعية فقط</li>
+        </ul>
 
         <a
           href={whatsappLinkForProduct(category?.name || product.title, path)}
