@@ -93,6 +93,12 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                 }
               : {}),
             seller: { '@type': 'Organization', name: siteConfig.name },
+            // التوصيل مجاني داخل الكويت
+            shippingDetails: {
+              '@type': 'OfferShippingDetails',
+              shippingRate: { '@type': 'MonetaryAmount', value: 0, currency: 'KWD' },
+              shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'KW' },
+            },
             // التفصيل حسب الطلب لا يُسترجع، إلا في حالة العيوب المصنعية (بدون رسوم على العميل)
             hasMerchantReturnPolicy: {
               '@type': 'MerchantReturnPolicy',

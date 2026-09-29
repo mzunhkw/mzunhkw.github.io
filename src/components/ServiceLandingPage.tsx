@@ -128,9 +128,7 @@ export default function ServiceLandingPage({ service }: { service: ServicePage }
           {service.pricing.excludes && service.pricing.excludes.length > 0 && (
             <p className="text-ink/75 leading-relaxed mt-2">لا يشمل السعر: {service.pricing.excludes.join('، ')}.</p>
           )}
-          {service.pricing.deliveryFee !== undefined && (
-            <p className="text-ink/75 leading-relaxed mt-2">رسوم التوصيل: {service.pricing.deliveryFee} دنانير.</p>
-          )}
+          <p className="text-ink/75 leading-relaxed mt-2">التوصيل مجاني داخل الكويت.</p>
           {service.pricing.note && <p className="text-ink/75 leading-relaxed mt-2">{service.pricing.note}</p>}
         </section>
       )}
