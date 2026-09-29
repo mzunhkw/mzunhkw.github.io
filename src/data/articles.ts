@@ -308,3 +308,9 @@ export const articles: Article[] = [
 ];
 
 export const getArticle = (slug: string) => articles.find((a) => a.slug === slug);
+
+// المقالات التي تربط إلى صفحة معيّنة (لعرضها كروابط داخلية عكسية في الأقسام والخدمات)
+export const articlesLinkingTo = (path: string) =>
+  articles.filter(
+    (a) => a.related.some((l) => l.href === path) || a.sections.some((sec) => (sec.links || []).some((l) => l.href === path))
+  );

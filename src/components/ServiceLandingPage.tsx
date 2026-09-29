@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { articlesLinkingTo } from '@/data/articles';
 import { categories } from '@/data/categories';
 import { siteConfig } from '@/data/site-config';
 import { breadcrumbLd, absoluteUrl } from '@/lib/seo';
@@ -181,6 +182,19 @@ export default function ServiceLandingPage({ service }: { service: ServicePage }
           ))}
         </div>
       </section>
+
+      {articlesLinkingTo(service.path).length > 0 && (
+        <section className="mt-12" aria-label="مقالات مفيدة">
+          <h2 className="text-lg sm:text-xl mb-3">مقالات مفيدة</h2>
+          <ul className="space-y-2">
+            {articlesLinkingTo(service.path).map((a) => (
+              <li key={a.slug}>
+                <Link href={a.path} className="text-sage underline underline-offset-4">{a.h1}</Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

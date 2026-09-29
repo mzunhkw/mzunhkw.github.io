@@ -57,6 +57,9 @@ export default function Footer() {
             {c.name}
           </Link>
         ))}
+        <Link href="/articles/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
+          مقالات ونصائح
+        </Link>
         {areaPages.map((a) => (
           <Link key={a.slug} href={a.path} className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
             نجار {a.governorate}

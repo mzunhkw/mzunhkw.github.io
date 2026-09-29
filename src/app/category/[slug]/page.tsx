@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { articlesLinkingTo } from '@/data/articles';
 import { notFound } from 'next/navigation';
 import { categories } from '@/data/categories';
 import { visibleProducts } from '@/data/products';
@@ -171,6 +172,19 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
           ))}
         </div>
       </section>
+
+      {articlesLinkingTo(`/category/${category.slug}/`).length > 0 && (
+        <section className="mt-12" aria-label="مقالات مفيدة">
+          <h2 className="text-lg sm:text-xl mb-3">مقالات مفيدة</h2>
+          <ul className="space-y-2">
+            {articlesLinkingTo(`/category/${category.slug}/`).map((a) => (
+              <li key={a.slug}>
+                <Link href={a.path} className="text-sage underline underline-offset-4">{a.h1}</Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }
