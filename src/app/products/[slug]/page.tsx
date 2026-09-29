@@ -93,6 +93,13 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                 }
               : {}),
             seller: { '@type': 'Organization', name: siteConfig.name },
+            // التفصيل حسب الطلب لا يُسترجع، إلا في حالة العيوب المصنعية (بدون رسوم على العميل)
+            hasMerchantReturnPolicy: {
+              '@type': 'MerchantReturnPolicy',
+              applicableCountry: 'KW',
+              returnPolicyCategory: 'https://schema.org/MerchantReturnNotPermitted',
+              itemDefectReturnFees: 'https://schema.org/FreeReturn',
+            },
             areaServed: { '@type': 'Country', name: 'الكويت' },
           },
         }
