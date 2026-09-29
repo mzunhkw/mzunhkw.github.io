@@ -11,6 +11,8 @@ import JsonLd from '@/components/JsonLd';
 import ProductCard from '@/components/ProductCard';
 import { siteConfig } from '@/data/site-config';
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo';
+import { areaPages } from '@/data/area-pages';
+import { articlesLinkingTo } from '@/data/articles';
 
 export function generateStaticParams() {
   const params = visibleProducts.map((p) => ({ slug: p.slug }));
@@ -105,6 +107,10 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     { name: product.title, path },
   ];
 
+  // روابط داخلية: صفحة "نجار المحافظة" حسب منطقة المنتج، ومقالات القسم
+  const areaPage = areaPages.find((a) => a.districts.some((d) => (product.region || '').includes(d)));
+  const guides = category ? articlesLinkingTo(`/category/${category.slug}/`) : [];
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-8 pt-4 pb-28 sm:py-12" data-wa-label={category?.name || product.title}>
       <JsonLd data={productLd} />
@@ -171,6 +177,21 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         </a>
       </div>
       </div>
+
+      {(areaPage || guides.length > 0) && (
+        <section className="mt-10 flex flex-wrap gap-2" aria-label="روابط ذات صلة">
+          {areaPage && (
+            <Link href={areaPage.path} className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">
+              نجار {areaPage.governorate} — منجرة مزونة
+            </Link>
+          )}
+          {guides.map((g) => (
+            <Link key={g.slug} href={g.path} className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">
+              {g.h1}
+            </Link>
+          ))}
+        </section>
+      )}
 
       {related.length > 0 && (
         <section className="mt-12">
