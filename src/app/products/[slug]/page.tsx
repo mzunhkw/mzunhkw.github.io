@@ -67,7 +67,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     url: absoluteUrl(path),
     sku: product.slug,
     brand: { '@type': 'Brand', name: siteConfig.name },
-    ...(category ? { category: category.name } : {}),
     ...(product.images.length ? { image: product.images.map(absoluteUrl) } : {}),
     ...(product.price > 0
       ? {
@@ -80,9 +79,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               ? { availability: 'https://schema.org/InStock' }
               : product.availability === 'temporarily-unavailable'
                 ? { availability: 'https://schema.org/OutOfStock' }
-                : product.availability === 'custom-order'
-                  ? { availability: 'https://schema.org/MadeToOrder' }
-                  : {}),
+                : // التفصيل حسب الطلب متاح للطلب الآن — Google لا يقبل MadeToOrder في بيانات التاجر
+                  { availability: 'https://schema.org/InStock' }),
             ...(/للمتر|المتر/.test(product.size || '')
               ? {
                   priceSpecification: {
