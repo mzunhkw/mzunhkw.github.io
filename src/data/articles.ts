@@ -256,7 +256,7 @@ export const articles: Article[] = [
       { src: '/images/product-house-bed-kids/0-2.webp', alt: 'سرير أطفال منخفض على شكل بيت مع كومودينو بأدراج' },
       { src: '/images/product-bunk-bed-triple/0-0.webp', alt: 'غرفة أطفال مشتركة بسرير دورين وثلاثة أسرّة في الكويت' },
     ],
-    productSlugs: ['product-house-bed-kids', 'product-bunk-bed-triple', 'product-kchi1', 'product-g1u4l'],
+    productSlugs: ['product-twin-kids-beds', 'product-nursery-set-adam', 'product-baby-crib-drawers', 'product-toddler-bed-cream', 'product-house-bed-kids', 'product-loft-bed-desk', 'product-kchi1', 'product-g1u4l'],
   },
   {
     slug: 'coffee-table-size-guide',
@@ -395,8 +395,11 @@ export const articles: Article[] = [
       { src: '/images/product-bunk-bed-triple/0-0.webp', alt: 'سرير دورين للأطفال بثلاثة أسرّة ودرج جانبي — من تنفيذ منجرة مزونة' },
       { src: '/images/product-bunk-bed-triple/0-1.webp', alt: 'سرير دورين أبيض بسرير علوي وسريرين منفردين في غرفة أطفال بالكويت' },
       { src: '/images/product-bunk-bed-triple/0-2.webp', alt: 'درابزين حماية الطابق العلوي والدرج الجانبي لسرير الدورين' },
+      { src: '/images/product-bunk-bed-slide-desk/0-0.webp', alt: 'سرير دورين للبنات بزحليقة ومكتب دراسة — من تنفيذ منجرة مزونة' },
+      { src: '/images/product-bunk-bed-triple-girls/0-0.webp', alt: 'سرير دورين بثلاثة أسرّة ودرج بأدراج تخزين لغرفة بنات' },
+      { src: '/images/product-loft-bed-desk/0-0.webp', alt: 'سرير علوي للأطفال مع مكتب دراسة ومكتبة رفوف' },
     ],
-    productSlugs: ['product-bunk-bed-triple', 'product-house-bed-kids'],
+    productSlugs: ['product-bunk-bed-slide-desk', 'product-bunk-bed-triple-girls', 'product-bunk-bed-triple-boys', 'product-bunk-bed-triple', 'product-bunk-bed-house-stairs', 'product-bunk-bed-house-shelves', 'product-bunk-bed-girls', 'product-loft-bed-desk'],
   },
   {
     slug: 'bed-sizes-kuwait',
