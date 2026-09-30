@@ -11,6 +11,8 @@ export type ArticleSection = {
   links?: ArticleLink[];
 };
 
+export type ArticleImage = { src: string; alt: string };
+
 export type Article = {
   slug: string;
   path: string;
@@ -25,6 +27,8 @@ export type Article = {
   sections: ArticleSection[];
   faqs: { q: string; a: string }[];
   related: ArticleLink[];
+  gallery?: ArticleImage[]; // صور أعمال حقيقية تظهر بعد المقدمة
+  productSlugs?: string[]; // منتجات مرتبطة تظهر كبطاقات داخل المقال
 };
 
 export const articles: Article[] = [
@@ -181,7 +185,7 @@ export const articles: Article[] = [
       'أفكار لتفصيل غرف نوم أطفال في الكويت: سرير بطابقين، كبت بتقسيم مناسب، ركن دراسة، ونصائح أمان. سعر تفصيل غرف النوم لدى منجرة مزونة من 35 إلى 110 د.ك للمتر حسب نوع الخشب.',
     excerpt: 'تصاميم غرف أطفال تجمع النوم والتخزين والدراسة، مع أسعار التفصيل بالمتر ونصائح الأمان.',
     datePublished: '2026-09-29',
-    dateModified: '2026-09-29',
+    dateModified: '2026-09-30',
     readingMinutes: 4,
     intro: [
       'غرفة الطفل مكان للنوم واللعب والدراسة معًا، لذلك تفصيلها حسب المقاس يعطيك استغلالًا أفضل للمساحة من الغرف الجاهزة. هذه أهم الأفكار التي ننفذها في منجرة مزونة لغرف الأطفال.',
@@ -202,6 +206,11 @@ export const articles: Article[] = [
           'سرير بأدراج سفلية لتخزين الألعاب والبطانيات.',
           'كبت ملابس بتعليق منخفض يستطيع الطفل الوصول إليه، مع رفوف علوية تُعدَّل لاحقًا.',
           'ركن دراسة مدمج بطاولة ورفوف كتب بجانب الكبت.',
+          'سرير على شكل بيت منخفض وقريب من الأرض للأطفال الصغار، سعره التقديري من 145 د.ك.',
+        ],
+        links: [
+          { href: '/category/kids-beds/', label: 'أسرّة أطفال من أعمالنا' },
+          { href: '/articles/bunk-bed-kids-kuwait/', label: 'دليل سرير الدورين' },
         ],
       },
       {
@@ -240,7 +249,14 @@ export const articles: Article[] = [
       { href: '/category/bedrooms/', label: 'غرف نوم' },
       { href: '/category/tables/', label: 'طاولات' },
       { href: '/articles/wardrobe-ideas-kuwait/', label: 'أفكار كبت ملابس وكبت زاوية' },
+      { href: '/category/kids-beds/', label: 'أسرّة أطفال' },
     ],
+    gallery: [
+      { src: '/images/product-house-bed-kids/0-0.webp', alt: 'سرير أطفال على شكل بيت بدرابزين حماية — من تنفيذ منجرة مزونة' },
+      { src: '/images/product-house-bed-kids/0-2.webp', alt: 'سرير أطفال منخفض على شكل بيت مع كومودينو بأدراج' },
+      { src: '/images/product-bunk-bed-triple/0-0.webp', alt: 'غرفة أطفال مشتركة بسرير دورين وثلاثة أسرّة في الكويت' },
+    ],
+    productSlugs: ['product-house-bed-kids', 'product-bunk-bed-triple', 'product-kchi1', 'product-g1u4l'],
   },
   {
     slug: 'coffee-table-size-guide',
@@ -356,20 +372,31 @@ export const articles: Article[] = [
       {
         heading: 'سعر تفصيل سرير الدورين',
         paragraphs: [
-          'نسعّر غرف النوم وأسرّتها بالمتر من 35 إلى 110 د.ك حسب نوع الخشب الذي تختاره. أرسل لنا مقاس الغرفة وارتفاع السقف وصورة للمكان عبر واتساب، ونعطيك تصورًا وسعرًا واضحًا قبل التنفيذ.',
+          'يختلف سعر سرير الدورين حسب عدد الأسرّة والمقاس والخامة. على سبيل المثال، سرير الدورين بثلاثة أسرّة ودرج جانبي الظاهر في الصور أعلاه سعره التقديري 420 د.ك. أرسل لنا مقاس الغرفة وارتفاع السقف وصورة للمكان عبر واتساب، ونعطيك تصورًا وسعرًا نهائيًا قبل التنفيذ.',
         ],
-        links: [{ href: '/category/bedrooms/', label: 'غرف نوم وكبتات' }],
+        links: [
+          { href: '/category/kids-beds/', label: 'أسرّة أطفال وسرير دورين' },
+          { href: '/products/product-bunk-bed-triple/', label: 'سرير دورين بثلاثة أسرّة' },
+        ],
       },
     ],
     faqs: [
       { q: 'هل تفصّلون سرير دورين حسب المقاس؟', a: 'نعم، نفصّل سرير دورين (بطابقين) حسب مقاس الغرفة وارتفاع السقف، مع درابزين حماية وسلم ثابت، ويمكن إضافة أدراج تخزين.' },
       { q: 'ما مقاس مرتبة سرير الدورين؟', a: 'غالبًا مرتبة مفردة بعرض 90 إلى 120 سم وطول 190 إلى 200 سم، ونحدد المقاس النهائي حسب مساحة الغرفة.' },
       { q: 'هل يمكن دمج سرير الدورين مع كبت أو مكتب؟', a: 'نعم، يمكن دمجه مع كبت ملابس أو ركن دراسة أو درج بأدراج تخزين لاستغلال المساحة.' },
+      { q: 'كم سعر سرير دورين للأطفال في الكويت؟', a: 'يختلف حسب عدد الأسرّة والمقاس والخامة. سرير الدورين بثلاثة أسرّة ودرج جانبي من أعمالنا سعره التقديري 420 د.ك، والسعر النهائي بالاتفاق عبر واتساب.' },
     ],
     related: [
+      { href: '/category/kids-beds/', label: 'أسرّة أطفال' },
       { href: '/category/bedrooms/', label: 'غرف نوم وكبتات' },
       { href: '/articles/kids-bedroom-kuwait/', label: 'غرف نوم أطفال' },
     ],
+    gallery: [
+      { src: '/images/product-bunk-bed-triple/0-0.webp', alt: 'سرير دورين للأطفال بثلاثة أسرّة ودرج جانبي — من تنفيذ منجرة مزونة' },
+      { src: '/images/product-bunk-bed-triple/0-1.webp', alt: 'سرير دورين أبيض بسرير علوي وسريرين منفردين في غرفة أطفال بالكويت' },
+      { src: '/images/product-bunk-bed-triple/0-2.webp', alt: 'درابزين حماية الطابق العلوي والدرج الجانبي لسرير الدورين' },
+    ],
+    productSlugs: ['product-bunk-bed-triple', 'product-house-bed-kids'],
   },
   {
     slug: 'bed-sizes-kuwait',

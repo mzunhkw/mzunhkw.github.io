@@ -3,12 +3,19 @@ import { siteConfig, whatsappLink } from '@/data/site-config';
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo';
 import { Article, articles } from '@/data/articles';
 import JsonLd from '@/components/JsonLd';
+import ProductCard from '@/components/ProductCard';
+import { visibleProducts } from '@/data/products';
+import { getSrcSet, getImageDimensions } from '@/lib/image';
 
 const chip = 'border border-sand bg-white rounded-full px-4 py-2 text-sm hover:border-sage-soft';
 
 export default function ArticlePage({ article }: { article: Article }) {
   const url = absoluteUrl(article.path);
   const others = articles.filter((a) => a.slug !== article.slug);
+  const gallery = article.gallery || [];
+  const linkedProducts = (article.productSlugs || [])
+    .map((slug) => visibleProducts.find((p) => p.slug === slug))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
   const articleLd = {
     '@context': 'https://schema.org',
@@ -20,7 +27,7 @@ export default function ArticlePage({ article }: { article: Article }) {
     dateModified: article.dateModified,
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     url,
-    image: [absoluteUrl('/og-image.jpg')],
+    image: gallery.length > 0 ? gallery.map((g) => absoluteUrl(g.src)) : [absoluteUrl('/og-image.jpg')],
     author: { '@type': 'Organization', name: `منجرة ${siteConfig.name}`, url: siteConfig.siteUrl },
     publisher: { '@id': `${siteConfig.siteUrl}/#store` },
   };
@@ -67,6 +74,32 @@ export default function ArticlePage({ article }: { article: Article }) {
         ))}
       </header>
 
+      {gallery.length > 0 && (
+        <section aria-label="صور من أعمالنا" className="mt-8 max-w-3xl">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {gallery.map((g, i) => {
+              const dim = getImageDimensions(g.src);
+              return (
+                <figure key={g.src} className={i === 0 ? 'col-span-2 sm:col-span-1' : ''}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={g.src}
+                    srcSet={getSrcSet(g.src)}
+                    sizes={i === 0 ? '(max-width: 640px) calc(100vw - 32px), 250px' : '(max-width: 640px) 45vw, 250px'}
+                    alt={g.alt}
+                    width={dim?.width || 900}
+                    height={dim?.height || 1200}
+                    loading="lazy"
+                    className="w-full aspect-[3/4] object-cover rounded-2xl bg-sand"
+                  />
+                </figure>
+              );
+            })}
+          </div>
+          <p className="text-sm text-ink/55 mt-2">صور حقيقية من أعمال منجرة مزونة</p>
+        </section>
+      )}
+
       <div className="mt-8 max-w-3xl space-y-10">
         {article.sections.map((s) => (
           <section key={s.heading}>
@@ -89,6 +122,17 @@ export default function ArticlePage({ article }: { article: Article }) {
           </section>
         ))}
       </div>
+
+      {linkedProducts.length > 0 && (
+        <section className="mt-12">
+          <h2 className="text-xl sm:text-2xl mb-4">من أعمالنا</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+            {linkedProducts.map((p) => (
+              <ProductCard key={p.slug} product={p} compact />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mt-12 bg-sage-mist rounded-2xl p-6 max-w-xl">
         <h2 className="text-xl mb-2">تحتاج عرض سعر؟</h2>
