@@ -387,6 +387,7 @@ const state = {
   offerDirty: false,
   busy: false,
   filters: { q: '', cat: '', status: '' },
+  altDraft: [],
 };
 
 // ---------------------------------------------------------------------------
@@ -776,6 +777,11 @@ function fillForm(p, opts) {
   $('f_shortDescription').value = p.shortDescription || '';
   $('f_description').value = p.description || '';
   $('f_materials').value = (p.materials || []).join('، ');
+  $('f_seoTitle').value = p.seoTitle || '';
+  $('f_metaDescription').value = p.metaDescription || '';
+  $('f_keywords').value = (p.keywords || []).join('، ');
+  renderAltFields(p.images || [], p.imageAlts || []);
+  updateSeoCounts();
   $('f_featured').checked = !!p.featured;
   $('f_published').checked = p.published !== false;
   $('f_images').value = '';
@@ -807,10 +813,71 @@ function readForm() {
     shortDescription: $('f_shortDescription').value.trim(),
     description: $('f_description').value.trim(),
     materials: parseMaterials($('f_materials').value),
+    seoTitle: $('f_seoTitle').value.trim(),
+    metaDescription: $('f_metaDescription').value.trim(),
+    keywords: parseMaterials($('f_keywords').value),
+    imageAlts: state.altDraft.map((x) => x.trim()),
     featured: $('f_featured').checked,
     published: $('f_published').checked,
     imageCount: state.images.length,
   };
+}
+
+function updateSeoCounts() {
+  const a = $('f_seoTitle'), b = $('f_metaDescription');
+  if (a) $('seoTitleCount').textContent = `${a.value.length}/60`;
+  if (b) $('metaCount').textContent = `${b.value.length}/160`;
+}
+function renderAltFields(images, alts) {
+  state.altDraft = (images || []).map((_, i) => (alts || [])[i] || '');
+  const box = $('altFields');
+  if (!box) return;
+  box.replaceChildren(...(images || []).map((url, i) => h('div', { class: 'alt-row' },
+    h('img', { src: url, alt: '', loading: 'lazy' }),
+    h('div', null,
+      h('label', { for: `alt_${i}`, text: `الصورة ${i + 1}${i === 0 ? ' — الغلاف' : ''}` }),
+      h('input', { id: `alt_${i}`, value: state.altDraft[i], maxlength: 180, placeholder: 'مثال: كنب مودرن بلون بيج من تنفيذ مزونة في الكويت',
+        oninput: (e) => { state.altDraft[i] = e.target.value; state.dirty = true; } })
+    )
+  )));
+}
+function seoAudit(p) {
+  const checks = [
+    ['عنوان SEO', !!(p.seoTitle || '').trim(), 'أضف عنوانًا مخصصًا للصفحة عند الحاجة.'],
+    ['وصف نتائج البحث', !!(p.metaDescription || '').trim(), 'أضف وصفًا فريدًا ومفيدًا للباحث.'],
+    ['وصف مختصر', (p.shortDescription || '').trim().length >= 70, 'اجعل الوصف المختصر مفيدًا وواضحًا.'],
+    ['وصف كامل', (p.description || '').trim().length >= 180, 'زد التفاصيل الأصلية عندما يكون ذلك طبيعيًا.'],
+    ['نصوص ALT', (p.images || []).length === 0 || (p.images || []).every((_, i) => (p.imageAlts || [])[i]),
+      'أضف ALT وصفيًا للصور المهمة.'],
+    ['الرابط', SLUG_RE.test(p.slug || ''), 'الرابط الحالي صالح.'],
+  ];
+  return checks;
+}
+function renderDashboard() {
+  if (!$('dashProducts')) return;
+  const products = state.products || [];
+  const published = products.filter((p) => p.published !== false && p.availability !== 'archived').length;
+  const images = products.reduce((n, p) => n + (p.images || []).length, 0);
+  const scored = products.filter((p) => p.published !== false).map((p) => seoAudit(p).filter((x) => x[1]).length / 6);
+  const pct = scored.length ? Math.round(scored.reduce((a,b) => a+b,0) / scored.length * 100) : 0;
+  $('dashProducts').textContent = String(products.length);
+  $('dashPublished').textContent = `${published} منشور`;
+  $('dashSeo').textContent = `${pct}%`;
+  $('dashSeoNote').textContent = pct >= 85 ? 'المحتوى منظم' : 'هناك فرص تحسين';
+  $('dashCategories').textContent = String(state.categories.length);
+  $('dashImages').textContent = String(images);
+  const totals = Array(6).fill(0);
+  products.filter(p => p.published !== false).forEach(p => seoAudit(p).forEach((x,i) => { if (x[1]) totals[i]++; }));
+  const labels = ['عناوين SEO', 'أوصاف نتائج البحث', 'أوصاف مختصرة', 'أوصاف كاملة', 'ALT للصور', 'روابط صالحة'];
+  const box = $('seoChecklist');
+  box.replaceChildren(...labels.map((label, i) => {
+    const total = published || products.length || 1;
+    const ok = totals[i] === total;
+    return h('div', { class: `seo-check ${ok ? 'ok' : 'warn'}` },
+      h('span', { class: 'check-icon', text: ok ? '✓' : '!' }),
+      h('div', null, h('strong', { text: label }), h('small', { text: `${totals[i]} من ${total} مكتملة${ok ? '' : ' — راجع المنتجات'}` }))
+    );
+  }));
 }
 
 async function confirmDiscard() {
@@ -920,6 +987,10 @@ function buildProduct(v, images) {
     shortDescription: v.shortDescription,
     description: v.description,
     materials: v.materials,
+    seoTitle: v.seoTitle,
+    metaDescription: v.metaDescription,
+    keywords: v.keywords,
+    imageAlts: v.imageAlts,
     images,
     featured: v.featured,
     published: v.published,
@@ -1086,7 +1157,16 @@ async function addCategory() {
     if (!slugTouched) slug.value = autoSlug(name.value, seed).replace(/^product-/, 'category-');
   });
   slug.addEventListener('input', () => (slugTouched = true));
-  const content = h('div', null, h('div', { class: 'field' }, h('label', { for: 'c_name', text: 'اسم التصنيف' }), name), h('div', { class: 'field' }, h('label', { for: 'c_slug', text: 'الرابط المختصر (لا يتغير بعد الإنشاء)' }), slug));
+  const description = h('textarea', { id: 'c_description', maxlength: 300, placeholder: 'وصف مختصر للقسم ومحتواه.' });
+  const seoTitle = h('input', { id: 'c_seoTitle', maxlength: 60, placeholder: 'عنوان SEO للقسم' });
+  const metaDescription = h('textarea', { id: 'c_metaDescription', maxlength: 160, placeholder: 'وصف نتائج البحث للقسم' });
+  const content = h('div', null,
+    h('div', { class: 'field' }, h('label', { for: 'c_name', text: 'اسم التصنيف' }), name),
+    h('div', { class: 'field' }, h('label', { for: 'c_slug', text: 'الرابط المختصر (لا يتغير بعد الإنشاء)' }), slug),
+    h('div', { class: 'field' }, h('label', { for: 'c_description', text: 'وصف القسم' }), description),
+    h('div', { class: 'field' }, h('label', { for: 'c_seoTitle', text: 'عنوان SEO' }), seoTitle),
+    h('div', { class: 'field' }, h('label', { for: 'c_metaDescription', text: 'وصف نتائج البحث' }), metaDescription)
+  );
   const ok = await openDialog({
     title: 'إضافة تصنيف',
     content,
@@ -1099,7 +1179,7 @@ async function addCategory() {
     },
   });
   if (!ok) return;
-  const entry = { slug: slug.value.trim(), name: name.value.trim(), updatedAt: new Date().toISOString() };
+  const entry = { slug: slug.value.trim(), name: name.value.trim(), description: description.value.trim(), seoTitle: seoTitle.value.trim(), metaDescription: metaDescription.value.trim(), updatedAt: new Date().toISOString() };
   await commitCategories(`إضافة تصنيف: ${entry.name}`, (cats) => {
     if (cats.some((c) => c.slug === entry.slug)) throw new Error('هذا الرابط صار مستخدمًا للتو بتصنيف ثاني.');
     return [...cats, entry];
@@ -1110,14 +1190,23 @@ async function editCategory(slug) {
   const cat = state.categories.find((c) => c.slug === slug);
   if (!cat) return;
   const name = h('input', { id: 'c_name', maxlength: 60, autocomplete: 'off', value: cat.name });
-  const content = h('div', null, h('div', { class: 'field' }, h('label', { for: 'c_name', text: 'اسم التصنيف' }), name), h('div', { class: 'help', dir: 'ltr', text: slug }));
+  const description = h('textarea', { id: 'c_description', maxlength: 300, value: cat.description || '', placeholder: 'وصف مختصر للقسم' });
+  const seoTitle = h('input', { id: 'c_seoTitle', maxlength: 60, value: cat.seoTitle || '', placeholder: 'عنوان SEO للقسم' });
+  const metaDescription = h('textarea', { id: 'c_metaDescription', maxlength: 160, value: cat.metaDescription || '', placeholder: 'وصف نتائج البحث للقسم' });
+  const content = h('div', null,
+    h('div', { class: 'field' }, h('label', { for: 'c_name', text: 'اسم التصنيف' }), name),
+    h('div', { class: 'field' }, h('label', { for: 'c_description', text: 'وصف القسم' }), description),
+    h('div', { class: 'field' }, h('label', { for: 'c_seoTitle', text: 'عنوان SEO' }), seoTitle),
+    h('div', { class: 'field' }, h('label', { for: 'c_metaDescription', text: 'وصف نتائج البحث' }), metaDescription),
+    h('div', { class: 'help', dir: 'ltr', text: slug })
+  );
   const ok = await openDialog({ title: 'تعديل التصنيف', content, okLabel: 'حفظ', validate: () => (name.value.trim() ? '' : 'اكتب اسم التصنيف.') });
   if (!ok) return;
   const newName = name.value.trim();
-  if (newName === cat.name) return;
+  if (newName === cat.name && description.value.trim() === (cat.description || '') && seoTitle.value.trim() === (cat.seoTitle || '') && metaDescription.value.trim() === (cat.metaDescription || '')) return;
   await commitCategories(`تعديل تصنيف: ${newName}`, (cats) => {
     if (!cats.some((c) => c.slug === slug)) throw new Error('هذا التصنيف انحذف من مكان ثاني. حدّث الصفحة.');
-    return cats.map((c) => (c.slug === slug ? { ...c, name: newName, updatedAt: new Date().toISOString() } : c));
+    return cats.map((c) => (c.slug === slug ? { ...c, name: newName, description: description.value.trim(), seoTitle: seoTitle.value.trim(), metaDescription: metaDescription.value.trim(), updatedAt: new Date().toISOString() } : c));
   });
 }
 
@@ -1420,10 +1509,15 @@ function renderOffers() {
 // ---------------------------------------------------------------------------
 function setTab(tab) {
   state.tab = tab;
-  for (const t of ['products', 'categories', 'offers']) {
+  for (const t of ['dashboard', 'products', 'categories', 'offers']) {
     $('tab-' + t).hidden = t !== tab;
-    $('tabBtn-' + t).setAttribute('aria-selected', String(t === tab));
+    const btn = $('tabBtn-' + t);
+    if (btn) {
+      btn.setAttribute('aria-selected', String(t === tab));
+      btn.classList.toggle('active', t === tab);
+    }
   }
+  if (tab === 'dashboard') renderDashboard();
 }
 
 function renderAll() {
@@ -1432,6 +1526,7 @@ function renderAll() {
   renderProducts();
   renderCategories();
   renderOffers();
+  renderDashboard();
   updateRepoLabel();
 }
 
@@ -1473,6 +1568,7 @@ function wire() {
   form.addEventListener('input', () => (state.dirty = true));
   form.addEventListener('change', () => (state.dirty = true));
   $('f_shortDescription').addEventListener('input', updateShortCount);
+  ['f_seoTitle','f_metaDescription'].forEach((id) => $(id).addEventListener('input', updateSeoCounts));
   $('f_title').addEventListener('input', (e) => {
     if (!state.editing && !state.slugTouched) $('f_slug').value = autoSlug(e.target.value, state.slugSeed);
   });

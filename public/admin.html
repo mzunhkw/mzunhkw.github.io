@@ -54,11 +54,45 @@
   </header>
 
   <div class="container">
-    <div class="tabs" role="tablist">
-      <button type="button" role="tab" id="tabBtn-products" data-tab="products" aria-selected="true">المنتجات</button>
-      <button type="button" role="tab" id="tabBtn-categories" data-tab="categories" aria-selected="false">التصنيفات</button>
-      <button type="button" role="tab" id="tabBtn-offers" data-tab="offers" aria-selected="false">العروض</button>
-    </div>
+    <nav class="admin-nav" aria-label="أقسام لوحة الإدارة">
+      <button type="button" class="nav-item" role="tab" id="tabBtn-dashboard" data-tab="dashboard" aria-selected="false"><span>⌂</span><b>نظرة عامة</b></button>
+      <button type="button" class="nav-item active" role="tab" id="tabBtn-products" data-tab="products" aria-selected="true"><span>▦</span><b>المنتجات</b></button>
+      <button type="button" class="nav-item" role="tab" id="tabBtn-categories" data-tab="categories" aria-selected="false"><span>◫</span><b>التصنيفات</b></button>
+      <button type="button" class="nav-item" role="tab" id="tabBtn-offers" data-tab="offers" aria-selected="false"><span>%</span><b>العروض</b></button>
+    </nav>
+
+    <!-- ---- لوحة المعلومات ---- -->
+    <section id="tab-dashboard" class="dashboard" hidden>
+      <div class="hero-panel">
+        <div>
+          <span class="eyebrow">لوحة التحكم</span>
+          <h2>مرحبًا بك في إدارة مزونة</h2>
+          <p>إدارة المحتوى والمنتجات والصور وتهيئة صفحات المنتجات لمحركات البحث من مكان واحد.</p>
+        </div>
+        <button class="primary" type="button" data-tab="products" onclick="setTab('products'); document.getElementById('f_title').focus()">+ إضافة منتج</button>
+      </div>
+      <div class="stats-grid">
+        <article class="stat-card"><span>المنتجات</span><strong id="dashProducts">0</strong><small id="dashPublished">0 منشور</small></article>
+        <article class="stat-card"><span>جاهزة للـ SEO</span><strong id="dashSeo">0%</strong><small id="dashSeoNote">جارٍ التحليل</small></article>
+        <article class="stat-card"><span>التصنيفات</span><strong id="dashCategories">0</strong><small>أقسام الموقع</small></article>
+        <article class="stat-card"><span>الصور</span><strong id="dashImages">0</strong><small>صورة مرتبطة بالمنتجات</small></article>
+      </div>
+      <div class="dashboard-grid">
+        <section class="panel">
+          <div class="panel-head"><div><h3>فحص SEO سريع</h3><p class="help">مؤشرات تحريرية داخل لوحة الإدارة، لا تغيّر ترتيب Google تلقائيًا.</p></div></div>
+          <div id="seoChecklist" class="seo-checklist"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h3>إجراءات سريعة</h3><p class="help">اختصارات للعمل اليومي.</p></div></div>
+          <div class="quick-actions">
+            <button type="button" data-tab="products" onclick="setTab('products'); document.getElementById('f_title').focus()">إضافة منتج</button>
+            <button type="button" data-tab="categories" onclick="setTab('categories')">إدارة التصنيفات</button>
+            <button type="button" data-tab="offers" onclick="setTab('offers')">إدارة العروض</button>
+            <a href="/sitemap.xml" target="_blank" rel="noopener">فتح Sitemap</a>
+          </div>
+        </section>
+      </div>
+    </section>
 
     <!-- ---- المنتجات ---- -->
     <section id="tab-products" class="grid">
@@ -115,6 +149,29 @@
             <label for="f_materials">الخامات (افصل بفاصلة)</label>
             <input id="f_materials" autocomplete="off" placeholder="خشب زان، قماش كتان" />
           </div>
+          <details class="seo-box" open>
+            <summary><strong>تهيئة محركات البحث SEO</strong><span>اختياري — يتيح لك التحكم بالمقتطف والصور بدون تغيير الرابط</span></summary>
+            <div class="seo-inner">
+              <div class="field">
+                <label for="f_seoTitle">عنوان SEO <span class="counter" id="seoTitleCount">0/60</span></label>
+                <input id="f_seoTitle" maxlength="60" autocomplete="off" placeholder="مثال: تفصيل كنب مودرن في الكويت | منجرة مزونة" />
+                <div class="help">يفضل أن يكون فريدًا وواضحًا ويصف الصفحة، ولا نكرر اسم الموقع بلا حاجة.</div>
+              </div>
+              <div class="field">
+                <label for="f_metaDescription">وصف نتائج البحث <span class="counter" id="metaCount">0/160</span></label>
+                <textarea id="f_metaDescription" maxlength="160" class="compact" placeholder="وصف مختصر مفيد للباحث في Google، بدون حشو كلمات مفتاحية."></textarea>
+              </div>
+              <div class="field">
+                <label for="f_keywords">كلمات مرتبطة بالمنتج <span class="help-inline">للمحرر فقط — لا تُضاف كـ meta keywords</span></label>
+                <input id="f_keywords" autocomplete="off" placeholder="كنب مودرن، تفصيل كنب، كنب الكويت" />
+              </div>
+              <div class="field">
+                <label>النص البديل للصور ALT</label>
+                <p class="help">اكتب وصفًا حقيقيًا للصورة. إذا تركته فارغًا سيُستخدم عنوان المنتج تلقائيًا.</p>
+                <div id="altFields" class="alt-fields"></div>
+              </div>
+            </div>
+          </details>
           <div class="field">
             <label id="imgLabel" for="f_images">الصور — أول صورة هي الغلاف</label>
             <div class="dropzone" id="dropzone">
@@ -162,7 +219,7 @@
           <h2>التصنيفات (<span id="catCount">0</span>)</h2>
           <button class="primary" type="button" id="addCatBtn">إضافة تصنيف</button>
         </div>
-        <p class="help">ترتيب التصنيفات هنا هو ترتيب ظهورها بالموقع. لا يمكن حذف تصنيف فيه منتجات.</p>
+        <p class="help">ترتيب التصنيفات هنا هو ترتيب ظهورها بالموقع. لا يمكن حذف تصنيف فيه منتجات. من تعديل التصنيف يمكنك أيضًا حفظ بياناته التحريرية مستقبلًا.</p>
         <div id="catList"></div>
       </div>
     </section>
