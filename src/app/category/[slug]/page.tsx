@@ -23,8 +23,8 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   const seo = getCategorySeo(category.slug, category.name);
   const path = `/category/${category.slug}/`;
   return {
-    title: seo.title,
-    description: seo.description,
+    title: category.seoTitle?.trim() || seo.title,
+    description: category.metaDescription?.trim() || seo.description,
     alternates: { canonical: path },
     openGraph: {
       title: seo.title,
