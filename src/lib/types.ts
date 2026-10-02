@@ -26,6 +26,8 @@ export type Category = {
   slug: string;
   name: string;
   description?: string;
+  seoTitle?: string;
+  metaDescription?: string;
   updatedAt?: string; // ISO date — يُحدَّث تلقائيًا من لوحة الإدارة عند كل إضافة/تعديل/ترتيب
 };
 
@@ -40,6 +42,11 @@ export type Product = {
   shortDescription?: string;
   description: string;
   materials?: string[];
+  // حقول SEO اختيارية تُدار من لوحة الإدارة؛ المنتجات القديمة تبقى صالحة بدونها.
+  seoTitle?: string;
+  metaDescription?: string;
+  keywords?: string[];
+  imageAlts?: string[];
   images: string[];
   featured?: boolean;
   published: boolean;
