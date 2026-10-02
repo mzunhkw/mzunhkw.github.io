@@ -33,9 +33,11 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
           .map((x) => x.trim().replace(/[.،\s]+$/, ''))
           .filter(Boolean)
           .join('. ');
-  const description = base.length > 160 ? base.slice(0, 157).replace(/\s+\S*$/, '') + '…' : base;
+  const generatedDescription = base.length > 160 ? base.slice(0, 157).replace(/\s+\S*$/, '') + '…' : base;
+  const seoTitle = (product.seoTitle || '').trim() || product.title;
+  const description = (product.metaDescription || '').trim() || generatedDescription;
   return {
-    title: product.title,
+    title: seoTitle,
     description,
     alternates: { canonical: `/products/${product.slug}/` },
     openGraph: {
@@ -190,6 +192,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       <Gallery
         images={product.images}
         title={[product.title, category?.name, product.materials?.[0]].filter(Boolean).join(' — ')}
+        alts={product.imageAlts}
       />
 
       <div>
