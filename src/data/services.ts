@@ -18,7 +18,7 @@ export type ServicePricing = {
 };
 
 export type ServicePage = {
-  slug: string; // اسم المجلد داخل src/app (بالعربي، مطابق للرابط)
+  slug: string; // اسم المجلد داخل src/app (لاتيني، مطابق للرابط — لا روابط عربية)
   path: string; // الرابط الكامل، يطابق seo-services/PHASE-2-URL-MAP.json
   title: string;
   h1: string;

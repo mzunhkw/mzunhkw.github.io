@@ -10,11 +10,11 @@ Phase 2 converts the approved keyword map into indexable commercial landing page
 ## Service landing pages
 Create these independent routes using the project's existing routing/components:
 
-1. `/تنجيد-كنب-الكويت/`
+1. `/tanjeed-sofa-kuwait/`
    - Target: تنجيد كنب، تنجيد كنب الكويت، تجديد كنب، تغيير قماش كنب
-2. `/تنجيد-مساند-الكويت/`
+2. `/tanjeed-cushions-kuwait/`
    - Target: تنجيد مساند، تنجيد مساند الكويت، مساند مجالس، مساند ظهر
-3. `/تنجيد-مجالس-الكويت/`
+3. `/tanjeed-majlis-kuwait/`
    - Target: تنجيد مجالس، تنجيد مجالس الكويت، تجديد مجالس، تغيير قماش مجالس
 
 ## Core category pages — قرار: لن تُنشأ (Superseded)
