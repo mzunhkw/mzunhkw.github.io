@@ -134,6 +134,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         hasVariant: woodTiers.map((t) => ({
           '@type': 'Product',
           name: `${product.title} — ${t.name}`,
+          // Google يشترط description لكل متغيّر Product (كان ينقص فيُرفض التحقق في Search Console)
+          description: `${productLd.description} الخامة: ${t.name}.`,
           sku: `${product.slug}-${t.id}`,
           inProductGroupWithID: product.slug,
           material: t.name,
