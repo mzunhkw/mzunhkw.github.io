@@ -5,7 +5,7 @@ import { categories } from '@/data/categories';
 import { availabilityLabels } from '@/lib/types';
 import { formatPrice } from '@/lib/catalog';
 import { woodTiers, woodMin, woodMax, woodAvg, woodPricedCategories } from '@/data/wood-tiers';
-import { whatsappLinkForProduct } from '@/data/site-config';
+import { whatsappLinkForProduct, deliveryDays } from '@/data/site-config';
 import Gallery from '@/components/Gallery';
 import Link from 'next/link';
 import JsonLd from '@/components/JsonLd';
@@ -62,6 +62,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     .filter((p) => p.categorySlug === product.categorySlug && p.slug !== product.slug)
     .slice(0, 3);
 
+  const delivery = deliveryDays(product.categorySlug);
+
   const productLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -103,6 +105,12 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               '@type': 'OfferShippingDetails',
               shippingRate: { '@type': 'MonetaryAmount', value: 0, currency: 'KWD' },
               shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'KW' },
+              // مجموع التجهيز + التوصيل = المدة المؤكدة من المالك (يوم واحد للتوصيل داخل الكويت)
+              deliveryTime: {
+                '@type': 'ShippingDeliveryTime',
+                handlingTime: { '@type': 'QuantitativeValue', minValue: delivery.min - 1, maxValue: delivery.max - 1, unitCode: 'DAY' },
+                transitTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 1, unitCode: 'DAY' },
+              },
             },
             // التفصيل حسب الطلب لا يُسترجع، إلا في حالة العيوب المصنعية (بدون رسوم على العميل)
             hasMerchantReturnPolicy: {
@@ -250,6 +258,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <li>✓ تفصيل حسب المقاس والتصميم الذي تختاره</li>
           <li>✓ زيارة لأخذ المقاسات ومعاينة العينات</li>
           <li>✓ توصيل مجاني داخل الكويت</li>
+          <li>✓ مدة التنفيذ والتوصيل: من {delivery.min} إلى {delivery.max} يومًا</li>
           <li>✓ الإرجاع في حالة العيوب المصنعية فقط</li>
         </ul>
 

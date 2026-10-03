@@ -51,3 +51,9 @@ export function whatsappLink(label?: string, path?: string) {
 export function whatsappLinkForProduct(label: string, path?: string) {
   return whatsappLink(label, path);
 }
+
+// مدة التنفيذ والتوصيل (تأكيد المالك 2026-10-03): غرف النوم 15–25 يوماً، وبقية الأقسام 7–12 يوماً.
+// تُعرض في صفحة المنتج وتُرسل لجوجل في shippingDetails.deliveryTime (التجهيز + يوم توصيل = المجموع نفسه).
+export function deliveryDays(categorySlug: string) {
+  return categorySlug === 'bedrooms' ? { min: 15, max: 25 } : { min: 7, max: 12 };
+}
