@@ -4,7 +4,7 @@ import { visibleProducts } from '@/data/products';
 import { categories } from '@/data/categories';
 import { getCategorySeo } from '@/data/category-seo';
 import { services } from '@/data/services';
-import { siteConfig } from '@/data/site-config';
+import { siteConfig, whatsappGeneralLink } from '@/data/site-config';
 import ProductCard from '@/components/ProductCard';
 import OffersStrip from '@/components/OffersStrip';
 import { visibleOffers } from '@/data/offers';
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  const whatsapp = `https://wa.me/${siteConfig.whatsappNumber}`;
+  const whatsapp = whatsappGeneralLink();
 
   // آخر منتج من كل قسم — تظهر بشريط "أعمال مختارة" المتحرك
   const byNewest = [...visibleProducts].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));

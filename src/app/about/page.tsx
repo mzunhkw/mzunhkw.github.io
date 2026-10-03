@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { categories } from '@/data/categories';
 import { services } from '@/data/services';
-import { siteConfig } from '@/data/site-config';
+import { siteConfig, whatsappGeneralLink } from '@/data/site-config';
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
 
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-  const whatsapp = `https://wa.me/${siteConfig.whatsappNumber}`;
+  const whatsapp = whatsappGeneralLink();
   const mapEmbedSrc = siteConfig.geo
     ? `https://www.google.com/maps?q=${siteConfig.geo.lat},${siteConfig.geo.lng}&output=embed`
     : `https://www.google.com/maps?q=${encodeURIComponent(`${siteConfig.address} الكويت`)}&output=embed`;

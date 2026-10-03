@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { categories } from '@/data/categories';
-import { siteConfig } from '@/data/site-config';
+import { siteConfig, whatsappGeneralLink } from '@/data/site-config';
 
 export default function Footer() {
   return (
@@ -22,7 +22,7 @@ export default function Footer() {
           <li>
             <span className="text-ink/55">واتساب: </span>
             <a
-              href={`https://wa.me/${siteConfig.whatsappNumber}`}
+              href={whatsappGeneralLink()}
               target="_blank"
               rel="noreferrer"
               className="text-sage underline"

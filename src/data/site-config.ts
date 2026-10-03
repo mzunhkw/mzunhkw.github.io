@@ -28,8 +28,17 @@ export const siteConfig = {
   projectsCount: '+112,000',
 };
 
-// رسالة واتساب موحّدة: «مرحبا اريد الاستفسار عن منتجات منجرة مزونة - القسم - الرابط»
+// الرسالة العامة (الزر العائم وكل رابط واتساب بلا قسم): تعرّف المالك أن المراسل جاء من موقع منجرة مزونة
+export const whatsappGeneralMessage = 'مرحبا اريد الاستفسار عن اعمال منجرة مزونة';
+
+export function whatsappGeneralLink() {
+  return `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(whatsappGeneralMessage)}`;
+}
+
+// رسالة واتساب موحّدة لصفحات الأقسام والمنتجات: «مرحبا اريد الاستفسار عن منتجات منجرة مزونة - القسم - الرابط»
+// بلا قسم ولا رابط تُستخدم الرسالة العامة.
 export function whatsappMessage(label?: string, url?: string) {
+  if (!label && !url) return whatsappGeneralMessage;
   return ['مرحبا اريد الاستفسار عن منتجات منجرة مزونة', label, url].filter(Boolean).join(' - ');
 }
 

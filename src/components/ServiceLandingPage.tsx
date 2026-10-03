@@ -1,15 +1,16 @@
 import Link from 'next/link';
 import { articlesLinkingTo } from '@/data/articles';
 import { categories } from '@/data/categories';
-import { siteConfig } from '@/data/site-config';
+import { siteConfig, whatsappGeneralMessage } from '@/data/site-config';
 import { breadcrumbLd, absoluteUrl } from '@/lib/seo';
 import { services, ServicePage } from '@/data/services';
 import JsonLd from '@/components/JsonLd';
 import Gallery from '@/components/Gallery';
 
 export default function ServiceLandingPage({ service }: { service: ServicePage }) {
+  // تبدأ الرسالة باسم المنجرة ليعرف المالك أن المراسل من الموقع، ثم اسم الخدمة
   const whatsapp = `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(
-    `مرحبًا، أستفسر عن: ${service.h1}`
+    `${whatsappGeneralMessage} - ${service.h1}`
   )}`;
   const category = categories.find((c) => c.slug === service.relatedCategorySlug);
   const otherServices = services.filter((s) => s.slug !== service.slug);
