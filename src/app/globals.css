@@ -855,4 +855,6 @@ body {
 .social-instagram svg { color: #C13584; }
 .social-whatsapp:hover { background: #25D366; border-color: #25D366; color: #fff; }
 .social-instagram:hover { background: #C13584; border-color: #C13584; color: #fff; }
+.social-x svg { color: #000; }
+.social-x:hover { background: #000; border-color: #000; color: #fff; }
 .social-link:hover svg { color: #fff; }

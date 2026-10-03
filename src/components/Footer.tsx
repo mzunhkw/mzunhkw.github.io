@@ -46,6 +46,19 @@ export default function Footer() {
               <span dir="ltr">@mazunhkw</span>
             </a>
           </li>
+          <li>
+            <span className="text-ink/55">إكس: </span>
+            <a
+              href="https://x.com/mazunhkw"
+              target="_blank"
+              rel="me noreferrer"
+              className="social-link social-x"
+              aria-label="حسابنا على إكس"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.25l-4.9-6.4L6.45 22H3.33l7.24-8.28L2.9 2h6.4l4.43 5.85L18.9 2zm-1.1 18.1h1.73L8.3 3.8H6.45L17.8 20.1z" /></svg>
+              <span dir="ltr">@mazunhkw</span>
+            </a>
+          </li>
         </ul>
       </div>
       <nav aria-label="أقسام الموقع" className="max-w-6xl mx-auto px-4 sm:px-8 pb-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
