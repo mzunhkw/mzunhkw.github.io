@@ -410,9 +410,11 @@ textarea.compact { min-height: 92px; }
   /* قائمة المنتجات كبطاقات */
   .filters { display: grid; grid-template-columns: 1fr; gap: 8px; }
   .list-item { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 10px; border-radius: 14px; align-items: start; }
-  .list-item img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; }
-  .list-item .actions, .list-item > div:last-child { grid-column: 1 / -1; display: flex; gap: 8px; }
-  .list-item .actions button, .list-item > div:last-child button { flex: 1; }
+  .list-item .thumb, .list-item .thumb-empty, .list-item img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; }
+  .list-item .meta { min-width: 0; }
+  .list-item .meta strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .list-item .btns { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+  .list-item .btns > * { flex: 1 1 calc(33% - 6px); min-height: 42px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; }
 
   .dropzone { min-height: 140px; padding: 24px !important; }
   .alt-row { grid-template-columns: 56px 1fr; }
