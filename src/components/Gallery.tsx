@@ -89,6 +89,8 @@ export default function Gallery({
                 sizes="100vw"
                 alt={altFor(i)}
                 loading={i === 0 && eagerFirst ? 'eager' : 'lazy'}
+                fetchPriority={i === 0 && eagerFirst ? 'high' : 'auto'}
+                decoding={i === 0 && eagerFirst ? 'sync' : 'async'}
                 className="w-full h-full object-cover"
               />
             </button>
