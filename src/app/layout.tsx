@@ -121,6 +121,16 @@ const jsonLd = {
   ...(siteConfig.socialLinks.length ? { sameAs: siteConfig.socialLinks } : {}),
 };
 
+const GA_ID = 'G-9CRZ2J12D6';
+// GA4 مؤجَّل (حارس LCP): gtag يُعرَّف فوراً فتُحفظ الأحداث في dataLayer، وسكربت gtag.js لا يُحمَّل
+// إلا عند أول تفاعل (لمس/تمرير/نقر/لوحة مفاتيح) أو بعد 6 ثوانٍ من اكتمال الصفحة — على mazunhkw.com فقط.
+// كل ضغطة على رابط واتساب تُرسل حدث whatsapp_click (يُعيَّن «حدثاً رئيسياً» في GA4).
+const GA_SCRIPT = `(function(){var id='${GA_ID}';window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};gtag('js',new Date());gtag('config',id);
+if(!(location.hostname==='mazunhkw.com'||location.hostname.slice(-13)==='.mazunhkw.com'))return;
+var done=false,ev=['pointerdown','keydown','scroll','touchstart'];function go(){if(done)return;done=true;ev.forEach(function(e){removeEventListener(e,go)});var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+id;document.head.appendChild(s);}
+ev.forEach(function(e){addEventListener(e,go,{once:true,passive:true})});function later(){setTimeout(go,6000)}if(document.readyState==='complete')later();else addEventListener('load',later,{once:true});
+document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href*="wa.me"],a[href*="api.whatsapp.com"]');if(!a)return;go();var p=location.pathname,q=p.split('/'),m=q[1]==='products'&&q[2]?[0,q[2]]:null;gtag('event','whatsapp_click',{page_path:p,product:m?m[1]:'',link_text:(a.textContent||'').trim().slice(0,60),language:document.documentElement.lang||'ar',transport_type:'beacon'});},true);})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ar" dir="rtl" className={`${notoKufiArabic.variable} ${notoKufiLatin.variable}`}>
@@ -137,6 +147,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-1">{children}</main>
         <Footer />
         <FloatingWhatsApp />
+        <script dangerouslySetInnerHTML={{ __html: GA_SCRIPT }} />
       </body>
     </html>
   );

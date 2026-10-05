@@ -920,10 +920,10 @@ function readForm() {
     shortDescription: $('f_shortDescription').value.trim(),
     description: $('f_description').value.trim(),
     materials: parseMaterials($('f_materials').value),
-    seoTitle: $('f_seoTitle').value.trim(),
-    metaDescription: $('f_metaDescription').value.trim(),
+    seoTitle: $('f_seoTitle').value.trim() || autoSeoTitle(title),
+    metaDescription: $('f_metaDescription').value.trim() || autoMeta($('f_shortDescription').value, $('f_description').value),
     keywords: parseMaterials($('f_keywords').value),
-    imageAlts: state.altDraft.map((x) => x.trim()),
+    imageAlts: autoAlts(title, state.altDraft.map((x) => x.trim()), state.images.length),
     featured: $('f_featured').checked,
     published: $('f_published').checked,
     imageCount: state.images.length,
@@ -948,6 +948,28 @@ function renderAltFields(images, alts) {
     )
   )));
 }
+
+// ---------------------------------------------------------------------------
+// اقتراح SEO تلقائي عند الحفظ: يُملأ فقط ما تركته فارغاً (يمكن تعديله لاحقاً)
+// ---------------------------------------------------------------------------
+function autoSeoTitle(title) {
+  const [core, place] = String(title || '').split(' — ');
+  const t = place && `${core} في ${place}`.length <= 58 ? `${core} في ${place}` : core;
+  return (t || '').trim().slice(0, 60);
+}
+function autoMeta(short, desc) {
+  const s = String(short || desc || '').replace(/\s+/g, ' ').trim();
+  if (s.length <= 158) return s;
+  const cut = s.slice(0, 158);
+  const marks = [...cut.matchAll(/،|\.(?=\s)/g)].map((m) => m.index).filter((i) => i > 95);
+  const end = marks.length ? marks[marks.length - 1] : cut.lastIndexOf(' ');
+  return cut.slice(0, end).replace(/[،.\s]+$/, '') + '.';
+}
+function autoAlts(title, alts, n) {
+  const core = String(title || '').split(' — ')[0].trim();
+  return Array.from({ length: n }, (_, i) => (alts[i] || '').trim() || (i === 0 ? core : `${core} — صورة ${i + 1}`));
+}
+
 function seoAudit(p) {
   const checks = [
     ['عنوان SEO', !!(p.seoTitle || '').trim(), 'أضف عنوانًا مخصصًا للصفحة عند الحاجة.'],
