@@ -354,14 +354,33 @@ async function processImage(file) {
   ctx.drawImage(src, 0, 0, canvas.width, canvas.height);
   if (src.close) src.close();
 
-  let blob = await canvasToBlob(canvas, 'image/webp', 0.82);
+  // سقف حجم صارم (LCP): لا تُرفع صورة أكبر من MAX_UPLOAD_KB — تُخفَّض الجودة ثم الأبعاد تدريجياً
+  const MAX_UPLOAD_KB = 300;
+  const shrink = async (type, qualities) => {
+    let b = null;
+    for (const q of qualities) {
+      b = await canvasToBlob(canvas, type, q);
+      if (!b || b.type !== type || b.size <= MAX_UPLOAD_KB * 1024) return b;
+    }
+    // ما زالت كبيرة: نصغّر الأبعاد إلى 1200 ونعيد المحاولة
+    if (Math.max(canvas.width, canvas.height) > 1200) {
+      const k = 1200 / Math.max(canvas.width, canvas.height);
+      const c2 = document.createElement('canvas');
+      c2.width = Math.round(canvas.width * k); c2.height = Math.round(canvas.height * k);
+      c2.getContext('2d').drawImage(canvas, 0, 0, c2.width, c2.height);
+      canvas.width = c2.width; canvas.height = c2.height; ctx.drawImage(c2, 0, 0);
+      b = await canvasToBlob(canvas, type, qualities[qualities.length - 1]);
+    }
+    return b;
+  };
+  let blob = await shrink('image/webp', [0.82, 0.74, 0.66]);
   let ext = 'webp';
   if (!blob || blob.type !== 'image/webp') {
     // متصفح ما يدعم ترميز WebP → JPEG بخلفية بيضاء
     ctx.globalCompositeOperation = 'destination-over';
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    blob = await canvasToBlob(canvas, 'image/jpeg', 0.85);
+    blob = await shrink('image/jpeg', [0.85, 0.76, 0.68]);
     ext = 'jpg';
   }
   if (!blob) throw new Error(`تعذر تحويل «${file.name}».`);

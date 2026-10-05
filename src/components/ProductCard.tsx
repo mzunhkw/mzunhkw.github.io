@@ -31,7 +31,7 @@ export default function ProductCard({ product, featured = false, compact = false
                   '(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) 55vw, 620px'
                 : '(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 300px'
             }
-            alt={product.title}
+            alt={product.imageAlts?.[0] || product.title}
             width={900}
             height={900}
             // لا نستعجل تحميل هذه الصورة حتى لو كانت "featured": عنصر LCP

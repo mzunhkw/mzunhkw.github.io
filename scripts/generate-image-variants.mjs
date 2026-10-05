@@ -37,6 +37,8 @@ const MIN_SAVING_RATIO = 1.15;
 const MAX_SERVED_WIDTH = 1000;
 const VARIANT_QUALITY = 75;
 const VARIANT_MARKER = '@';
+// سقف حجم الملف الأصلي المنشور (ك.ب) — ما فوقه يُعاد ضغطه وقت البناء
+const MAX_ORIGINAL_KB = 300;
 
 function isVariantFile(name) {
   return name.includes(VARIANT_MARKER);
@@ -49,7 +51,7 @@ function listOriginalWebp(dir, out = []) {
     const stat = statSync(full);
     if (stat.isDirectory()) {
       listOriginalWebp(full, out);
-    } else if (extname(entry).toLowerCase() === '.webp' && !isVariantFile(entry)) {
+    } else if (['.webp', '.jpg', '.jpeg', '.png'].includes(extname(entry).toLowerCase()) && !isVariantFile(entry)) {
       out.push(full);
     }
   }
@@ -62,7 +64,7 @@ function toPublicPath(absPath) {
 
 function variantPath(absOriginal, width) {
   const dir = dirname(absOriginal);
-  const ext = extname(absOriginal);
+  const ext = '.webp'; // النسخ دائماً WebP حتى لو الأصل JPG/PNG
   const base = basename(absOriginal, ext);
   return join(dir, `${base}${VARIANT_MARKER}${width}w${ext}`);
 }
@@ -73,7 +75,16 @@ async function run() {
   let generated = 0;
   let skippedExisting = 0;
 
+  let shrunk = 0;
   for (const absOriginal of originals) {
+    // حارس LCP: أي أصل أكبر من MAX_ORIGINAL_KB يُعاد ضغطه في مكانه أثناء البناء (لا يُعدَّل git)،
+    // لأنه يُخدم كـ src احتياطي وقد يكون أول صورة في الصفحة
+    if (statSync(absOriginal).size > MAX_ORIGINAL_KB * 1024) {
+      const isWebp = extname(absOriginal).toLowerCase() === '.webp';
+      const pipe = sharp(absOriginal).rotate().resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true });
+      const buf = await (isWebp ? pipe.webp({ quality: 72 }) : pipe.jpeg({ quality: 76, mozjpeg: true })).toBuffer();
+      if (buf.length < statSync(absOriginal).size) { writeFileSync(absOriginal, buf); shrunk++; }
+    }
     const meta = await sharp(absOriginal).metadata();
     const originalWidth = meta.width ?? 0;
     const originalHeight = meta.height ?? 0;
@@ -120,7 +131,7 @@ async function run() {
   writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
 
   console.log(
-    `[image-variants] ${originals.length} صورة أصلية — ${generated} نسخة جديدة، ${skippedExisting} كانت موجودة مسبقًا.`
+    `[image-variants] ${originals.length} صورة أصلية — ${generated} نسخة جديدة، ${skippedExisting} كانت موجودة مسبقًا، ${shrunk} أصل أُعيد ضغطه (فوق ${MAX_ORIGINAL_KB} ك.ب).`
   );
 }
 
