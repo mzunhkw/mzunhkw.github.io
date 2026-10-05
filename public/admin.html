@@ -18,26 +18,35 @@
 <!-- ============ شاشة الدخول ============ -->
 <main id="login" class="gate">
   <h2>لوحة إدارة مزونة</h2>
-  <p>الدخول يتم بـ GitHub Token — هو نفسه مفتاح الحماية الحقيقي. يُتحقق منه فورًا، ويُحفظ بهذا التبويب فقط ويُمسح عند إغلاقه.</p>
-  <form id="loginForm" novalidate>
+  <form id="pwForm" novalidate>
     <div class="field">
-      <label for="l_token">GitHub Token</label>
-      <input id="l_token" type="password" autocomplete="off" spellcheck="false" dir="ltr" required />
+      <label for="l_pw">كلمة السر</label>
+      <input id="l_pw" type="password" autocomplete="current-password" dir="ltr" required />
     </div>
-    <details id="l_repoBox">
-      <summary>إعدادات المستودع</summary>
-      <div class="field"><label for="l_owner">owner</label><input id="l_owner" dir="ltr" autocomplete="off" /></div>
-      <div class="field"><label for="l_repo">repo</label><input id="l_repo" dir="ltr" autocomplete="off" /></div>
-      <div class="field"><label for="l_branch">branch</label><input id="l_branch" dir="ltr" autocomplete="off" /></div>
-    </details>
-    <button class="primary block" id="loginBtn" type="submit">دخول</button>
-    <div class="error" id="loginErr" role="alert"></div>
+    <button class="primary block" id="pwBtn" type="submit">دخول</button>
+    <div class="error" id="pwErr" role="alert"></div>
   </form>
-  <ol>
-    <li>افتح github.com/settings/personal-access-tokens/new (Fine-grained token).</li>
-    <li>Repository access ← Only select repositories ← مستودع الموقع فقط.</li>
-    <li>Permissions ← Contents ← Read and write.</li>
-  </ol>
+  <p id="noVault" hidden>لم تُضبط كلمة سر بعد. اضبطها مرة واحدة من «ضبط كلمة السر» بالأسفل.</p>
+  <details id="setupBox">
+    <summary>ضبط كلمة السر أو تغييرها (مرة واحدة)</summary>
+    <p>الصق GitHub Token (Contents: Read and write على هذا المستودع فقط)، واختر كلمة سر من 12 حرفاً على الأقل. يُشفَّر التوكن بكلمة السر داخل متصفحك ويُحفظ مشفّراً في الموقع، فلا يُرى التوكن نفسه أبداً. بعدها يكفي إدخال كلمة السر من أي جهاز.</p>
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label for="l_token">GitHub Token</label>
+        <input id="l_token" type="password" autocomplete="off" spellcheck="false" dir="ltr" required />
+      </div>
+      <div class="field"><label for="l_newpw">كلمة السر الجديدة (12 حرفاً على الأقل)</label><input id="l_newpw" type="password" autocomplete="new-password" dir="ltr" /></div>
+      <div class="field"><label for="l_newpw2">أعد كتابة كلمة السر</label><input id="l_newpw2" type="password" autocomplete="new-password" dir="ltr" /></div>
+      <details id="l_repoBox">
+        <summary>إعدادات المستودع</summary>
+        <div class="field"><label for="l_owner">owner</label><input id="l_owner" dir="ltr" autocomplete="off" /></div>
+        <div class="field"><label for="l_repo">repo</label><input id="l_repo" dir="ltr" autocomplete="off" /></div>
+        <div class="field"><label for="l_branch">branch</label><input id="l_branch" dir="ltr" autocomplete="off" /></div>
+      </details>
+      <button class="primary block" id="loginBtn" type="submit">حفظ كلمة السر والدخول</button>
+      <div class="error" id="loginErr" role="alert"></div>
+    </form>
+  </details>
 </main>
 
 <!-- ============ التطبيق ============ -->

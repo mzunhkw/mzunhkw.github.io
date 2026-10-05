@@ -509,7 +509,7 @@ function showLogin(message) {
   $('l_repo').value = c.repo;
   $('l_branch').value = c.branch;
   $('l_token').value = '';
-  $('l_token').focus();
+  if ($('l_pw')) $('l_pw').focus();
 }
 
 function showApp() {
@@ -527,6 +527,80 @@ async function verifyAndLoad() {
   await loadData();
 }
 
+
+// ---------------------------------------------------------------------------
+// الدخول بكلمة سر: التوكن مشفّر بكلمة السر (PBKDF2 600k + AES-GCM) في public/admin-vault.json
+// الملف علني لكنه بلا قيمة دون كلمة السر؛ قوة الحماية = قوة كلمة السر (12 حرفاً على الأقل)
+// ---------------------------------------------------------------------------
+const VAULT_PATH = 'public/admin-vault.json';
+const VAULT_ITER = 600000;
+const b64e = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
+const b64d = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+async function vaultKey(password, salt, iter) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+async function sealToken(token, password) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await vaultKey(password, salt, VAULT_ITER);
+  const data = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(token));
+  return { v: 1, kdf: 'PBKDF2-SHA256', iter: VAULT_ITER, salt: b64e(salt), iv: b64e(iv), data: b64e(data), updated: new Date().toISOString() };
+}
+async function openVault(vault, password) {
+  const key = await vaultKey(password, b64d(vault.salt), vault.iter || VAULT_ITER);
+  const out = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(vault.iv) }, key, b64d(vault.data));
+  return new TextDecoder().decode(out);
+}
+let VAULT = null;
+async function loadVault() {
+  try {
+    // يُقرأ من GitHub مباشرة (مسموح في CSP، ومتاح فور الحفظ دون انتظار النشر)
+    const c = cfg();
+    const r = await fetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/${VAULT_PATH}?ref=${encodeURIComponent(c.branch)}&ts=${Date.now()}`, { cache: 'no-store', headers: { Accept: 'application/vnd.github.raw+json' } });
+    VAULT = r.ok ? await r.json() : null;
+  } catch (_) { VAULT = null; }
+  $('noVault').hidden = !!VAULT;
+  $('pwForm').hidden = !VAULT;
+  if (!VAULT) $('setupBox').open = true;
+}
+async function saveVault(password) {
+  const token = sessionStorage.getItem(TOKEN_KEY);
+  const sealed = await sealToken(token, password);
+  let sha;
+  try { sha = (await gh(`${repoBase()}/contents/${VAULT_PATH}?ref=${encodeURIComponent(cfg().branch)}`)).sha; } catch (_) { sha = undefined; }
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(sealed, null, 2) + '\n')));
+  await gh(`${repoBase()}/contents/${VAULT_PATH}`, { method: 'PUT', body: { message: 'لوحة الإدارة: تحديث كلمة السر (التوكن مشفّر)', content, branch: cfg().branch, ...(sha ? { sha } : {}) } });
+  VAULT = sealed;
+}
+let pwFails = 0;
+async function onPasswordLogin(e) {
+  e.preventDefault();
+  const pw = $('l_pw').value;
+  const err = $('pwErr');
+  err.textContent = '';
+  if (!VAULT) { err.textContent = 'لم تُضبط كلمة سر بعد.'; return; }
+  if (pwFails >= 5) { err.textContent = 'محاولات كثيرة. حدّث الصفحة وحاول بعد قليل.'; return; }
+  const btn = $('pwBtn');
+  btn.disabled = true;
+  btn.textContent = 'جارٍ التحقق…';
+  try {
+    let token;
+    try { token = await openVault(VAULT, pw); } catch (_) { pwFails++; throw new Error('كلمة السر غير صحيحة.'); }
+    sessionStorage.setItem(TOKEN_KEY, token);
+    await verifyAndLoad();
+    $('l_pw').value = '';
+    showApp();
+    toast('', '');
+  } catch (ex) {
+    sessionStorage.removeItem(TOKEN_KEY);
+    err.textContent = ex.message === 'التوكن غير صحيح أو منتهي الصلاحية.' ? 'التوكن المحفوظ انتهت صلاحيته: اضبط كلمة السر من جديد بتوكن جديد.' : ex.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'دخول';
+  }
+}
+
 async function onLogin(e) {
   e.preventDefault();
   const token = $('l_token').value.trim();
@@ -537,6 +611,15 @@ async function onLogin(e) {
   err.textContent = '';
   if (!token) {
     err.textContent = 'الصق الـ GitHub Token أولًا.';
+    return;
+  }
+  const newPw = $('l_newpw').value;
+  if (newPw.length < 12) {
+    err.textContent = 'كلمة السر يجب أن تكون 12 حرفاً على الأقل.';
+    return;
+  }
+  if (newPw !== $('l_newpw2').value) {
+    err.textContent = 'كلمتا السر غير متطابقتين.';
     return;
   }
   if (!/^[\w.-]+$/.test(owner) || !/^[\w.-]+$/.test(repo) || !/^[\w./-]+$/.test(branch)) {
@@ -553,8 +636,13 @@ async function onLogin(e) {
   btn.textContent = 'جارٍ التحقق…';
   try {
     await verifyAndLoad();
+    await saveVault(newPw);
     $('l_token').value = '';
+    $('l_newpw').value = '';
+    $('l_newpw2').value = '';
     showApp();
+    toast('حُفظت كلمة السر. من الآن يكفي إدخالها للدخول .', 'ok');
+    return;
     toast('', '');
   } catch (ex) {
     sessionStorage.removeItem(TOKEN_KEY);
@@ -1532,6 +1620,8 @@ function renderAll() {
 
 function wire() {
   $('loginForm').addEventListener('submit', onLogin);
+  $('pwForm').addEventListener('submit', onPasswordLogin);
+  loadVault();
   $('logoutBtn').addEventListener('click', onLogout);
   $('refreshBtn').addEventListener('click', () => runBusy('جارٍ التحديث…', async () => { await loadData(); toast('تم التحديث.', 'ok'); }));
   document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab)));
