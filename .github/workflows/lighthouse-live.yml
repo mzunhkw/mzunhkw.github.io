@@ -1,0 +1,32 @@
+# قياس Lighthouse على الموقع الحي (نفس إعدادات PageSpeed Insights للجوال: Moto G Power ومحاكاة 4G بطيء)
+# يدوي: Actions ← «قياس الأداء على الموقع الحي» ← Run workflow. النتائج تظهر كتنبيهات في صفحة التشغيل.
+name: قياس الأداء على الموقع الحي
+on:
+  workflow_dispatch:
+    inputs:
+      pages:
+        description: "مسارات بلا / في البداية مفصولة بمسافة (فارغ = الرئيسية والخشبي والرول)"
+        required: false
+        default: ""
+jobs:
+  live:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Lighthouse (حي، 3 مرات لكل صفحة)
+        run: |
+          mkdir -p lh
+          PAGES="${{ github.event.inputs.pages }}"; [ -z "$PAGES" ] && PAGES="_ products/product-di3d2/ category/sofas/"
+          for page in $PAGES; do [ "$page" = "_" ] && page=""
+            for run in 1 2 3; do
+              name="lhr-$(echo "${page:-home}" | tr '/' '_')-$run.json"
+              npx --yes lighthouse@12 "https://mazunhkw.com/$page" --quiet --output=json --output-path="lh/$name" \
+                --only-categories=performance --chrome-flags="--headless=new --no-sandbox" || echo "::warning::فشل القياس $page $run"
+            done
+          done
+      - name: ملخص
+        if: always()
+        run: node scripts/lh-summary.mjs lh

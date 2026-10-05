@@ -17,6 +17,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      indexnow_urls: ${{ steps.indexnow.outputs.urls }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,6 +40,17 @@ jobs:
 
       - name: Add .nojekyll
         run: touch ./out/.nojekyll
+      - name: ذاكرة IndexNow
+        uses: actions/cache@v4
+        with:
+          path: .indexnow
+          key: indexnow-${{ github.sha }}
+          restore-keys: indexnow-
+      - name: IndexNow — تجهيز الروابط المتغيرة
+        id: indexnow
+        run: |
+          node scripts/indexnow.mjs prepare
+          { echo "urls<<EOF"; cat .indexnow/urls.txt; echo; echo "EOF"; } >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -61,3 +74,20 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
             -H "Content-Type: application/json" \
             --data '{"purge_everything": true}'
+
+  indexnow:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.1'
+      - name: إرسال IndexNow
+        env:
+          URLS: ${{ needs.build.outputs.indexnow_urls }}
+        run: |
+          mkdir -p .indexnow
+          printf '%s\n' "$URLS" > .indexnow/urls.txt
+          node scripts/indexnow.mjs submit
