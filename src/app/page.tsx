@@ -65,7 +65,7 @@ export default function HomePage() {
             </nav>
 
             <div className="hero-trust">
-              <span><b>{siteConfig.projectsCount}</b> مشروع</span>
+              <span><b>{siteConfig.projectsCount}</b> عمل منفّذ</span>
               <span><b>{siteConfig.foundedYear}</b> منذ التأسيس</span>
               <span>تفصيل حسب الطلب</span>
             </div>
@@ -163,7 +163,7 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
         <div className="home-about">
           <div className="stats-grid">
-            <div><b>{siteConfig.projectsCount}</b><span>مشروع منفّذ</span></div>
+            <div><b>{siteConfig.projectsCount}</b><span>عمل منفّذ</span></div>
             <div><b>{siteConfig.foundedYear}</b><span>منذ التأسيس</span></div>
           </div>
 
