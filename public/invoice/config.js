@@ -22,6 +22,7 @@ window.INVOICE_CONFIG = {
   storagePrefix: 'mzinv', // بادئة التخزين في الجهاز — غيّرها لكل موقع
   keyDbName: 'mazuna-invoice', // مخزن مفتاح التوقيع داخل الجهاز — غيّره لكل موقع
   quoteValidityDays: 14,
+  verifyLang: 'ar', // لغة صفحة التحقق الافتراضية (ar أو en) — للنسخة المستقلة verify/index.html
   terms: {
     invoice: {
       ar: [
