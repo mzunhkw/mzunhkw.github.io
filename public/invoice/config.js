@@ -22,7 +22,8 @@ window.INVOICE_CONFIG = {
   storagePrefix: 'mzinv', // بادئة التخزين في الجهاز — غيّرها لكل موقع
   keyDbName: 'mazuna-invoice', // مخزن مفتاح التوقيع داخل الجهاز — غيّره لكل موقع
   // ترقيم المستندات: بادئة + رقم بعدد خانات ثابت، مثال A7D/000547 ثم A7D/000548
-  numbering: { invoicePrefix: 'A7D/', invoiceStart: 547, quotePrefix: 'Q/', quoteStart: 1, digits: 6 },
+  // version: ارفعه عند تغيير البادئة أو رقم البداية هنا ليُطبَّق على الأجهزة المستخدمة من قبل
+  numbering: { version: 2, invoicePrefix: 'A7D/', invoiceStart: 547, quotePrefix: 'Q3W/', quoteStart: 382, digits: 6 },
   quoteValidityDays: 14,
   verifyLang: 'ar', // لغة صفحة التحقق الافتراضية (ar أو en) — للنسخة المستقلة verify/index.html
   terms: {

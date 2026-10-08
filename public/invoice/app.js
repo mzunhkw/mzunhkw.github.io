@@ -710,14 +710,19 @@ async function init() {
   CODES = await (await fetch('/invoice/codes.json', { cache: 'no-cache' })).json();
   UI = lsGet(LS.ui, 'ar') === 'en' ? 'en' : 'ar';
   applyUi();
-  // أول تشغيل لنظام الترقيم الجديد: يبدأ العدّاد من رقم البداية في config.js (مثال 547) إن كان أقل
-  if (localStorage.getItem(LS.num) == null) {
+  // ترحيل الترقيم: عند رفع numbering.version في config.js تُطبَّق البادئات وأرقام البداية الجديدة
+  // على هذا الجهاز (العدّاد لا ينزل أبدًا عن رقم وصل إليه)، والمسودة غير المحفوظة تأخذ الرقم الجديد
+  {
     const N = CFG.numbering || {};
-    if (Number(lsGet(LS.next, 0)) < (N.invoiceStart || 1)) lsSet(LS.next, N.invoiceStart || 1);
-    if (Number(lsGet(LS.nextQ, 0)) < (N.quoteStart || 1)) lsSet(LS.nextQ, N.quoteStart || 1);
-    lsSet(LS.num, numFmt());
-    const d = lsGet(LS.draft, null);
-    if (d && !d.savedAt) { d.no = nextNo(d.type || 'invoice'); lsSet(LS.draft, d); }
+    const ver = Number(N.version || 1);
+    if (Number(lsGet(`${LS.num}_ver`, 0)) < ver) {
+      if (Number(lsGet(LS.next, 0)) < (N.invoiceStart || 1)) lsSet(LS.next, N.invoiceStart || 1);
+      if (Number(lsGet(LS.nextQ, 0)) < (N.quoteStart || 1)) lsSet(LS.nextQ, N.quoteStart || 1);
+      lsSet(LS.num, { invoicePrefix: N.invoicePrefix || '', quotePrefix: N.quotePrefix || '', digits: Number(N.digits || 0) });
+      lsSet(`${LS.num}_ver`, ver);
+      const d = lsGet(LS.draft, null);
+      if (d && !d.savedAt) { d.no = nextNo(d.type || 'invoice'); lsSet(LS.draft, d); }
+    }
   }
   inv = lsGet(LS.draft, null);
   if (inv) {
