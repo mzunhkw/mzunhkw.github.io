@@ -11,15 +11,17 @@ import ProductCard from '@/components/ProductCard';
 const AREA_SERVICES = [
   { name: 'كنب وقنفات', href: '/category/sofas/' },
   { name: 'غرف نوم', href: '/category/bedrooms/' },
-  { name: 'كبتات ملابس', href: '/category/bedrooms/' },
-  { name: 'طاولات', href: '/category/tables/' },
+  { name: 'كبتات ملابس', href: '/tafseel-kabatat-kuwait/' },
+  { name: 'طاولات طعام', href: '/category/tables/' },
+  { name: 'طاولات قهوة', href: '/category/coffee-tables/' },
   { name: 'مجالس وديوانيات', href: '/category/majlis/' },
   { name: 'مساند عربية', href: '/category/cushions/' },
 ];
 
 export default function AreaLandingPage({ area }: { area: AreaPage }) {
   // أعمالنا الفعلية المنفذة في مناطق المحافظة (حسب حقل region بالمنتج)
-  const works = visibleProducts.filter((p) => area.districts.some((d) => (p.region || '').includes(d))).slice(0, 12);
+  const terms = [...area.districts, ...(area.regionAliases || [])];
+  const works = visibleProducts.filter((p) => terms.some((d) => (p.region || '').includes(d))).slice(0, 12);
   const others = areaPages.filter((a) => a.slug !== area.slug);
   const whatsapp = whatsappLink(`نجار ${area.governorate}`, area.path);
 

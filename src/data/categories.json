@@ -21,7 +21,11 @@
   },
   {
     "slug": "tables",
-    "name": "طاولات طعام وقهوة"
+    "name": "طاولات طعام"
+  },
+  {
+    "slug": "coffee-tables",
+    "name": "طاولات قهوة وجانبية"
   },
   {
     "slug": "decor",

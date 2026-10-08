@@ -103,11 +103,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: latest(
       gitLastModified('src/data/area-pages.ts'),
       gitLastModified('src/components/AreaLandingPage.tsx'),
-      newestProduct(visibleProducts.filter((p) => a.districts.some((d) => (p.region || '').includes(d))))
+      newestProduct(visibleProducts.filter((p) => [...a.districts, ...(a.regionAliases || [])].some((d) => (p.region || '').includes(d))))
     ),
     changeFrequency: 'monthly',
     priority: 0.8,
   }));
+
+  // صفحة تفصيل الكبتات — تعرض كبتات قسم غرف النوم، فتتغير مع الملف أو مع أي كبت يُعدَّل
+  const wardrobeUrls: MetadataRoute.Sitemap = [
+    {
+      url: `${base}/tafseel-kabatat-kuwait/`,
+      lastModified: latest(
+        gitLastModified('src/app/tafseel-kabatat-kuwait/page.tsx'),
+        newestProduct(visibleProducts.filter((p) => p.categorySlug === 'bedrooms' && /كبت|غرفة ملابس/.test(p.title)))
+      ),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+  ];
 
   // المرحلة 3: قسم المقالات — dateModified المكتوب بكل مقال هو التاريخ الفعلي لآخر تحديث للمحتوى
   const articleUrls: MetadataRoute.Sitemap = [
@@ -125,5 +138,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   ];
 
-  return [...staticUrls, ...categoryUrls, ...serviceUrls, ...areaUrls, ...articleUrls, ...productUrls];
+  return [...staticUrls, ...categoryUrls, ...serviceUrls, ...wardrobeUrls, ...areaUrls, ...articleUrls, ...productUrls];
 }
