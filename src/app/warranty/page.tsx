@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { siteConfig, whatsappLink } from '@/data/site-config';
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
+import { commercialRegistrationLink } from '@/components/TrustSection';
 
 // سياسة الضمان والإرجاع — مدد الضمان من المالك مباشرة (2026-10-08):
 // خامات عالية الجودة (خشب الزان وإسفنج البغلي): من سنة إلى خمس سنوات، والزان الأحمر خمس سنوات؛
@@ -153,13 +154,25 @@ export default function WarrantyPage() {
       <section className="mt-10">
         <h2 className="text-xl sm:text-2xl mb-3">كيف تطلب الضمان</h2>
         <ol className="list-decimal ps-5 space-y-1.5 text-ink/75 leading-relaxed">
-          <li>راسلنا عبر واتساب برقم الفاتورة.</li>
+          <li>راسلنا عبر واتساب برقم الفاتورة، أو امسح باركود الفاتورة واضغط «طلب ضمان» من صفحة التحقق.</li>
           <li>أرسل صورًا واضحة للمشكلة.</li>
           <li>نحدد معك موعدًا لمعاينة القطعة، وإذا كان العيب مشمولًا بالضمان نصلحه.</li>
         </ol>
         <a href={whatsapp} target="_blank" rel="noreferrer" className="inline-grid mt-5 min-h-12 px-8 place-items-center bg-sage text-white rounded-full">
           طلب ضمان عبر واتساب
         </a>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="text-xl sm:text-2xl mb-3">التحقق من الفاتورة والضمان</h2>
+        <p className="text-ink/75 leading-relaxed">
+          كل فاتورة من منجرتنا عليها باركود تحقق موقّع رقميًا. امسحه بكاميرا الجوال لتتأكد أن الفاتورة صادرة منا وترى مدة ضمان
+          كل قطعة وتاريخ انتهائه. ويمكنك طلب رقم السجل التجاري للمنجرة عبر واتساب.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link href="/verify/" className="inline-grid min-h-11 px-5 place-items-center border border-sand rounded-full text-sm hover:border-sage-soft">التحقق من فاتورة</Link>
+          <a href={commercialRegistrationLink()} target="_blank" rel="noreferrer" className="inline-grid min-h-11 px-5 place-items-center border border-sand rounded-full text-sm hover:border-sage-soft">طلب رقم السجل التجاري عبر واتساب</a>
+        </div>
       </section>
 
       <section className="mt-10">

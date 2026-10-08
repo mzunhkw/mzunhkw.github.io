@@ -5,6 +5,7 @@ import { services } from '@/data/services';
 import { siteConfig, whatsappGeneralLink } from '@/data/site-config';
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
+import TrustSection from '@/components/TrustSection';
 
 // كل المعلومات في هذه الصفحة من المالك مباشرة (2026-10-08): البداية، الفريق، المعرض،
 // خطوات الطلب، الضمان، وما يميز المنجرة. لا تُضف ادعاءً غير مؤكد.
@@ -154,6 +155,10 @@ export default function AboutPage() {
             <Link href="/warranty/" className="text-sage underline">تفاصيل الضمان وما يشمله وكيف تطلبه</Link>
           </p>
         </div>
+      </section>
+
+      <section className="mt-12">
+        <TrustSection />
       </section>
 
       <section className="mt-12">

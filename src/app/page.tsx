@@ -9,6 +9,7 @@ import ProductCard from '@/components/ProductCard';
 import OffersStrip from '@/components/OffersStrip';
 import { visibleOffers } from '@/data/offers';
 import { getSrcSet } from '@/lib/image';
+import TrustSection from '@/components/TrustSection';
 
 export const metadata: Metadata = {
   // «نجار» ~5,400/شهر و«نجار الكويت» ~1,600 و«منجرة» ~1,000 (Ubersuggest، الكويت، أكتوبر 2026)
@@ -159,6 +160,10 @@ export default function HomePage() {
           </div>
         </section>
       )}
+
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16" aria-label="الفواتير والضمان">
+        <TrustSection />
+      </section>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
         <div className="home-about">
