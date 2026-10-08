@@ -150,6 +150,9 @@ export default function AboutPage() {
             ضمان خشب الزان الأحمر إلى خمس سنوات.
           </p>
           <p>وإذا اختار العميل خامة أقل جودة، يكون الضمان على عيوب التصنيع فقط.</p>
+          <p>
+            <Link href="/warranty/" className="text-sage underline">تفاصيل الضمان وما يشمله وكيف تطلبه</Link>
+          </p>
         </div>
       </section>
 
