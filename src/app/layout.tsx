@@ -102,7 +102,8 @@ const jsonLd = {
   telephone: `+${siteConfig.whatsappNumber}`,
   foundingDate: String(siteConfig.foundedYear),
   areaServed: { '@type': 'Country', name: 'الكويت' },
-  priceRange: '5 - 28 KWD',
+  // نطاق الأسعار التقديرية المعروضة في الموقع (من مساند الظهر بالمتر إلى طاولات الطعام الرخام)
+  priceRange: '9 - 450 KWD',
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'مجمع علي عبدالوهاب',

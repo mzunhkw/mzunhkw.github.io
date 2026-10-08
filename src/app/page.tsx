@@ -110,7 +110,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="خدمات-التنجيد" className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16 scroll-mt-24" aria-labelledby="upholstery-title">
+      <section id="upholstery" className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16 scroll-mt-24" aria-labelledby="upholstery-title">
         <div className="upholstery-panel">
           <div className="upholstery-intro">
             <span className="eyebrow">تفصيل وتجديد</span>
