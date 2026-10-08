@@ -26,7 +26,7 @@ export default function Header() {
         <nav className="desktop-nav" aria-label="التنقل الرئيسي">
           <Link href="/" className="nav-link">الرئيسية</Link>
           <Link href="/products/" className="nav-link">المنتجات</Link>
-          <Link href="/#خدمات-التنجيد" className="nav-link">التنجيد</Link>
+          <Link href="/#upholstery" className="nav-link">التنجيد</Link>
           <Link href="/about/" className="nav-link">من نحن</Link>
         </nav>
 
