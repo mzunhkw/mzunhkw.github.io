@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "kid": "kmv020rt0",
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "D0k6ounBM_JuU_3DbrmOB3RxldNQz_WJMcycVLN1j0Q",
+    "y": "-JlsAHLrLggd4CDlWACTscFR3aW9XHFdgteESkjdBV8",
+    "created": "2026-10-08T21:34:18.318Z"
+  }
+]
