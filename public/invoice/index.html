@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="referrer" content="no-referrer" />
+<meta name="theme-color" content="#3B2A20" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="فواتير مزونة" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/invoice/manifest.webmanifest" />
+<!-- لا سكربتات ولا اتصالات إلا من نفس الموقع ومن GitHub API (لتفعيل مفتاح التحقق فقط) -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; frame-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'" />
+<title>فواتير منجرة مزونة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/invoice/invoice.css?v=1" />
+</head>
+<body>
+
+<header class="bar">
+  <img src="/logo-header.webp" alt="" width="34" height="34" />
+  <strong>فواتير منجرة مزونة</strong>
+  <nav>
+    <button type="button" data-view="edit" class="tab on">فاتورة</button>
+    <button type="button" data-view="archive" class="tab">الأرشيف</button>
+    <button type="button" data-view="settings" class="tab">الإعدادات</button>
+  </nav>
+</header>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- ============ الفاتورة ============ -->
+<main id="v-edit" class="view">
+  <div id="keyWarn" class="note warn" hidden>باركود التحقق غير مفعّل على هذا الجهاز — فعّله من الإعدادات.</div>
+
+  <section class="card">
+    <div class="grid2">
+      <div class="field"><label for="i_no">رقم الفاتورة</label><input id="i_no" inputmode="numeric" dir="ltr" /></div>
+      <div class="field"><label for="i_date">التاريخ</label><input id="i_date" type="date" dir="ltr" /></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>العميل</h3>
+    <div class="field"><label for="c_name">الاسم</label><input id="c_name" autocomplete="off" /></div>
+    <div class="grid2">
+      <div class="field"><label for="c_phone">الهاتف</label><input id="c_phone" inputmode="tel" dir="ltr" /></div>
+      <div class="field"><label for="c_area">المنطقة</label><input id="c_area" autocomplete="off" /></div>
+    </div>
+    <div class="field"><label for="c_addr">العنوان (قطعة، شارع، منزل)</label><input id="c_addr" autocomplete="off" /></div>
+  </section>
+
+  <section class="card">
+    <h3>القطع</h3>
+    <div id="items"></div>
+    <button type="button" id="addItem" class="ghost wide">+ إضافة قطعة</button>
+  </section>
+
+  <section class="card">
+    <h3>الحساب</h3>
+    <div class="sum"><span>المجموع</span><b id="t_sub">0.000</b></div>
+    <div class="grid2">
+      <div class="field"><label for="t_disc">الخصم (د.ك)</label><input id="t_disc" inputmode="decimal" dir="ltr" value="0" /></div>
+      <div class="field"><label for="t_dep">العربون (د.ك)</label><input id="t_dep" inputmode="decimal" dir="ltr" value="0" /></div>
+    </div>
+    <div class="sum big"><span>الإجمالي</span><b id="t_total">0.000</b></div>
+    <div class="sum"><span>المتبقي عند التسليم</span><b id="t_rem">0.000</b></div>
+  </section>
+
+  <section class="card">
+    <h3>التسليم</h3>
+    <div class="grid2">
+      <div class="field"><label for="d_days">مدة التنفيذ (يوم)</label><input id="d_days" inputmode="numeric" dir="ltr" /></div>
+      <div class="field"><label for="d_date">تاريخ التسليم المتوقع</label><input id="d_date" type="date" dir="ltr" /></div>
+    </div>
+    <div class="field"><label for="n_notes">ملاحظات</label><textarea id="n_notes" rows="3"></textarea></div>
+  </section>
+
+  <div class="actions">
+    <button type="button" id="btnSave" class="primary">حفظ الفاتورة</button>
+    <button type="button" id="btnPdf">PDF ومشاركة</button>
+    <button type="button" id="btnWa">إرسال رابط التحقق واتساب</button>
+    <button type="button" id="btnNew" class="ghost">فاتورة جديدة</button>
+  </div>
+  <p class="hint">الحفظ يثبّت الفاتورة ويوقّع باركود التحقق. أي تعديل بعد الحفظ يتطلب الحفظ مرة أخرى.</p>
+</main>
+
+<!-- ============ الأرشيف ============ -->
+<main id="v-archive" class="view" hidden>
+  <div class="field"><input id="a_q" placeholder="ابحث برقم الفاتورة أو الاسم أو الهاتف" /></div>
+  <div id="a_list"></div>
+  <div class="actions">
+    <button type="button" id="btnExport" class="ghost">نسخة احتياطية للأرشيف</button>
+    <label class="ghost filebtn">استرجاع نسخة<input type="file" id="importFile" accept="application/json" hidden /></label>
+  </div>
+</main>
+
+<!-- ============ الإعدادات ============ -->
+<main id="v-settings" class="view" hidden>
+  <section class="card">
+    <h3>ترقيم الفواتير</h3>
+    <div class="field"><label for="s_next">رقم الفاتورة التالية</label><input id="s_next" inputmode="numeric" dir="ltr" /></div>
+    <button type="button" id="saveNext">حفظ</button>
+  </section>
+
+  <section class="card">
+    <h3>باركود التحقق</h3>
+    <p id="keyStatus" class="hint"></p>
+    <div class="field"><label for="s_pw">كلمة سر لوحة الإدارة</label><input id="s_pw" type="password" dir="ltr" autocomplete="current-password" /></div>
+    <button type="button" id="activateKey" class="primary">تفعيل التحقق على هذا الجهاز</button>
+    <p class="hint">يُنشأ مفتاح توقيع خاص داخل هذا الجهاز فقط ولا يمكن نسخه، ويُرفع مفتاحه العام لموقع مزونة. الفواتير القديمة تبقى صالحة حتى لو غيّرت الجهاز وفعّلته من جديد.</p>
+  </section>
+
+  <section class="card">
+    <h3>شروط الفاتورة</h3>
+    <textarea id="s_terms" rows="8"></textarea>
+    <button type="button" id="saveTerms">حفظ الشروط</button>
+  </section>
+</main>
+
+<!-- ورقة الفاتورة (تُرسم منها صورة الـ PDF) -->
+<div id="sheetWrap" aria-hidden="true"><div id="sheet"></div></div>
+
+<script src="/invoice/vendor/qrcode.js"></script>
+<script src="/invoice/app.js?v=1"></script>
+</body>
+</html>
