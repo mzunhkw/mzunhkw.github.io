@@ -65,6 +65,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
+  staticUrls.push({
+    url: `${base}/warranty/`,
+    lastModified: gitLastModified('src/app/warranty/page.tsx'),
+    changeFrequency: 'yearly',
+    priority: 0.4,
+  });
+
   const categoryUrls: MetadataRoute.Sitemap = categories.map((c) => ({
     url: `${base}/category/${c.slug}/`,
     // تاريخ حقيقي من لوحة الإدارة إذا موجود (تصنيفات معدَّلة بعد هذا التحديث)،
