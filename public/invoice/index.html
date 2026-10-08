@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/invoice/invoice.css?v=2" />
+<link rel="stylesheet" href="/invoice/invoice.css?v=3" />
 </head>
 <body>
 
@@ -61,7 +61,7 @@
 
   <section class="card">
     <div class="grid2">
-      <div class="field"><label for="i_no" id="l_no"></label><input id="i_no" inputmode="numeric" dir="ltr" /></div>
+      <div class="field"><label for="i_no" id="l_no"></label><input id="i_no" dir="ltr" autocomplete="off" /></div>
       <div class="field"><label for="i_date" data-i18n="date"></label><input id="i_date" type="date" dir="ltr" /></div>
     </div>
     <div class="field quote-only"><label for="q_valid" data-i18n="validDays"></label><input id="q_valid" inputmode="numeric" dir="ltr" /></div>
@@ -141,10 +141,26 @@
   <section class="card">
     <h3 data-i18n="numbering"></h3>
     <div class="grid2">
+      <div class="field"><label for="s_prefix" data-i18n="invPrefix"></label><input id="s_prefix" dir="ltr" autocomplete="off" /></div>
       <div class="field"><label for="s_next" data-i18n="nextInvoice"></label><input id="s_next" inputmode="numeric" dir="ltr" /></div>
+      <div class="field"><label for="s_prefixQ" data-i18n="quotePrefix"></label><input id="s_prefixQ" dir="ltr" autocomplete="off" /></div>
       <div class="field"><label for="s_nextQ" data-i18n="nextQuote"></label><input id="s_nextQ" inputmode="numeric" dir="ltr" /></div>
+      <div class="field"><label for="s_digits" data-i18n="numDigits"></label><input id="s_digits" inputmode="numeric" dir="ltr" /></div>
+      <div class="field"><label data-i18n="preview"></label><div id="s_numPreview" class="item-total" dir="ltr"></div></div>
     </div>
     <button type="button" id="saveNext" data-i18n="saveBtn"></button>
+  </section>
+
+  <section class="card">
+    <h3 data-i18n="shopTitle"></h3>
+    <div class="field"><label for="s_nameAr" data-i18n="shopNameAr"></label><input id="s_nameAr" autocomplete="off" /></div>
+    <div class="field"><label for="s_nameEn" data-i18n="shopNameEn"></label><input id="s_nameEn" dir="ltr" autocomplete="off" /></div>
+    <div class="field"><label for="s_phone" data-i18n="shopPhone"></label><input id="s_phone" inputmode="tel" dir="ltr" autocomplete="off" /></div>
+    <div class="actions">
+      <button type="button" id="saveShop" data-i18n="saveBtn"></button>
+      <button type="button" id="resetShop" class="ghost" data-i18n="resetTerms"></button>
+    </div>
+    <p class="hint" data-i18n="shopHint"></p>
   </section>
 
   <section class="card">
@@ -175,8 +191,8 @@
 <!-- ورقة المستند (تُرسم منها صورة الـ PDF) -->
 <div id="sheetWrap" aria-hidden="true"><div id="sheet"></div></div>
 
-<script src="/invoice/config.js?v=2"></script>
+<script src="/invoice/config.js?v=3"></script>
 <script src="/invoice/vendor/qrcode.js"></script>
-<script src="/invoice/app.js?v=2"></script>
+<script src="/invoice/app.js?v=3"></script>
 </body>
 </html>

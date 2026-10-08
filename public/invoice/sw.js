@@ -1,6 +1,6 @@
 // عمل التطبيق بدون إنترنت: الشبكة أولًا، والنسخة المحفوظة عند انقطاع الاتصال
-const CACHE = 'invoice-app-v2';
-const ASSETS = ['/invoice/', '/invoice/config.js?v=2', '/invoice/app.js?v=2', '/invoice/invoice.css?v=2', '/invoice/codes.json', '/invoice/vendor/qrcode.js', '/invoice/vendor/html2canvas.min.js', '/invoice/vendor/jspdf.umd.min.js', '/logo.png', '/logo-header.webp'];
+const CACHE = 'invoice-app-v3';
+const ASSETS = ['/invoice/', '/invoice/config.js?v=3', '/invoice/app.js?v=3', '/invoice/invoice.css?v=3', '/invoice/codes.json', '/invoice/vendor/qrcode.js', '/invoice/vendor/html2canvas.min.js', '/invoice/vendor/jspdf.umd.min.js', '/logo.png', '/logo-header.webp'];
 self.addEventListener('install', (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting())));
 self.addEventListener('activate', (e) => e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', (e) => {
