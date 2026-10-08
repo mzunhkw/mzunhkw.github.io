@@ -10,12 +10,21 @@
 
 const CFG = window.INVOICE_CONFIG;
 const P = CFG.storagePrefix || 'inv';
-const LS = { archive: `${P}_archive`, draft: `${P}_draft`, next: `${P}_next`, nextQ: `${P}_nextQ`, terms: `${P}_terms2`, ui: `${P}_ui` };
+const LS = { archive: `${P}_archive`, draft: `${P}_draft`, next: `${P}_next`, nextQ: `${P}_nextQ`, terms: `${P}_terms2`, ui: `${P}_ui`, num: `${P}_numfmt`, shop: `${P}_shop` };
+
+// بيانات المتجر: الإعداد الافتراضي من config.js، وما يعدّله المستخدم من الإعدادات يتقدم عليه
+function shopData(lang) {
+  let o = {};
+  try { o = JSON.parse(localStorage.getItem(LS.shop) || '{}') || {}; } catch (_) { o = {}; }
+  const base = CFG.shop[lang === 'en' ? 'en' : 'ar'];
+  const phone = o.phone || CFG.shop.phone;
+  return { ...base, name: (lang === 'en' ? o.nameEn : o.nameAr) || base.name, phone, whatsapp: o.phone ? (o.phone.length === 8 ? `965${o.phone}` : o.phone) : CFG.shop.whatsapp };
+}
 
 // ---------------------------------------------------------------- نصوص الواجهة
 const I18N = {
   ar: {
-    appTitle: `فواتير ${CFG.shop.ar.name}`, tabDoc: 'مستند', tabArchive: 'الأرشيف', tabSettings: 'الإعدادات',
+    appTitle: () => `فواتير ${shopData('ar').name}`, tabDoc: 'مستند', tabArchive: 'الأرشيف', tabSettings: 'الإعدادات',
     newTitle: 'مستند جديد', newType: 'النوع', newLang: 'لغة المستند', typeInvoice: 'فاتورة', typeQuote: 'عرض سعر',
     typeInvoices: 'الفواتير', typeQuotes: 'عروض الأسعار', all: 'الكل', create: 'إنشاء', cancel: 'إلغاء',
     keyWarn: 'باركود التحقق غير مفعّل على هذا الجهاز — فعّله من الإعدادات.',
@@ -32,6 +41,9 @@ const I18N = {
     search: 'ابحث بالرقم أو الاسم أو الهاتف', backup: 'نسخة احتياطية للأرشيف', restore: 'استرجاع نسخة',
     open: 'فتح', copy: 'نسخ', none: 'لا توجد مستندات محفوظة.', signed: 'موقّعة', unsigned: 'بلا باركود',
     uiLang: 'لغة التطبيق', numbering: 'الترقيم', nextInvoice: 'رقم الفاتورة التالية', nextQuote: 'رقم عرض السعر التالي',
+    invPrefix: 'بادئة الفواتير', quotePrefix: 'بادئة عروض الأسعار', numDigits: 'عدد الخانات', preview: 'الفاتورة التالية',
+    shopTitle: 'بيانات المنجرة في المستندات', shopNameAr: 'الاسم بالعربي', shopNameEn: 'الاسم بالإنجليزي', shopPhone: 'رقم الهاتف وواتساب',
+    shopHint: 'تظهر في الفواتير وعروض الأسعار ورسائل واتساب. رقم صفحة التحقق في الموقع يبقى من إعدادات الموقع.', shopSaved: 'حُفظت بيانات المنجرة',
     saveBtn: 'حفظ', verifyTitle: 'باركود التحقق', adminPw: 'كلمة سر لوحة الإدارة', orToken: 'أو الصق توكن GitHub بصلاحية الكتابة',
     activate: 'تفعيل التحقق على هذا الجهاز', activating: 'جارٍ التفعيل…',
     activateHint: 'يُنشأ مفتاح توقيع خاص داخل هذا الجهاز فقط ولا يمكن نسخه، ويُرفع مفتاحه العام للموقع. الفواتير القديمة تبقى صالحة إذا غيّرت الجهاز وفعّلته من جديد.',
@@ -48,7 +60,7 @@ const I18N = {
     wrongPw: 'كلمة السر غير صحيحة.', noVault: 'تعذّر قراءة خزنة لوحة الإدارة.', startFail: 'تعذّر تشغيل التطبيق — تحقق من الاتصال',
   },
   en: {
-    appTitle: `${CFG.shop.en.name} — Invoices`, tabDoc: 'Document', tabArchive: 'Archive', tabSettings: 'Settings',
+    appTitle: () => `${shopData('en').name} — Invoices`, tabDoc: 'Document', tabArchive: 'Archive', tabSettings: 'Settings',
     newTitle: 'New document', newType: 'Type', newLang: 'Document language', typeInvoice: 'Invoice', typeQuote: 'Quotation',
     typeInvoices: 'Invoices', typeQuotes: 'Quotations', all: 'All', create: 'Create', cancel: 'Cancel',
     keyWarn: 'Verification barcode is not activated on this device — activate it in Settings.',
@@ -65,6 +77,9 @@ const I18N = {
     search: 'Search by number, name or phone', backup: 'Back up archive', restore: 'Restore backup',
     open: 'Open', copy: 'Copy', none: 'No saved documents.', signed: 'signed', unsigned: 'no barcode',
     uiLang: 'App language', numbering: 'Numbering', nextInvoice: 'Next invoice no.', nextQuote: 'Next quotation no.',
+    invPrefix: 'Invoice prefix', quotePrefix: 'Quotation prefix', numDigits: 'Digits', preview: 'Next invoice',
+    shopTitle: 'Business details on documents', shopNameAr: 'Name in Arabic', shopNameEn: 'Name in English', shopPhone: 'Phone & WhatsApp',
+    shopHint: 'Shown on invoices, quotations and WhatsApp messages. The phone on the website verification page comes from the website settings.', shopSaved: 'Business details saved',
     saveBtn: 'Save', verifyTitle: 'Verification barcode', adminPw: 'Admin panel password', orToken: 'Or paste a GitHub token with write access',
     activate: 'Activate verification on this device', activating: 'Activating…',
     activateHint: 'A private signing key is created on this device only and cannot be copied; its public key is uploaded to the website. Old invoices stay valid if you switch devices and activate again.',
@@ -304,7 +319,27 @@ async function signInvoice(x) {
 
 // ---------------------------------------------------------------- المستند
 const blankItem = () => ({ cat: '1', desc: '', mat: '9', fabric: '', foam: '', L: '', W: '', H: '', unit: 'm', qty: '', price: '', war: '0' });
-const nextNo = (type) => String(lsGet(type === 'quote' ? LS.nextQ : LS.next, 1));
+// الترقيم: بادئة + رقم بعدد خانات ثابت (مثال A7D/000547). العدّاد يحفظ الرقم فقط.
+function numFmt() {
+  const d = CFG.numbering || {};
+  const o = lsGet(LS.num, {});
+  return {
+    invoicePrefix: o.invoicePrefix != null ? o.invoicePrefix : d.invoicePrefix || '',
+    quotePrefix: o.quotePrefix != null ? o.quotePrefix : d.quotePrefix || '',
+    digits: Number(o.digits || d.digits || 0),
+  };
+}
+const fmtNo = (type, n) => {
+  const f = numFmt();
+  return `${type === 'quote' ? f.quotePrefix : f.invoicePrefix}${String(n).padStart(f.digits, '0')}`;
+};
+const counter = (type) => Number(lsGet(type === 'quote' ? LS.nextQ : LS.next, (CFG.numbering || {})[type === 'quote' ? 'quoteStart' : 'invoiceStart'] || 1));
+const nextNo = (type) => fmtNo(type, counter(type));
+// الرقم التسلسلي داخل رقم المستند (آخر مجموعة أرقام)، مثال A7D/000547 → 547
+const seqOf = (no) => {
+  const m = String(no).match(/(\d+)\D*$/);
+  return m ? Number(m[1]) : NaN;
+};
 function newDoc(type, lang) {
   return {
     id: crypto.randomUUID(), type, lang, no: nextNo(type), date: today(), valid: String(CFG.quoteValidityDays || 14),
@@ -382,7 +417,7 @@ function fillForm() {
   refreshKeyStatus();
 }
 function readForm() {
-  inv.no = digits($('i_no').value).replace(/\D/g, '');
+  inv.no = digits($('i_no').value).trim().toUpperCase();
   inv.date = $('i_date').value || today();
   inv.valid = digits($('q_valid').value).replace(/\D/g, '');
   inv.cust = { name: $('c_name').value.trim(), phone: digits($('c_phone').value).trim(), area: $('c_area').value.trim(), addr: $('c_addr').value.trim() };
@@ -425,9 +460,10 @@ async function saveDoc() {
   if (i >= 0) archive[i] = inv;
   else archive.unshift(inv);
   lsSet(LS.archive, archive);
-  const n = Number(inv.no);
+  // بعد الحفظ تصبح المستند التالي +1 (مثال A7D/000547 → A7D/000548)
+  const n = seqOf(inv.no);
   const nk = isQuote() ? LS.nextQ : LS.next;
-  if (Number.isFinite(n) && n >= Number(lsGet(nk, 1))) lsSet(nk, n + 1);
+  if (Number.isFinite(n) && n >= counter(inv.type)) lsSet(nk, n + 1);
   lsSet(LS.draft, inv);
   toast(isQuote() ? t('savedQuote', inv.no) : inv.verifyUrl ? t('savedSigned', inv.no) : t('savedNoKey', inv.no));
 }
@@ -452,7 +488,7 @@ function qrDataUrl(text) {
 function buildSheet() {
   const lang = inv.lang === 'en' ? 'en' : 'ar';
   const D = DOC[lang];
-  const S = CFG.shop[lang];
+  const S = shopData(lang);
   const quote = isQuote();
   const x = totals(inv);
   const stored = lsGet(LS.terms, {});
@@ -471,7 +507,7 @@ function buildSheet() {
   sheet.replaceChildren(
     h('div', { class: 'sh-head' },
       h('div', { class: 'sh-brand' }, h('img', { src: CFG.shop.logo, alt: '' }),
-        h('div', {}, h('h1', { text: S.name }), h('p', { text: S.tagline }), h('p', { text: `${S.address} · ${D.phoneLbl} ${CFG.shop.phone}` }))),
+        h('div', {}, h('h1', { text: S.name }), h('p', { text: S.tagline }), h('p', { text: `${S.address} · ${D.phoneLbl} ${S.phone}` }))),
       h('div', { class: 'sh-meta' },
         h('div', { class: 'sh-title', text: quote ? D.quote : D.invoice }),
         h('div', {}, `${D.no} `, h('b', { text: inv.no })),
@@ -539,7 +575,7 @@ async function makePdf() {
     pdf.addImage(part.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pw, (part.height * pw) / canvas.width);
   }
   const kind = isQuote() ? 'quotation' : 'invoice';
-  const file = new File([pdf.output('blob')], `${P}-${kind}-${inv.no}.pdf`, { type: 'application/pdf' });
+  const file = new File([pdf.output('blob')], `${P}-${kind}-${String(inv.no).replace(/[^\w-]+/g, '-')}.pdf`, { type: 'application/pdf' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
       await navigator.share({ files: [file], title: `${isQuote() ? DOC[inv.lang === 'en' ? 'en' : 'ar'].quote : DOC[inv.lang === 'en' ? 'en' : 'ar'].invoice} ${inv.no}` });
@@ -558,7 +594,7 @@ async function sendWhatsapp() {
   if (!inv.verifyUrl) return toast(t('needKey'));
   const phone = digits(inv.cust.phone).replace(/\D/g, '');
   const to = phone.length === 8 ? `965${phone}` : phone;
-  const S = CFG.shop[inv.lang === 'en' ? 'en' : 'ar'];
+  const S = shopData(inv.lang);
   const msg =
     inv.lang === 'en'
       ? `${S.name}\nYour invoice no. ${inv.no} dated ${inv.date}.\nVerify the invoice and its warranty:\n${inv.verifyUrl}`
@@ -630,8 +666,17 @@ function show(view) {
   document.querySelectorAll('.tab').forEach((x) => x.classList.toggle('on', x.dataset.view === view));
   if (view === 'archive') renderArchive();
   if (view === 'settings') {
-    $('s_next').value = lsGet(LS.next, 1);
-    $('s_nextQ').value = lsGet(LS.nextQ, 1);
+    const f = numFmt();
+    $('s_prefix').value = f.invoicePrefix;
+    $('s_prefixQ').value = f.quotePrefix;
+    $('s_digits').value = f.digits || '';
+    $('s_next').value = counter('invoice');
+    $('s_nextQ').value = counter('quote');
+    $('s_numPreview').textContent = nextNo('invoice');
+    const o = lsGet(LS.shop, {});
+    $('s_nameAr').value = o.nameAr || CFG.shop.ar.name;
+    $('s_nameEn').value = o.nameEn || CFG.shop.en.name;
+    $('s_phone').value = o.phone || CFG.shop.phone;
     loadTermsEditor();
     refreshKeyStatus();
   }
@@ -665,6 +710,15 @@ async function init() {
   CODES = await (await fetch('/invoice/codes.json', { cache: 'no-cache' })).json();
   UI = lsGet(LS.ui, 'ar') === 'en' ? 'en' : 'ar';
   applyUi();
+  // أول تشغيل لنظام الترقيم الجديد: يبدأ العدّاد من رقم البداية في config.js (مثال 547) إن كان أقل
+  if (localStorage.getItem(LS.num) == null) {
+    const N = CFG.numbering || {};
+    if (Number(lsGet(LS.next, 0)) < (N.invoiceStart || 1)) lsSet(LS.next, N.invoiceStart || 1);
+    if (Number(lsGet(LS.nextQ, 0)) < (N.quoteStart || 1)) lsSet(LS.nextQ, N.quoteStart || 1);
+    lsSet(LS.num, numFmt());
+    const d = lsGet(LS.draft, null);
+    if (d && !d.savedAt) { d.no = nextNo(d.type || 'invoice'); lsSet(LS.draft, d); }
+  }
   inv = lsGet(LS.draft, null);
   if (inv) {
     inv.type = inv.type || 'invoice';
@@ -700,11 +754,25 @@ async function init() {
     const a = parseInt(digits($('s_next').value), 10);
     const b = parseInt(digits($('s_nextQ').value), 10);
     if (!(a > 0) || !(b > 0)) return toast(t('badNum'));
+    const dg = parseInt(digits($('s_digits').value), 10) || 0;
+    lsSet(LS.num, { invoicePrefix: $('s_prefix').value.trim().toUpperCase(), quotePrefix: $('s_prefixQ').value.trim().toUpperCase(), digits: Math.min(Math.max(dg, 0), 10) });
     lsSet(LS.next, a);
     lsSet(LS.nextQ, b);
-    if (!inv.savedAt) { inv.no = String(isQuote() ? b : a); lsSet(LS.draft, inv); fillForm(); }
+    if (!inv.savedAt) { inv.no = nextNo(inv.type); lsSet(LS.draft, inv); fillForm(); }
+    $('s_numPreview').textContent = nextNo('invoice');
     toast(t('nextSet'));
   });
+  ['s_prefix', 's_digits', 's_next'].forEach((id) => $(id).addEventListener('input', () => {
+    const dg = parseInt(digits($('s_digits').value), 10) || 0;
+    $('s_numPreview').textContent = `${$('s_prefix').value.trim().toUpperCase()}${String(parseInt(digits($('s_next').value), 10) || 0).padStart(dg, '0')}`;
+  }));
+  $('saveShop').addEventListener('click', () => {
+    const phone = digits($('s_phone').value).replace(/\D/g, '');
+    lsSet(LS.shop, { nameAr: $('s_nameAr').value.trim(), nameEn: $('s_nameEn').value.trim(), phone });
+    applyUi();
+    toast(t('shopSaved'));
+  });
+  $('resetShop').addEventListener('click', () => { localStorage.removeItem(LS.shop); show('settings'); applyUi(); });
   $('s_termsType').addEventListener('change', loadTermsEditor);
   $('s_termsLang').addEventListener('change', loadTermsEditor);
   $('saveTerms').addEventListener('click', () => { const s = lsGet(LS.terms, {}); s[termsKey()] = $('s_terms').value.trim(); lsSet(LS.terms, s); toast(t('termsSaved')); });

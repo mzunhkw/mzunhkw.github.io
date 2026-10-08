@@ -21,6 +21,8 @@ window.INVOICE_CONFIG = {
   vaultPath: 'public/admin-vault.json',
   storagePrefix: 'mzinv', // بادئة التخزين في الجهاز — غيّرها لكل موقع
   keyDbName: 'mazuna-invoice', // مخزن مفتاح التوقيع داخل الجهاز — غيّره لكل موقع
+  // ترقيم المستندات: بادئة + رقم بعدد خانات ثابت، مثال A7D/000547 ثم A7D/000548
+  numbering: { invoicePrefix: 'A7D/', invoiceStart: 547, quotePrefix: 'Q/', quoteStart: 1, digits: 6 },
   quoteValidityDays: 14,
   verifyLang: 'ar', // لغة صفحة التحقق الافتراضية (ar أو en) — للنسخة المستقلة verify/index.html
   terms: {
