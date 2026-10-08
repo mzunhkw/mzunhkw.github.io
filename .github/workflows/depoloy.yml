@@ -68,12 +68,21 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
+      # مسح كاش Cloudflare بعد كل نشر — وإلا تبقى الصفحات (خصوصاً الرئيسية) بنسخة قديمة.
+      # curl وحده لا يفشل حتى لو رفضت Cloudflare الطلب، لذلك نتحقق من "success" ونطبع الخطأ بوضوح.
       - name: Purge Cloudflare Cache
         run: |
-          curl -X POST "https://api.cloudflare.com/client/v4/zones/b528006a18f77a38dabf78eedd19c95f/purge_cache" \
+          RES=$(curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/b528006a18f77a38dabf78eedd19c95f/purge_cache" \
             -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
             -H "Content-Type: application/json" \
-            --data '{"purge_everything": true}'
+            --data '{"purge_everything": true}' || true)
+          echo "$RES"
+          if echo "$RES" | grep -q '"success":[[:space:]]*true'; then
+            echo "✅ تم مسح كاش Cloudflare"
+          else
+            echo "::error title=فشل مسح كاش Cloudflare::تحقق من صلاحية السر CF_API_TOKEN (Zone > Cache Purge). الموقع قد يعرض نسخة قديمة."
+            exit 1
+          fi
 
   indexnow:
     needs: [build, deploy]
