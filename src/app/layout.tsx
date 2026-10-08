@@ -101,6 +101,7 @@ const jsonLd = {
   image: `${siteConfig.siteUrl}/og-image.jpg`,
   telephone: `+${siteConfig.whatsappNumber}`,
   foundingDate: String(siteConfig.foundedYear),
+  numberOfEmployees: { '@type': 'QuantitativeValue', value: siteConfig.teamSize },
   areaServed: { '@type': 'Country', name: 'الكويت' },
   // نطاق الأسعار التقديرية المعروضة في الموقع (من مساند الظهر بالمتر إلى طاولات الطعام الرخام)
   priceRange: '9 - 450 KWD',
