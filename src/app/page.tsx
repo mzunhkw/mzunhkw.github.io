@@ -11,11 +11,12 @@ import { visibleOffers } from '@/data/offers';
 import { getSrcSet } from '@/lib/image';
 
 export const metadata: Metadata = {
-  title: { absolute: `منجرة ${siteConfig.name} — ${siteConfig.seoTitle}` },
+  // «نجار» ~5,400/شهر و«نجار الكويت» ~1,600 و«منجرة» ~1,000 (Ubersuggest، الكويت، أكتوبر 2026)
+  title: { absolute: `منجرة ${siteConfig.name} | ${siteConfig.seoTitle}` },
   description: siteConfig.seoDescription,
   alternates: { canonical: '/' },
   openGraph: {
-    title: `منجرة ${siteConfig.name} — ${siteConfig.seoTitle}`,
+    title: `منجرة ${siteConfig.name} | ${siteConfig.seoTitle}`,
     description: siteConfig.seoDescription,
     url: '/',
     siteName: siteConfig.name,
@@ -44,7 +45,7 @@ export default function HomePage() {
         <div className="hero-panel">
           <div className="hero-copy">
             <span className="eyebrow">منجرة مزونة · نجار وتفصيل أثاث في الكويت منذ {siteConfig.foundedYear}</span>
-            <h1>منجرة مزونة: تفصيل أثاث وتنجيد كنب في الكويت</h1>
+            <h1>منجرة مزونة: نجار في الكويت لتفصيل الأثاث وتنجيد الكنب</h1>
             <p>{siteConfig.about}</p>
 
             <div className="hero-actions">

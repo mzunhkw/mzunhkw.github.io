@@ -171,7 +171,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   ];
 
   // روابط داخلية: صفحة "نجار المحافظة" حسب منطقة المنتج، ومقالات القسم
-  const areaPage = areaPages.find((a) => a.districts.some((d) => (product.region || '').includes(d)));
+  const areaPage = areaPages.find((a) => [...a.districts, ...(a.regionAliases || [])].some((d) => (product.region || '').includes(d)));
   const guides = category ? articlesLinkingTo(`/category/${category.slug}/`) : [];
 
   return (
