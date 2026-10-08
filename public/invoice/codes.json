@@ -5,24 +5,97 @@
     "pc": "قطعة",
     "m2": "متر مربع"
   },
+  "units_en": {
+    "m": "linear m",
+    "pc": "piece",
+    "m2": "m²"
+  },
   "categories": {
-    "1": { "name": "كنب وقنفات", "unit": "m" },
-    "2": { "name": "مجلس", "unit": "m" },
-    "3": { "name": "مساند وجلسات أرضية", "unit": "m" },
-    "4": { "name": "غرفة نوم", "unit": "m" },
-    "5": { "name": "كبت ملابس", "unit": "m" },
-    "15": { "name": "تسريحة", "unit": "pc" },
-    "6": { "name": "سرير أطفال", "unit": "pc" },
-    "7": { "name": "طاولة طعام", "unit": "pc" },
-    "8": { "name": "كراسي طعام", "unit": "pc" },
-    "16": { "name": "بوفيه", "unit": "pc" },
-    "9": { "name": "طاولة قهوة أو جانبية", "unit": "pc" },
-    "10": { "name": "كونسول ومرايا مدخل", "unit": "pc" },
-    "11": { "name": "كرسي مدخل", "unit": "pc" },
-    "12": { "name": "تنجيد كنب", "unit": "m" },
-    "13": { "name": "تنجيد مجلس", "unit": "m" },
-    "14": { "name": "تنجيد مساند", "unit": "m" },
-    "99": { "name": "أخرى", "unit": "pc" }
+    "1": {
+      "name": "كنب وقنفات",
+      "unit": "m",
+      "en": "Sofas"
+    },
+    "2": {
+      "name": "مجلس",
+      "unit": "m",
+      "en": "Majlis seating"
+    },
+    "3": {
+      "name": "مساند وجلسات أرضية",
+      "unit": "m",
+      "en": "Floor cushions & seating"
+    },
+    "4": {
+      "name": "غرفة نوم",
+      "unit": "m",
+      "en": "Bedroom set"
+    },
+    "5": {
+      "name": "كبت ملابس",
+      "unit": "m",
+      "en": "Wardrobe"
+    },
+    "15": {
+      "name": "تسريحة",
+      "unit": "pc",
+      "en": "Dressing table"
+    },
+    "6": {
+      "name": "سرير أطفال",
+      "unit": "pc",
+      "en": "Kids bed"
+    },
+    "7": {
+      "name": "طاولة طعام",
+      "unit": "pc",
+      "en": "Dining table"
+    },
+    "8": {
+      "name": "كراسي طعام",
+      "unit": "pc",
+      "en": "Dining chairs"
+    },
+    "16": {
+      "name": "بوفيه",
+      "unit": "pc",
+      "en": "Buffet"
+    },
+    "9": {
+      "name": "طاولة قهوة أو جانبية",
+      "unit": "pc",
+      "en": "Coffee / side table"
+    },
+    "10": {
+      "name": "كونسول ومرايا مدخل",
+      "unit": "pc",
+      "en": "Console & entrance mirror"
+    },
+    "11": {
+      "name": "كرسي مدخل",
+      "unit": "pc",
+      "en": "Entrance chair"
+    },
+    "12": {
+      "name": "تنجيد كنب",
+      "unit": "m",
+      "en": "Sofa upholstery"
+    },
+    "13": {
+      "name": "تنجيد مجلس",
+      "unit": "m",
+      "en": "Majlis upholstery"
+    },
+    "14": {
+      "name": "تنجيد مساند",
+      "unit": "m",
+      "en": "Cushion upholstery"
+    },
+    "99": {
+      "name": "أخرى",
+      "unit": "pc",
+      "en": "Other"
+    }
   },
   "materials": {
     "7": "خشب زان أحمر",
@@ -39,6 +112,21 @@
     "12": "قماش وإسفنج",
     "99": "أخرى"
   },
+  "materials_en": {
+    "7": "Red beech wood",
+    "4": "Beech veneer",
+    "6": "Solid wood",
+    "5": "Walnut veneer",
+    "9": "Marine plywood with walnut veneer",
+    "8": "Marine plywood",
+    "3": "Polylac / high gloss",
+    "2": "MDF with UV or acrylic finish",
+    "1": "Melamine",
+    "10": "Marble",
+    "11": "Glass",
+    "12": "Fabric & foam",
+    "99": "Other"
+  },
   "warranty": {
     "0": "عيوب التصنيع فقط",
     "12": "سنة واحدة",
@@ -46,5 +134,65 @@
     "36": "ثلاث سنوات",
     "48": "أربع سنوات",
     "60": "خمس سنوات"
-  }
+  },
+  "warranty_en": {
+    "0": "Manufacturing defects only",
+    "12": "1 year",
+    "24": "2 years",
+    "36": "3 years",
+    "48": "4 years",
+    "60": "5 years"
+  },
+  "foams": [
+    {
+      "ar": "",
+      "en": ""
+    },
+    {
+      "ar": "إسفنج البغلي",
+      "en": "Al-Baghli foam"
+    },
+    {
+      "ar": "إسفنج الوطنية",
+      "en": "Al-Wataniya foam"
+    },
+    {
+      "ar": "دانلوب البغلي",
+      "en": "Al-Baghli Dunlop"
+    }
+  ],
+  "categoryOrder": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "15",
+    "6",
+    "7",
+    "8",
+    "16",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "99"
+  ],
+  "materialOrder": [
+    "7",
+    "4",
+    "6",
+    "5",
+    "9",
+    "8",
+    "3",
+    "2",
+    "1",
+    "10",
+    "11",
+    "12",
+    "99"
+  ]
 }

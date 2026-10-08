@@ -17,115 +17,166 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/invoice/invoice.css?v=1" />
+<link rel="stylesheet" href="/invoice/invoice.css?v=2" />
 </head>
 <body>
 
 <header class="bar">
-  <img src="/logo-header.webp" alt="" width="34" height="34" />
-  <strong>فواتير منجرة مزونة</strong>
+  <img id="barLogo" src="/logo-header.webp" alt="" width="34" height="34" />
+  <strong id="barTitle"></strong>
   <nav>
-    <button type="button" data-view="edit" class="tab on">فاتورة</button>
-    <button type="button" data-view="archive" class="tab">الأرشيف</button>
-    <button type="button" data-view="settings" class="tab">الإعدادات</button>
+    <button type="button" data-view="edit" class="tab on" data-i18n="tabDoc"></button>
+    <button type="button" data-view="archive" class="tab" data-i18n="tabArchive"></button>
+    <button type="button" data-view="settings" class="tab" data-i18n="tabSettings"></button>
   </nav>
 </header>
 
 <div id="toast" role="status" aria-live="polite"></div>
 
-<!-- ============ الفاتورة ============ -->
+<!-- ============ اختيار نوع المستند الجديد ============ -->
+<dialog id="newDlg">
+  <form method="dialog" class="dlg">
+    <h3 data-i18n="newTitle"></h3>
+    <p class="hint" data-i18n="newType"></p>
+    <div class="choice">
+      <label><input type="radio" name="nt" value="invoice" checked /> <span data-i18n="typeInvoice"></span></label>
+      <label><input type="radio" name="nt" value="quote" /> <span data-i18n="typeQuote"></span></label>
+    </div>
+    <p class="hint" data-i18n="newLang"></p>
+    <div class="choice">
+      <label><input type="radio" name="nl" value="ar" checked /> العربية</label>
+      <label><input type="radio" name="nl" value="en" /> English</label>
+    </div>
+    <div class="actions">
+      <button type="submit" value="ok" class="primary" data-i18n="create"></button>
+      <button type="submit" value="cancel" class="ghost" data-i18n="cancel"></button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ============ المستند ============ -->
 <main id="v-edit" class="view">
-  <div id="keyWarn" class="note warn" hidden>باركود التحقق غير مفعّل على هذا الجهاز — فعّله من الإعدادات.</div>
+  <div id="keyWarn" class="note warn" hidden data-i18n="keyWarn"></div>
+  <div id="docBadge" class="badge"></div>
 
   <section class="card">
     <div class="grid2">
-      <div class="field"><label for="i_no">رقم الفاتورة</label><input id="i_no" inputmode="numeric" dir="ltr" /></div>
-      <div class="field"><label for="i_date">التاريخ</label><input id="i_date" type="date" dir="ltr" /></div>
+      <div class="field"><label for="i_no" id="l_no"></label><input id="i_no" inputmode="numeric" dir="ltr" /></div>
+      <div class="field"><label for="i_date" data-i18n="date"></label><input id="i_date" type="date" dir="ltr" /></div>
     </div>
+    <div class="field quote-only"><label for="q_valid" data-i18n="validDays"></label><input id="q_valid" inputmode="numeric" dir="ltr" /></div>
   </section>
 
   <section class="card">
-    <h3>العميل</h3>
-    <div class="field"><label for="c_name">الاسم</label><input id="c_name" autocomplete="off" /></div>
+    <h3 data-i18n="customer"></h3>
+    <div class="field"><label for="c_name" data-i18n="name"></label><input id="c_name" autocomplete="off" /></div>
     <div class="grid2">
-      <div class="field"><label for="c_phone">الهاتف</label><input id="c_phone" inputmode="tel" dir="ltr" /></div>
-      <div class="field"><label for="c_area">المنطقة</label><input id="c_area" autocomplete="off" /></div>
+      <div class="field"><label for="c_phone" data-i18n="phone"></label><input id="c_phone" inputmode="tel" dir="ltr" /></div>
+      <div class="field"><label for="c_area" data-i18n="area"></label><input id="c_area" autocomplete="off" /></div>
     </div>
-    <div class="field"><label for="c_addr">العنوان (قطعة، شارع، منزل)</label><input id="c_addr" autocomplete="off" /></div>
+    <div class="field"><label for="c_addr" data-i18n="address"></label><input id="c_addr" autocomplete="off" /></div>
   </section>
 
   <section class="card">
-    <h3>القطع</h3>
+    <h3 data-i18n="items"></h3>
     <div id="items"></div>
-    <button type="button" id="addItem" class="ghost wide">+ إضافة قطعة</button>
+    <button type="button" id="addItem" class="ghost wide" data-i18n="addItem"></button>
   </section>
 
   <section class="card">
-    <h3>الحساب</h3>
-    <div class="sum"><span>المجموع</span><b id="t_sub">0.000</b></div>
+    <h3 data-i18n="totals"></h3>
+    <div class="sum"><span data-i18n="subtotal"></span><b id="t_sub">0.000</b></div>
     <div class="grid2">
-      <div class="field"><label for="t_disc">الخصم (د.ك)</label><input id="t_disc" inputmode="decimal" dir="ltr" value="0" /></div>
-      <div class="field"><label for="t_dep">العربون (د.ك)</label><input id="t_dep" inputmode="decimal" dir="ltr" value="0" /></div>
+      <div class="field"><label for="t_disc" data-i18n="discount"></label><input id="t_disc" inputmode="decimal" dir="ltr" value="0" /></div>
+      <div class="field invoice-only"><label for="t_dep" data-i18n="deposit"></label><input id="t_dep" inputmode="decimal" dir="ltr" value="0" /></div>
     </div>
-    <div class="sum big"><span>الإجمالي</span><b id="t_total">0.000</b></div>
-    <div class="sum"><span>المتبقي عند التسليم</span><b id="t_rem">0.000</b></div>
+    <div class="sum big"><span data-i18n="total"></span><b id="t_total">0.000</b></div>
+    <div class="sum invoice-only"><span data-i18n="remaining"></span><b id="t_rem">0.000</b></div>
   </section>
 
   <section class="card">
-    <h3>التسليم</h3>
+    <h3 data-i18n="delivery"></h3>
     <div class="grid2">
-      <div class="field"><label for="d_days">مدة التنفيذ (يوم)</label><input id="d_days" inputmode="numeric" dir="ltr" /></div>
-      <div class="field"><label for="d_date">تاريخ التسليم المتوقع</label><input id="d_date" type="date" dir="ltr" /></div>
+      <div class="field"><label for="d_days" data-i18n="days"></label><input id="d_days" inputmode="numeric" dir="ltr" /></div>
+      <div class="field"><label for="d_date" data-i18n="ddate"></label><input id="d_date" type="date" dir="ltr" /></div>
     </div>
-    <div class="field"><label for="n_notes">ملاحظات</label><textarea id="n_notes" rows="3"></textarea></div>
+    <div class="field"><label for="n_notes" data-i18n="notes"></label><textarea id="n_notes" rows="3"></textarea></div>
   </section>
 
   <div class="actions">
-    <button type="button" id="btnSave" class="primary">حفظ الفاتورة</button>
-    <button type="button" id="btnPdf">PDF ومشاركة</button>
-    <button type="button" id="btnWa">إرسال رابط التحقق واتساب</button>
-    <button type="button" id="btnNew" class="ghost">فاتورة جديدة</button>
+    <button type="button" id="btnSave" class="primary" data-i18n="save"></button>
+    <button type="button" id="btnPdf" data-i18n="pdf"></button>
+    <button type="button" id="btnWa" class="invoice-only" data-i18n="sendVerify"></button>
+    <button type="button" id="btnConvert" class="quote-only" data-i18n="convert"></button>
+    <button type="button" id="btnNew" class="ghost" data-i18n="newDoc"></button>
   </div>
-  <p class="hint">الحفظ يثبّت الفاتورة ويوقّع باركود التحقق. أي تعديل بعد الحفظ يتطلب الحفظ مرة أخرى.</p>
+  <p class="hint invoice-only" data-i18n="saveHint"></p>
 </main>
 
 <!-- ============ الأرشيف ============ -->
 <main id="v-archive" class="view" hidden>
-  <div class="field"><input id="a_q" placeholder="ابحث برقم الفاتورة أو الاسم أو الهاتف" /></div>
+  <div class="field"><input id="a_q" data-i18n-ph="search" /></div>
+  <div class="choice small">
+    <label><input type="radio" name="af" value="" checked /> <span data-i18n="all"></span></label>
+    <label><input type="radio" name="af" value="invoice" /> <span data-i18n="typeInvoices"></span></label>
+    <label><input type="radio" name="af" value="quote" /> <span data-i18n="typeQuotes"></span></label>
+  </div>
   <div id="a_list"></div>
   <div class="actions">
-    <button type="button" id="btnExport" class="ghost">نسخة احتياطية للأرشيف</button>
-    <label class="ghost filebtn">استرجاع نسخة<input type="file" id="importFile" accept="application/json" hidden /></label>
+    <button type="button" id="btnExport" class="ghost" data-i18n="backup"></button>
+    <label class="ghost filebtn"><span data-i18n="restore"></span><input type="file" id="importFile" accept="application/json" hidden /></label>
   </div>
 </main>
 
 <!-- ============ الإعدادات ============ -->
 <main id="v-settings" class="view" hidden>
   <section class="card">
-    <h3>ترقيم الفواتير</h3>
-    <div class="field"><label for="s_next">رقم الفاتورة التالية</label><input id="s_next" inputmode="numeric" dir="ltr" /></div>
-    <button type="button" id="saveNext">حفظ</button>
+    <h3 data-i18n="uiLang"></h3>
+    <div class="choice">
+      <label><input type="radio" name="ul" value="ar" /> العربية</label>
+      <label><input type="radio" name="ul" value="en" /> English</label>
+    </div>
   </section>
 
   <section class="card">
-    <h3>باركود التحقق</h3>
+    <h3 data-i18n="numbering"></h3>
+    <div class="grid2">
+      <div class="field"><label for="s_next" data-i18n="nextInvoice"></label><input id="s_next" inputmode="numeric" dir="ltr" /></div>
+      <div class="field"><label for="s_nextQ" data-i18n="nextQuote"></label><input id="s_nextQ" inputmode="numeric" dir="ltr" /></div>
+    </div>
+    <button type="button" id="saveNext" data-i18n="saveBtn"></button>
+  </section>
+
+  <section class="card">
+    <h3 data-i18n="verifyTitle"></h3>
     <p id="keyStatus" class="hint"></p>
-    <div class="field"><label for="s_pw">كلمة سر لوحة الإدارة</label><input id="s_pw" type="password" dir="ltr" autocomplete="current-password" /></div>
-    <button type="button" id="activateKey" class="primary">تفعيل التحقق على هذا الجهاز</button>
-    <p class="hint">يُنشأ مفتاح توقيع خاص داخل هذا الجهاز فقط ولا يمكن نسخه، ويُرفع مفتاحه العام لموقع مزونة. الفواتير القديمة تبقى صالحة حتى لو غيّرت الجهاز وفعّلته من جديد.</p>
+    <div class="field" id="pwField"><label for="s_pw" data-i18n="adminPw"></label><input id="s_pw" type="password" dir="ltr" autocomplete="current-password" /></div>
+    <details class="hint"><summary data-i18n="orToken"></summary>
+      <div class="field"><input id="s_token" type="password" dir="ltr" autocomplete="off" placeholder="github_pat_…" /></div>
+    </details>
+    <button type="button" id="activateKey" class="primary" data-i18n="activate"></button>
+    <p class="hint" data-i18n="activateHint"></p>
   </section>
 
   <section class="card">
-    <h3>شروط الفاتورة</h3>
+    <h3 data-i18n="termsTitle"></h3>
+    <div class="grid2">
+      <div class="field"><select id="s_termsType"><option value="invoice" data-i18n="typeInvoice"></option><option value="quote" data-i18n="typeQuote"></option></select></div>
+      <div class="field"><select id="s_termsLang"><option value="ar">العربية</option><option value="en">English</option></select></div>
+    </div>
     <textarea id="s_terms" rows="8"></textarea>
-    <button type="button" id="saveTerms">حفظ الشروط</button>
+    <div class="actions">
+      <button type="button" id="saveTerms" data-i18n="saveTerms"></button>
+      <button type="button" id="resetTerms" class="ghost" data-i18n="resetTerms"></button>
+    </div>
   </section>
 </main>
 
-<!-- ورقة الفاتورة (تُرسم منها صورة الـ PDF) -->
+<!-- ورقة المستند (تُرسم منها صورة الـ PDF) -->
 <div id="sheetWrap" aria-hidden="true"><div id="sheet"></div></div>
 
+<script src="/invoice/config.js?v=2"></script>
 <script src="/invoice/vendor/qrcode.js"></script>
-<script src="/invoice/app.js?v=1"></script>
+<script src="/invoice/app.js?v=2"></script>
 </body>
 </html>

@@ -93,3 +93,24 @@ button.wide { margin-top: 4px; }
 .sh-sign { display: flex; justify-content: space-between; margin-top: 30px; font-size: 12px; }
 .sh-sign div { width: 40%; border-top: 1px solid #999; padding-top: 6px; text-align: center; }
 .sh-foot { margin-top: 18px; text-align: center; font-size: 11px; color: #777; }
+
+/* ---- نوع المستند واللغة ---- */
+dialog { border: none; border-radius: 18px; padding: 0; width: min(420px, calc(100% - 32px)); box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+dialog::backdrop { background: rgba(43,36,31,.45); }
+.dlg { padding: 18px; }
+.dlg h3 { margin: 0 0 6px; }
+.choice { display: flex; gap: 8px; margin: 6px 0 12px; }
+.choice label { flex: 1; display: flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; cursor: pointer; background: #fff; }
+.choice label:has(input:checked) { border-color: var(--sage); background: #eef3ec; }
+.choice input { width: auto; min-height: 0; margin: 0; }
+.choice.small label { padding: 6px 10px; font-size: 13px; }
+.badge { display: inline-block; margin-bottom: 10px; padding: 4px 12px; border-radius: 999px; background: var(--brown); color: #fff; font-size: 13px; }
+body.is-quote .invoice-only, body:not(.is-quote) .quote-only { display: none !important; }
+.row .tag { display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 999px; background: var(--sand); margin-inline-start: 6px; }
+
+/* ---- ورقة إنجليزية (LTR) ---- */
+#sheet[dir='ltr'] { font-family: 'Noto Kufi Arabic', Arial, sans-serif; }
+#sheet[dir='ltr'] .sh-meta { text-align: right; }
+#sheet[dir='ltr'] .sh-table th { text-align: left; }
+#sheet[dir='ltr'] .sh-table .num { text-align: right; }
+.sh-title { display: inline-block; background: var(--brown); color: #fff; padding: 2px 12px; border-radius: 999px; font-size: 13px; margin-bottom: 4px; }

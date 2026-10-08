@@ -1,36 +1,107 @@
 'use strict';
 /* ==========================================================================
-   فواتير منجرة مزونة — تطبيق ويب يعمل من الجوال بلا خادم.
-   - الفواتير تُحفظ في هذا الجهاز (localStorage) مع نسخة احتياطية يدوية.
-   - باركود التحقق: توقيع ECDSA P-256 بمفتاح خاص لا يمكن نسخه (IndexedDB)،
-     ومفتاحه العام يُرفع إلى public/verify-keys.json في مستودع الموقع.
-   - صفحة التحقق: mazunhkw.com/verify/#<بيانات>.<توقيع>
+   نظام الفواتير وعروض الأسعار — تطبيق ويب يعمل من الجوال بلا خادم.
+   - الإعدادات (الاسم، الهاتف، المستودع، الشروط) في config.js، والأصناف في codes.json.
+   - المستندات تُحفظ في هذا الجهاز (localStorage) مع نسخة احتياطية يدوية.
+   - الفواتير فقط تحمل باركود تحقق: توقيع ECDSA P-256 بمفتاح خاص غير قابل للنسخ
+     (IndexedDB)، ومفتاحه العام يُرفع إلى keysPath في مستودع الموقع.
+   - صفحة التحقق: <site>/verify/#<بيانات>.<توقيع>
    ========================================================================== */
 
-const SITE = 'https://mazunhkw.com';
-const SHOP = {
-  name: 'منجرة مزونة',
-  tagline: 'نجارة وتفصيل أثاث وتنجيد — الكويت',
-  phone: '65061072',
-  whatsapp: '96565061072',
-  address: 'الضجيج — مجمع علي عبدالوهاب، الكويت',
-  instagram: '@mazunhkw',
+const CFG = window.INVOICE_CONFIG;
+const P = CFG.storagePrefix || 'inv';
+const LS = { archive: `${P}_archive`, draft: `${P}_draft`, next: `${P}_next`, nextQ: `${P}_nextQ`, terms: `${P}_terms2`, ui: `${P}_ui` };
+
+// ---------------------------------------------------------------- نصوص الواجهة
+const I18N = {
+  ar: {
+    appTitle: `فواتير ${CFG.shop.ar.name}`, tabDoc: 'مستند', tabArchive: 'الأرشيف', tabSettings: 'الإعدادات',
+    newTitle: 'مستند جديد', newType: 'النوع', newLang: 'لغة المستند', typeInvoice: 'فاتورة', typeQuote: 'عرض سعر',
+    typeInvoices: 'الفواتير', typeQuotes: 'عروض الأسعار', all: 'الكل', create: 'إنشاء', cancel: 'إلغاء',
+    keyWarn: 'باركود التحقق غير مفعّل على هذا الجهاز — فعّله من الإعدادات.',
+    invoiceNo: 'رقم الفاتورة', quoteNo: 'رقم عرض السعر', date: 'التاريخ', validDays: 'صلاحية العرض (يوم)',
+    customer: 'العميل', name: 'الاسم', phone: 'الهاتف', area: 'المنطقة', address: 'العنوان (قطعة، شارع، منزل)',
+    items: 'القطع', addItem: '+ إضافة قطعة', piece: 'قطعة', del: 'حذف', cat: 'نوع القطعة', mat: 'الخامة',
+    desc: 'الوصف (التصميم، اللون، التفاصيل)', fabric: 'القماش (النوع / الكود / اللون)', foam: 'الإسفنج',
+    L: 'الطول (سم)', W: 'العرض/العمق (سم)', H: 'الارتفاع (سم)', unit: 'وحدة السعر', qty: 'الكمية', per: 'السعر لكل',
+    war: 'الضمان', lineTotal: 'إجمالي القطعة', totals: 'الحساب', subtotal: 'المجموع', discount: 'الخصم (د.ك)',
+    deposit: 'العربون (د.ك)', total: 'الإجمالي', remaining: 'المتبقي عند التسليم', delivery: 'التسليم',
+    days: 'مدة التنفيذ (يوم)', ddate: 'تاريخ التسليم المتوقع', notes: 'ملاحظات', save: 'حفظ', pdf: 'PDF ومشاركة',
+    sendVerify: 'إرسال رابط التحقق واتساب', convert: 'تحويل إلى فاتورة', newDoc: 'مستند جديد',
+    saveHint: 'حفظ الفاتورة يوقّع باركود التحقق. أي تعديل بعد الحفظ يتطلب الحفظ مرة أخرى.',
+    search: 'ابحث بالرقم أو الاسم أو الهاتف', backup: 'نسخة احتياطية للأرشيف', restore: 'استرجاع نسخة',
+    open: 'فتح', copy: 'نسخ', none: 'لا توجد مستندات محفوظة.', signed: 'موقّعة', unsigned: 'بلا باركود',
+    uiLang: 'لغة التطبيق', numbering: 'الترقيم', nextInvoice: 'رقم الفاتورة التالية', nextQuote: 'رقم عرض السعر التالي',
+    saveBtn: 'حفظ', verifyTitle: 'باركود التحقق', adminPw: 'كلمة سر لوحة الإدارة', orToken: 'أو الصق توكن GitHub بصلاحية الكتابة',
+    activate: 'تفعيل التحقق على هذا الجهاز', activating: 'جارٍ التفعيل…',
+    activateHint: 'يُنشأ مفتاح توقيع خاص داخل هذا الجهاز فقط ولا يمكن نسخه، ويُرفع مفتاحه العام للموقع. الفواتير القديمة تبقى صالحة إذا غيّرت الجهاز وفعّلته من جديد.',
+    keyOn: (k) => `مفعّل على هذا الجهاز (المفتاح ${k}).`, keyOff: 'غير مفعّل على هذا الجهاز.',
+    termsTitle: 'الشروط', saveTerms: 'حفظ الشروط', resetTerms: 'استرجاع الافتراضي',
+    needNo: 'الرقم مطلوب', needQty: 'أضف كمية لقطعة واحدة على الأقل', dupNo: (n) => `الرقم ${n} مستخدم في مستند آخر`,
+    savedSigned: (n) => `حُفظت الفاتورة ${n} مع باركود التحقق`, savedNoKey: (n) => `حُفظت الفاتورة ${n} — بدون باركود (التحقق غير مفعّل)`,
+    savedQuote: (n) => `حُفظ عرض السعر ${n}`, pdfWait: 'جارٍ تجهيز الـ PDF…', pdfFail: 'تعذّر إنشاء الـ PDF',
+    needKey: 'فعّل باركود التحقق من الإعدادات ثم احفظ الفاتورة', unsaved: 'المستند الحالي غير محفوظ. بدء مستند جديد؟',
+    converted: (n) => `فاتورة جديدة رقم ${n} من عرض السعر — راجعها واحفظ`, copied: 'نسخة جديدة — راجعها واحفظ',
+    confirmDel: (n) => `حذف المستند ${n} من هذا الجهاز؟`, restored: (n) => `تم الاسترجاع — ${n} مستند`, badFile: 'ملف غير صالح',
+    badNum: 'رقم غير صالح', nextSet: 'حُفظ الترقيم', termsSaved: 'حُفظت الشروط', needPw: 'اكتب كلمة السر أو الصق التوكن',
+    activated: 'تم التفعيل — صفحة التحقق تعمل بعد دقائق من نشر الموقع', activateFail: 'تعذّر التفعيل',
+    wrongPw: 'كلمة السر غير صحيحة.', noVault: 'تعذّر قراءة خزنة لوحة الإدارة.', startFail: 'تعذّر تشغيل التطبيق — تحقق من الاتصال',
+  },
+  en: {
+    appTitle: `${CFG.shop.en.name} — Invoices`, tabDoc: 'Document', tabArchive: 'Archive', tabSettings: 'Settings',
+    newTitle: 'New document', newType: 'Type', newLang: 'Document language', typeInvoice: 'Invoice', typeQuote: 'Quotation',
+    typeInvoices: 'Invoices', typeQuotes: 'Quotations', all: 'All', create: 'Create', cancel: 'Cancel',
+    keyWarn: 'Verification barcode is not activated on this device — activate it in Settings.',
+    invoiceNo: 'Invoice no.', quoteNo: 'Quotation no.', date: 'Date', validDays: 'Valid for (days)',
+    customer: 'Customer', name: 'Name', phone: 'Phone', area: 'Area', address: 'Address (block, street, house)',
+    items: 'Items', addItem: '+ Add item', piece: 'Item', del: 'Delete', cat: 'Item type', mat: 'Material',
+    desc: 'Description (design, colour, details)', fabric: 'Fabric (type / code / colour)', foam: 'Foam',
+    L: 'Length (cm)', W: 'Width/depth (cm)', H: 'Height (cm)', unit: 'Price unit', qty: 'Quantity', per: 'Price per',
+    war: 'Warranty', lineTotal: 'Item total', totals: 'Totals', subtotal: 'Subtotal', discount: 'Discount (KWD)',
+    deposit: 'Deposit (KWD)', total: 'Total', remaining: 'Balance due on delivery', delivery: 'Delivery',
+    days: 'Lead time (days)', ddate: 'Expected delivery date', notes: 'Notes', save: 'Save', pdf: 'PDF & share',
+    sendVerify: 'Send verification link on WhatsApp', convert: 'Convert to invoice', newDoc: 'New document',
+    saveHint: 'Saving an invoice signs its verification barcode. Save again after any change.',
+    search: 'Search by number, name or phone', backup: 'Back up archive', restore: 'Restore backup',
+    open: 'Open', copy: 'Copy', none: 'No saved documents.', signed: 'signed', unsigned: 'no barcode',
+    uiLang: 'App language', numbering: 'Numbering', nextInvoice: 'Next invoice no.', nextQuote: 'Next quotation no.',
+    saveBtn: 'Save', verifyTitle: 'Verification barcode', adminPw: 'Admin panel password', orToken: 'Or paste a GitHub token with write access',
+    activate: 'Activate verification on this device', activating: 'Activating…',
+    activateHint: 'A private signing key is created on this device only and cannot be copied; its public key is uploaded to the website. Old invoices stay valid if you switch devices and activate again.',
+    keyOn: (k) => `Active on this device (key ${k}).`, keyOff: 'Not active on this device.',
+    termsTitle: 'Terms', saveTerms: 'Save terms', resetTerms: 'Restore default',
+    needNo: 'Number is required', needQty: 'Add a quantity to at least one item', dupNo: (n) => `Number ${n} is already used`,
+    savedSigned: (n) => `Invoice ${n} saved with verification barcode`, savedNoKey: (n) => `Invoice ${n} saved — no barcode (verification not active)`,
+    savedQuote: (n) => `Quotation ${n} saved`, pdfWait: 'Preparing PDF…', pdfFail: 'Could not create the PDF',
+    needKey: 'Activate the verification barcode in Settings, then save the invoice', unsaved: 'The current document is not saved. Start a new one?',
+    converted: (n) => `New invoice ${n} from the quotation — review and save`, copied: 'New copy — review and save',
+    confirmDel: (n) => `Delete document ${n} from this device?`, restored: (n) => `Restored — ${n} documents`, badFile: 'Invalid file',
+    badNum: 'Invalid number', nextSet: 'Numbering saved', termsSaved: 'Terms saved', needPw: 'Enter the password or paste a token',
+    activated: 'Activated — the verification page works a few minutes after the site redeploys', activateFail: 'Activation failed',
+    wrongPw: 'Wrong password.', noVault: 'Could not read the admin vault.', startFail: 'Could not start — check your connection',
+  },
 };
-const REPO = { owner: 'mzunhkw', repo: 'mzunhkw.github.io', branch: 'main' };
-const KEYS_PATH = 'public/verify-keys.json';
-const VAULT_PATH = 'public/admin-vault.json';
-const LS = { archive: 'mzinv_archive', draft: 'mzinv_draft', next: 'mzinv_next', terms: 'mzinv_terms' };
-const FOAMS = ['', 'إسفنج البغلي', 'إسفنج الوطنية', 'دانلوب البغلي'];
-const DEFAULT_TERMS = [
-  'الأسعار متفق عليها بعد أخذ المقاسات ومعاينة العينات.',
-  'يبدأ التنفيذ بعد استلام العربون، ويُستكمل باقي المبلغ عند التسليم.',
-  'القطع المفصّلة حسب الطلب لا تُسترجع إلا في حالة العيوب المصنعية.',
-  'الضمان حسب المدة المذكورة لكل قطعة، ويشمل إصلاح عيوب التصنيع ولا يشمل الاستبدال. التفاصيل: mazunhkw.com/warranty',
-  'التوصيل مجاني داخل الكويت.',
-].join('\n');
+// نصوص ورقة المستند حسب لغته
+const DOC = {
+  ar: { invoice: 'فاتورة', quote: 'عرض سعر', no: 'رقم', date: 'التاريخ', validUntil: 'صالح حتى', customer: 'العميل', phone: 'الهاتف', area: 'المنطقة', address: 'العنوان',
+    cols: ['#', 'القطعة والمواصفات', 'المقاس (سم)', 'الكمية', 'السعر', 'الإجمالي'], fabric: 'قماش', warranty: 'الضمان', until: 'حتى',
+    L: 'طول', W: 'عمق', H: 'ارتفاع', subtotal: 'المجموع', discount: 'الخصم', total: 'الإجمالي', deposit: 'العربون المدفوع', remaining: 'المتبقي عند التسليم',
+    delivery: 'التسليم المتوقع', day: 'يوم', notes: 'ملاحظات', terms: 'الشروط', scan: 'امسح للتحقق من الفاتورة والضمان',
+    signCust: 'توقيع العميل', approveCust: 'موافقة العميل', signShop: (n) => `عن ${n}`, phoneLbl: 'هاتف وواتساب', insta: 'انستقرام', cur: 'د.ك' },
+  en: { invoice: 'Invoice', quote: 'Quotation', no: 'No.', date: 'Date', validUntil: 'Valid until', customer: 'Customer', phone: 'Phone', area: 'Area', address: 'Address',
+    cols: ['#', 'Item & specifications', 'Size (cm)', 'Qty', 'Price', 'Total'], fabric: 'Fabric', warranty: 'Warranty', until: 'until',
+    L: 'L', W: 'D', H: 'H', subtotal: 'Subtotal', discount: 'Discount', total: 'Total', deposit: 'Deposit paid', remaining: 'Balance due on delivery',
+    delivery: 'Expected delivery', day: 'days', notes: 'Notes', terms: 'Terms', scan: 'Scan to verify this invoice and its warranty',
+    signCust: 'Customer signature', approveCust: 'Customer approval', signShop: (n) => `For ${n}`, phoneLbl: 'Phone & WhatsApp', insta: 'Instagram', cur: 'KWD' },
+};
 
 let CODES = null;
-let inv = null; // الفاتورة الحالية
+let inv = null; // المستند الحالي
+let UI = 'ar';
+const t = (k, ...a) => {
+  const v = (I18N[UI] || I18N.ar)[k];
+  return typeof v === 'function' ? v(...a) : v;
+};
 
 // ---------------------------------------------------------------- أدوات
 const $ = (id) => document.getElementById(id);
@@ -56,21 +127,26 @@ const num = (s) => {
   return Number.isFinite(n) ? n : 0;
 };
 const kwd = (n) => (Math.round(n * 1000) / 1000).toFixed(3);
-// تاريخ اليوم بتوقيت الجهاز (الكويت) — toISOString يعطي UTC فيتأخر يومًا بعد منتصف الليل
+// تاريخ اليوم بتوقيت الجهاز — toISOString يعطي UTC فيتأخر يومًا بعد منتصف الليل في الكويت
 const today = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
 const addDays = (iso, d) => {
-  const t = new Date(iso + 'T00:00:00Z');
-  t.setUTCDate(t.getUTCDate() + d);
-  return t.toISOString().slice(0, 10);
+  const x = new Date(iso + 'T00:00:00Z');
+  x.setUTCDate(x.getUTCDate() + d);
+  return x.toISOString().slice(0, 10);
+};
+const addMonths = (iso, m) => {
+  const x = new Date(iso + 'T00:00:00Z');
+  x.setUTCMonth(x.getUTCMonth() + m);
+  return x.toISOString().slice(0, 10);
 };
 const toast = (msg) => {
-  const t = $('toast');
-  t.replaceChildren(h('span', { text: msg }));
+  const el = $('toast');
+  el.replaceChildren(h('span', { text: msg }));
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => t.replaceChildren(), 3200);
+  toast._t = setTimeout(() => el.replaceChildren(), 3400);
 };
 const b64u = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const utf8b64u = (str) => b64u(new TextEncoder().encode(str));
@@ -88,14 +164,28 @@ const lsSet = (k, v) => {
   try {
     localStorage.setItem(k, JSON.stringify(v));
   } catch (_) {
-    toast('تعذّر الحفظ في الجهاز — المساحة ممتلئة؟');
+    toast('Storage full');
   }
+};
+const isQuote = () => !!inv && inv.type === 'quote';
+
+// أسماء الرموز حسب اللغة
+const catName = (c, lang) => {
+  const x = CODES.categories[c] || {};
+  return (lang === 'en' ? x.en : x.name) || x.name || '';
+};
+const matName = (m, lang) => (lang === 'en' ? CODES.materials_en[m] : CODES.materials[m]) || CODES.materials[m] || '';
+const warName = (w, lang) => (lang === 'en' ? CODES.warranty_en[w] : CODES.warranty[w]) || CODES.warranty[w] || '';
+const unitName = (u, lang) => (lang === 'en' ? CODES.units_en[u] : CODES.units[u]) || CODES.units[u] || '';
+const foamName = (f, lang) => {
+  const x = (CODES.foams || []).find((o) => o.ar === f);
+  return x ? (lang === 'en' ? x.en : x.ar) : f;
 };
 
 // ---------------------------------------------------------------- مخزن المفتاح (IndexedDB)
 function idb() {
   return new Promise((res, rej) => {
-    const r = indexedDB.open('mazuna-invoice', 1);
+    const r = indexedDB.open(CFG.keyDbName || `${P}-invoice`, 1);
     r.onupgradeneeded = () => r.result.createObjectStore('keys');
     r.onsuccess = () => res(r.result);
     r.onerror = () => rej(r.error);
@@ -120,12 +210,13 @@ async function keyPut(v) {
 }
 
 // ---------------------------------------------------------------- GitHub (لتفعيل المفتاح فقط)
-async function openVault(password) {
-  const r = await fetch(`https://api.github.com/repos/${REPO.owner}/${REPO.repo}/contents/${VAULT_PATH}?ref=${REPO.branch}&ts=${Date.now()}`, {
+async function tokenFromVault(password) {
+  const R = CFG.repo;
+  const r = await fetch(`https://api.github.com/repos/${R.owner}/${R.repo}/contents/${CFG.vaultPath}?ref=${R.branch}&ts=${Date.now()}`, {
     cache: 'no-store',
     headers: { Accept: 'application/vnd.github.raw+json' },
   });
-  if (!r.ok) throw new Error('تعذّر قراءة خزنة لوحة الإدارة.');
+  if (!r.ok) throw new Error(t('noVault'));
   const vault = await r.json();
   const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
   const key = await crypto.subtle.deriveKey(
@@ -139,7 +230,7 @@ async function openVault(password) {
     const out = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(vault.iv) }, key, b64d(vault.data));
     return new TextDecoder().decode(out);
   } catch (_) {
-    throw new Error('كلمة السر غير صحيحة.');
+    throw new Error(t('wrongPw'));
   }
 }
 async function gh(token, path, opts = {}) {
@@ -154,21 +245,23 @@ async function gh(token, path, opts = {}) {
 }
 async function activateKey() {
   const pw = $('s_pw').value;
-  if (!pw) return toast('اكتب كلمة سر لوحة الإدارة');
+  const pasted = $('s_token').value.trim();
+  if (!pw && !pasted) return toast(t('needPw'));
   const btn = $('activateKey');
   btn.disabled = true;
-  btn.textContent = 'جارٍ التفعيل…';
+  btn.textContent = t('activating');
   try {
-    const token = await openVault(pw);
+    const token = pasted || (await tokenFromVault(pw));
     // المفتاح الخاص غير قابل للتصدير: لا يخرج من هذا الجهاز أبدًا
     const pair = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign', 'verify']);
     const jwk = await crypto.subtle.exportKey('jwk', pair.publicKey);
     const kid = 'k' + Date.now().toString(36);
-    const path = `/repos/${REPO.owner}/${REPO.repo}/contents/${KEYS_PATH}`;
+    const R = CFG.repo;
+    const path = `/repos/${R.owner}/${R.repo}/contents/${CFG.keysPath}`;
     let sha;
     let keys = [];
     try {
-      const cur = await gh(token, `${path}?ref=${REPO.branch}`);
+      const cur = await gh(token, `${path}?ref=${R.branch}`);
       sha = cur.sha;
       keys = JSON.parse(new TextDecoder().decode(b64d(cur.content.replace(/\n/g, ''))));
     } catch (_) {
@@ -176,59 +269,60 @@ async function activateKey() {
     }
     keys.push({ kid, kty: 'EC', crv: 'P-256', x: jwk.x, y: jwk.y, created: new Date().toISOString() });
     const content = b64e(new TextEncoder().encode(JSON.stringify(keys, null, 2) + '\n'));
-    await gh(token, path, {
-      method: 'PUT',
-      body: { message: 'فواتير مزونة: إضافة مفتاح تحقق لجهاز جديد', content, branch: REPO.branch, ...(sha ? { sha } : {}) },
-    });
+    await gh(token, path, { method: 'PUT', body: { message: 'Invoices: add verification key for a device', content, branch: R.branch, ...(sha ? { sha } : {}) } });
     await keyPut({ kid, privateKey: pair.privateKey, created: new Date().toISOString() });
     $('s_pw').value = '';
-    toast('تم التفعيل — صفحة التحقق تعمل بعد دقائق من نشر الموقع');
+    $('s_token').value = '';
+    toast(t('activated'));
     await refreshKeyStatus();
   } catch (e) {
-    toast(e.message || 'تعذّر التفعيل');
+    toast(e.message || t('activateFail'));
   } finally {
     btn.disabled = false;
-    btn.textContent = 'تفعيل التحقق على هذا الجهاز';
+    btn.textContent = t('activate');
   }
 }
 async function refreshKeyStatus() {
   const k = await keyGet().catch(() => null);
-  $('keyStatus').textContent = k ? `مفعّل على هذا الجهاز (المفتاح ${k.kid}).` : 'غير مفعّل على هذا الجهاز.';
-  $('keyWarn').hidden = !!k;
+  $('keyStatus').textContent = k ? t('keyOn', k.kid) : t('keyOff');
+  $('keyWarn').hidden = !!k || isQuote();
+  $('pwField').hidden = !CFG.vaultPath;
   return k;
 }
 
-// ---------------------------------------------------------------- التوقيع
+// ---------------------------------------------------------------- التوقيع (للفواتير فقط)
 // البيانات الموقّعة (بلا اسم العميل أو هاتفه أو المبلغ):
 // { v, k, n: رقم الفاتورة, d: التاريخ, i: [[رمز القطعة, رمز الخامة, أشهر الضمان], ...] }
 async function signInvoice(x) {
   const key = await keyGet();
   if (!key) return null;
-  const payload = { v: 1, k: key.kid, n: String(x.no), d: x.date, i: x.items.map((it) => [Number(it.cat), Number(it.mat), Number(it.war)]) };
+  const payload = { v: 1, k: key.kid, n: String(x.no), d: x.date, i: x.items.filter((it) => num(it.qty) > 0).map((it) => [Number(it.cat), Number(it.mat), Number(it.war)]) };
   const data = utf8b64u(JSON.stringify(payload));
   const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, key.privateKey, new TextEncoder().encode(data));
-  return `${SITE}/verify/#${data}.${b64u(sig)}`;
+  return `${CFG.site}/verify/#${data}.${b64u(sig)}`;
 }
 
-// ---------------------------------------------------------------- الفاتورة
+// ---------------------------------------------------------------- المستند
 const blankItem = () => ({ cat: '1', desc: '', mat: '9', fabric: '', foam: '', L: '', W: '', H: '', unit: 'm', qty: '', price: '', war: '0' });
-function nextNo() {
-  return String(lsGet(LS.next, 1));
-}
-function newInvoice() {
-  return { id: crypto.randomUUID(), no: nextNo(), date: today(), cust: { name: '', phone: '', area: '', addr: '' }, items: [blankItem()], disc: '0', dep: '0', days: '', ddate: '', notes: '', verifyUrl: null, savedAt: null };
+const nextNo = (type) => String(lsGet(type === 'quote' ? LS.nextQ : LS.next, 1));
+function newDoc(type, lang) {
+  return {
+    id: crypto.randomUUID(), type, lang, no: nextNo(type), date: today(), valid: String(CFG.quoteValidityDays || 14),
+    cust: { name: '', phone: '', area: '', addr: '' }, items: [blankItem()], disc: '0', dep: '0', days: '', ddate: '', notes: '',
+    verifyUrl: null, savedAt: null,
+  };
 }
 const lineTotal = (it) => num(it.qty) * num(it.price);
 function totals(x) {
   const sub = x.items.reduce((s, it) => s + lineTotal(it), 0);
   const total = Math.max(0, sub - num(x.disc));
-  return { sub, total, rem: Math.max(0, total - num(x.dep)) };
+  return { sub, total, rem: Math.max(0, total - (x.type === 'quote' ? 0 : num(x.dep))) };
 }
-function optionList(map, selected) {
-  return Object.entries(map).map(([v, label]) => h('option', { value: v, selected: String(v) === String(selected), text: typeof label === 'string' ? label : label.name }));
-}
+const ordered = (map, order) => (order || Object.keys(map)).filter((k) => k in map);
+const sel = (onchange, keys, label, selected) => h('select', { onchange }, keys.map((v) => h('option', { value: v, selected: String(v) === String(selected), text: label(v) })));
 
 function renderItems() {
+  const lang = UI;
   const box = $('items');
   box.replaceChildren(
     ...inv.items.map((it, idx) => {
@@ -239,40 +333,41 @@ function renderItems() {
           renderItems();
         }
         onChange();
-        if (k === 'qty' || k === 'price') box.querySelectorAll('.item-total')[idx].textContent = `${kwd(lineTotal(it))} د.ك`;
+        if (k === 'qty' || k === 'price') box.querySelectorAll('.item-total')[idx].textContent = kwd(lineTotal(it));
       };
-      const unitLabel = CODES.units[it.unit] || '';
-      return h(
-        'div',
-        { class: 'item' },
-        h('div', { class: 'item-head' }, h('b', { text: `قطعة ${idx + 1}` }),
-          inv.items.length > 1 ? h('button', { type: 'button', class: 'danger', text: 'حذف', onclick: () => { inv.items.splice(idx, 1); renderItems(); onChange(); } }) : null),
+      const u = unitName(it.unit, lang);
+      const f = (label, el) => h('div', { class: 'field' }, h('label', { text: label }), el);
+      const inp = (k, extra = {}) => h('input', { value: it[k], oninput: set(k), ...extra });
+      const nm = { inputmode: 'decimal', dir: 'ltr' };
+      return h('div', { class: 'item' },
+        h('div', { class: 'item-head' }, h('b', { text: `${t('piece')} ${idx + 1}` }),
+          inv.items.length > 1 ? h('button', { type: 'button', class: 'danger', text: t('del'), onclick: () => { inv.items.splice(idx, 1); renderItems(); onChange(); } }) : null),
         h('div', { class: 'grid2' },
-          h('div', { class: 'field' }, h('label', { text: 'نوع القطعة' }), h('select', { onchange: set('cat') }, optionList(CODES.categories, it.cat))),
-          h('div', { class: 'field' }, h('label', { text: 'الخامة' }), h('select', { onchange: set('mat') }, optionList(CODES.materials, it.mat)))),
-        h('div', { class: 'field' }, h('label', { text: 'الوصف (التصميم، اللون، التفاصيل)' }), h('input', { value: it.desc, oninput: set('desc') })),
+          f(t('cat'), sel(set('cat'), ordered(CODES.categories, CODES.categoryOrder), (v) => catName(v, lang), it.cat)),
+          f(t('mat'), sel(set('mat'), ordered(CODES.materials, CODES.materialOrder), (v) => matName(v, lang), it.mat))),
+        f(t('desc'), inp('desc')),
         h('div', { class: 'grid2' },
-          h('div', { class: 'field' }, h('label', { text: 'القماش (النوع / الكود / اللون)' }), h('input', { value: it.fabric, oninput: set('fabric') })),
-          h('div', { class: 'field' }, h('label', { text: 'الإسفنج' }), h('select', { onchange: set('foam') }, FOAMS.map((f) => h('option', { value: f, selected: f === it.foam, text: f || '—' }))))),
+          f(t('fabric'), inp('fabric')),
+          f(t('foam'), sel(set('foam'), (CODES.foams || []).map((o) => o.ar), (v) => foamName(v, lang) || '—', it.foam))),
+        h('div', { class: 'grid3' }, f(t('L'), inp('L', nm)), f(t('W'), inp('W', nm)), f(t('H'), inp('H', nm))),
         h('div', { class: 'grid3' },
-          h('div', { class: 'field' }, h('label', { text: 'الطول (سم)' }), h('input', { value: it.L, inputmode: 'decimal', dir: 'ltr', oninput: set('L') })),
-          h('div', { class: 'field' }, h('label', { text: 'العرض/العمق (سم)' }), h('input', { value: it.W, inputmode: 'decimal', dir: 'ltr', oninput: set('W') })),
-          h('div', { class: 'field' }, h('label', { text: 'الارتفاع (سم)' }), h('input', { value: it.H, inputmode: 'decimal', dir: 'ltr', oninput: set('H') }))),
-        h('div', { class: 'grid3' },
-          h('div', { class: 'field' }, h('label', { text: 'وحدة السعر' }), h('select', { onchange: (e) => { it.unit = e.target.value; renderItems(); onChange(); } }, optionList(CODES.units, it.unit))),
-          h('div', { class: 'field' }, h('label', { text: `الكمية (${unitLabel})` }), h('input', { value: it.qty, inputmode: 'decimal', dir: 'ltr', oninput: set('qty') })),
-          h('div', { class: 'field' }, h('label', { text: `السعر لكل ${unitLabel}` }), h('input', { value: it.price, inputmode: 'decimal', dir: 'ltr', oninput: set('price') }))),
+          f(t('unit'), sel((e) => { it.unit = e.target.value; renderItems(); onChange(); }, Object.keys(CODES.units), (v) => unitName(v, lang), it.unit)),
+          f(`${t('qty')} (${u})`, inp('qty', nm)),
+          f(`${t('per')} ${u}`, inp('price', nm))),
         h('div', { class: 'grid2' },
-          h('div', { class: 'field' }, h('label', { text: 'الضمان' }), h('select', { onchange: set('war') }, optionList(CODES.warranty, it.war))),
-          h('div', { class: 'field' }, h('label', { text: 'إجمالي القطعة' }), h('div', { class: 'item-total', text: `${kwd(lineTotal(it))} د.ك` })))
-      );
+          f(t('war'), sel(set('war'), Object.keys(CODES.warranty), (v) => warName(v, lang), it.war)),
+          f(t('lineTotal'), h('div', { class: 'item-total', text: kwd(lineTotal(it)) }))));
     })
   );
 }
 
 function fillForm() {
+  document.body.classList.toggle('is-quote', isQuote());
+  $('docBadge').textContent = `${isQuote() ? t('typeQuote') : t('typeInvoice')} · ${inv.lang === 'en' ? 'English' : 'العربية'}`;
+  $('l_no').textContent = isQuote() ? t('quoteNo') : t('invoiceNo');
   $('i_no').value = inv.no;
   $('i_date').value = inv.date;
+  $('q_valid').value = inv.valid || '';
   $('c_name').value = inv.cust.name;
   $('c_phone').value = inv.cust.phone;
   $('c_area').value = inv.cust.area;
@@ -284,10 +379,12 @@ function fillForm() {
   $('n_notes').value = inv.notes;
   renderItems();
   updateTotals();
+  refreshKeyStatus();
 }
 function readForm() {
   inv.no = digits($('i_no').value).replace(/\D/g, '');
   inv.date = $('i_date').value || today();
+  inv.valid = digits($('q_valid').value).replace(/\D/g, '');
   inv.cust = { name: $('c_name').value.trim(), phone: digits($('c_phone').value).trim(), area: $('c_area').value.trim(), addr: $('c_addr').value.trim() };
   inv.disc = digits($('t_disc').value);
   inv.dep = digits($('t_dep').value);
@@ -296,10 +393,10 @@ function readForm() {
   inv.notes = $('n_notes').value.trim();
 }
 function updateTotals() {
-  const t = totals(inv);
-  $('t_sub').textContent = `${kwd(t.sub)} د.ك`;
-  $('t_total').textContent = `${kwd(t.total)} د.ك`;
-  $('t_rem').textContent = `${kwd(t.rem)} د.ك`;
+  const x = totals(inv);
+  $('t_sub').textContent = kwd(x.sub);
+  $('t_total').textContent = kwd(x.total);
+  $('t_rem').textContent = kwd(x.rem);
 }
 function onChange() {
   readForm();
@@ -309,16 +406,19 @@ function onChange() {
   lsSet(LS.draft, inv);
 }
 
-async function saveInvoice() {
+async function saveDoc() {
   readForm();
-  if (!inv.no) return toast('رقم الفاتورة مطلوب');
-  if (!inv.items.some((it) => num(it.qty) > 0)) return toast('أضف كمية لقطعة واحدة على الأقل');
+  if (!inv.no) return toast(t('needNo'));
+  if (!inv.items.some((it) => num(it.qty) > 0)) return toast(t('needQty'));
   const archive = lsGet(LS.archive, []);
-  if (archive.some((a) => a.no === inv.no && a.id !== inv.id)) return toast(`رقم الفاتورة ${inv.no} مستخدم في فاتورة أخرى`);
-  try {
-    inv.verifyUrl = await signInvoice(inv);
-  } catch (_) {
-    inv.verifyUrl = null;
+  if (archive.some((a) => (a.type || 'invoice') === inv.type && a.no === inv.no && a.id !== inv.id)) return toast(t('dupNo', inv.no));
+  inv.verifyUrl = null;
+  if (!isQuote()) {
+    try {
+      inv.verifyUrl = await signInvoice(inv);
+    } catch (_) {
+      inv.verifyUrl = null;
+    }
   }
   inv.savedAt = new Date().toISOString();
   const i = archive.findIndex((a) => a.id === inv.id);
@@ -326,67 +426,87 @@ async function saveInvoice() {
   else archive.unshift(inv);
   lsSet(LS.archive, archive);
   const n = Number(inv.no);
-  if (Number.isFinite(n) && n >= Number(nextNo())) lsSet(LS.next, n + 1);
+  const nk = isQuote() ? LS.nextQ : LS.next;
+  if (Number.isFinite(n) && n >= Number(lsGet(nk, 1))) lsSet(nk, n + 1);
   lsSet(LS.draft, inv);
-  toast(inv.verifyUrl ? `حُفظت الفاتورة ${inv.no} مع باركود التحقق` : `حُفظت الفاتورة ${inv.no} — بدون باركود (التحقق غير مفعّل)`);
+  toast(isQuote() ? t('savedQuote', inv.no) : inv.verifyUrl ? t('savedSigned', inv.no) : t('savedNoKey', inv.no));
 }
 
-// ---------------------------------------------------------------- ورقة الفاتورة
+function convertToInvoice() {
+  readForm();
+  const src = inv;
+  inv = { ...structuredClone(src), id: crypto.randomUUID(), type: 'invoice', no: nextNo('invoice'), date: today(), dep: '0', verifyUrl: null, savedAt: null, fromQuote: src.no };
+  lsSet(LS.draft, inv);
+  fillForm();
+  toast(t('converted', inv.no));
+  window.scrollTo(0, 0);
+}
+
+// ---------------------------------------------------------------- ورقة المستند
 function qrDataUrl(text) {
   const qr = qrcode(0, 'M'); // eslint-disable-line no-undef
   qr.addData(text);
   qr.make();
   return qr.createDataURL(6, 2);
 }
-function warrantyText(it) {
-  const months = Number(it.war);
-  const label = CODES.warranty[it.war] || '';
-  if (!months) return label;
-  const end = new Date(inv.date + 'T00:00:00Z');
-  end.setUTCMonth(end.getUTCMonth() + months);
-  return `${label} — حتى ${end.toISOString().slice(0, 10)}`;
-}
 function buildSheet() {
-  const t = totals(inv);
-  const terms = (lsGet(LS.terms, null) || DEFAULT_TERMS).split('\n').filter(Boolean);
-  const dims = (it) => [it.L && `طول ${digits(it.L)}`, it.W && `عمق ${digits(it.W)}`, it.H && `ارتفاع ${digits(it.H)}`].filter(Boolean).join(' · ');
+  const lang = inv.lang === 'en' ? 'en' : 'ar';
+  const D = DOC[lang];
+  const S = CFG.shop[lang];
+  const quote = isQuote();
+  const x = totals(inv);
+  const stored = lsGet(LS.terms, {});
+  const tk = `${quote ? 'quote' : 'invoice'}_${lang}`;
+  const terms = (stored[tk] || CFG.terms[quote ? 'quote' : 'invoice'][lang].join('\n')).split('\n').filter(Boolean);
+  const dims = (it) => [it.L && `${D.L} ${digits(it.L)}`, it.W && `${D.W} ${digits(it.W)}`, it.H && `${D.H} ${digits(it.H)}`].filter(Boolean).join(' · ');
+  const warText = (it) => {
+    const m = Number(it.war);
+    // في عرض السعر لا يُذكر تاريخ انتهاء، لأن الضمان يبدأ من تاريخ الفاتورة
+    return m && !quote ? `${warName(it.war, lang)} — ${D.until} ${addMonths(inv.date, m)}` : warName(it.war, lang);
+  };
+  const money = (n) => `${kwd(n)} ${D.cur}`;
   const sheet = $('sheet');
+  sheet.setAttribute('dir', lang === 'en' ? 'ltr' : 'rtl');
+  sheet.setAttribute('lang', lang);
   sheet.replaceChildren(
     h('div', { class: 'sh-head' },
-      h('div', { class: 'sh-brand' }, h('img', { src: '/logo.png', alt: '' }),
-        h('div', {}, h('h1', { text: SHOP.name }), h('p', { text: SHOP.tagline }), h('p', { text: `${SHOP.address} · هاتف وواتساب ${SHOP.phone}` }))),
-      h('div', { class: 'sh-meta' }, h('div', {}, 'فاتورة رقم ', h('b', { text: inv.no })), h('div', { text: `التاريخ: ${inv.date}` }))),
+      h('div', { class: 'sh-brand' }, h('img', { src: CFG.shop.logo, alt: '' }),
+        h('div', {}, h('h1', { text: S.name }), h('p', { text: S.tagline }), h('p', { text: `${S.address} · ${D.phoneLbl} ${CFG.shop.phone}` }))),
+      h('div', { class: 'sh-meta' },
+        h('div', { class: 'sh-title', text: quote ? D.quote : D.invoice }),
+        h('div', {}, `${D.no} `, h('b', { text: inv.no })),
+        h('div', { text: `${D.date}: ${inv.date}` }),
+        quote && num(inv.valid) ? h('div', { text: `${D.validUntil}: ${addDays(inv.date, num(inv.valid))}` }) : null)),
     h('div', { class: 'sh-cust' },
-      h('div', { text: `العميل: ${inv.cust.name || '—'}` }), h('div', { text: `الهاتف: ${inv.cust.phone || '—'}` }),
-      h('div', { text: `المنطقة: ${inv.cust.area || '—'}` }), h('div', { text: `العنوان: ${inv.cust.addr || '—'}` })),
+      h('div', { text: `${D.customer}: ${inv.cust.name || '—'}` }), h('div', { text: `${D.phone}: ${inv.cust.phone || '—'}` }),
+      h('div', { text: `${D.area}: ${inv.cust.area || '—'}` }), h('div', { text: `${D.address}: ${inv.cust.addr || '—'}` })),
     h('table', { class: 'sh-table' },
-      h('thead', {}, h('tr', {}, ['#', 'القطعة والمواصفات', 'المقاس (سم)', 'الكمية', 'السعر', 'الإجمالي'].map((c) => h('th', { text: c })))),
+      h('thead', {}, h('tr', {}, D.cols.map((c) => h('th', { text: c })))),
       h('tbody', {}, inv.items.filter((it) => num(it.qty) > 0).map((it, i) => {
-        const cat = (CODES.categories[it.cat] || {}).name || '';
-        const spec = [CODES.materials[it.mat], it.fabric && `قماش: ${it.fabric}`, it.foam, `الضمان: ${warrantyText(it)}`].filter(Boolean).join(' · ');
+        const spec = [matName(it.mat, lang), it.fabric && `${D.fabric}: ${it.fabric}`, foamName(it.foam, lang), `${D.warranty}: ${warText(it)}`].filter(Boolean).join(' · ');
         return h('tr', {},
           h('td', { text: String(i + 1) }),
-          h('td', {}, h('div', { text: [cat, it.desc].filter(Boolean).join(' — ') }), h('div', { class: 'sh-spec', text: spec })),
+          h('td', {}, h('div', { text: [catName(it.cat, lang), it.desc].filter(Boolean).join(' — ') }), h('div', { class: 'sh-spec', text: spec })),
           h('td', { text: dims(it) || '—' }),
-          h('td', { class: 'num', text: `${digits(it.qty)} ${CODES.units[it.unit] || ''}` }),
+          h('td', { class: 'num', text: `${digits(it.qty)} ${unitName(it.unit, lang)}` }),
           h('td', { class: 'num', text: kwd(num(it.price)) }),
           h('td', { class: 'num', text: kwd(lineTotal(it)) }));
       }))),
     h('div', { class: 'sh-bottom' },
       h('div', { class: 'sh-totals' },
-        h('div', {}, h('span', { text: 'المجموع' }), h('span', { text: `${kwd(t.sub)} د.ك` })),
-        num(inv.disc) ? h('div', {}, h('span', { text: 'الخصم' }), h('span', { text: `${kwd(num(inv.disc))} د.ك` })) : null,
-        h('div', { class: 'grand' }, h('span', { text: 'الإجمالي' }), h('span', { text: `${kwd(t.total)} د.ك` })),
-        h('div', {}, h('span', { text: 'العربون المدفوع' }), h('span', { text: `${kwd(num(inv.dep))} د.ك` })),
-        h('div', {}, h('span', { text: 'المتبقي عند التسليم' }), h('span', { text: `${kwd(t.rem)} د.ك` })),
-        inv.days || inv.ddate ? h('div', {}, h('span', { text: 'التسليم المتوقع' }), h('span', { text: [inv.days && `${inv.days} يوم`, inv.ddate].filter(Boolean).join(' — ') })) : null,
-        inv.notes ? h('p', { text: `ملاحظات: ${inv.notes}` }) : null),
-      inv.verifyUrl
-        ? h('div', { class: 'sh-qr' }, h('img', { src: qrDataUrl(inv.verifyUrl), alt: '' }), h('div', { text: 'امسح للتحقق من الفاتورة والضمان' }), h('div', { text: 'mazunhkw.com/verify' }))
+        h('div', {}, h('span', { text: D.subtotal }), h('span', { text: money(x.sub) })),
+        num(inv.disc) ? h('div', {}, h('span', { text: D.discount }), h('span', { text: money(num(inv.disc)) })) : null,
+        h('div', { class: 'grand' }, h('span', { text: D.total }), h('span', { text: money(x.total) })),
+        quote ? null : h('div', {}, h('span', { text: D.deposit }), h('span', { text: money(num(inv.dep)) })),
+        quote ? null : h('div', {}, h('span', { text: D.remaining }), h('span', { text: money(x.rem) })),
+        inv.days || inv.ddate ? h('div', {}, h('span', { text: D.delivery }), h('span', { text: [inv.days && `${inv.days} ${D.day}`, inv.ddate].filter(Boolean).join(' — ') })) : null,
+        inv.notes ? h('p', { text: `${D.notes}: ${inv.notes}` }) : null),
+      !quote && inv.verifyUrl
+        ? h('div', { class: 'sh-qr' }, h('img', { src: qrDataUrl(inv.verifyUrl), alt: '' }), h('div', { text: D.scan }), h('div', { text: `${CFG.site.replace('https://', '')}/verify` }))
         : null),
-    h('div', { class: 'sh-terms' }, h('b', { text: 'الشروط' }), h('ol', {}, terms.map((x) => h('li', { text: x })))),
-    h('div', { class: 'sh-sign' }, h('div', { text: 'توقيع العميل' }), h('div', { text: `عن ${SHOP.name}` })),
-    h('div', { class: 'sh-foot', text: `${SHOP.name} · ${SITE.replace('https://', '')} · انستقرام ${SHOP.instagram}` })
+    h('div', { class: 'sh-terms' }, h('b', { text: D.terms }), h('ol', {}, terms.map((s) => h('li', { text: s })))),
+    h('div', { class: 'sh-sign' }, h('div', { text: quote ? D.approveCust : D.signCust }), h('div', { text: D.signShop(S.name) })),
+    h('div', { class: 'sh-foot', text: `${S.name} · ${CFG.site.replace('https://', '')} · ${D.insta} ${CFG.shop.instagram}` })
   );
   return sheet;
 }
@@ -396,9 +516,9 @@ const loadScript = (src) =>
     document.head.append(h('script', { src, onload: res, onerror: rej }));
   });
 async function makePdf() {
-  if (!inv.savedAt) await saveInvoice();
+  if (!inv.savedAt) await saveDoc();
   if (!inv.savedAt) return;
-  toast('جارٍ تجهيز الـ PDF…');
+  toast(t('pdfWait'));
   await loadScript('/invoice/vendor/html2canvas.min.js');
   await loadScript('/invoice/vendor/jspdf.umd.min.js');
   const sheet = buildSheet();
@@ -418,10 +538,11 @@ async function makePdf() {
     if (page) pdf.addPage();
     pdf.addImage(part.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pw, (part.height * pw) / canvas.width);
   }
-  const file = new File([pdf.output('blob')], `mazuna-invoice-${inv.no}.pdf`, { type: 'application/pdf' });
+  const kind = isQuote() ? 'quotation' : 'invoice';
+  const file = new File([pdf.output('blob')], `${P}-${kind}-${inv.no}.pdf`, { type: 'application/pdf' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
-      await navigator.share({ files: [file], title: `فاتورة ${SHOP.name} رقم ${inv.no}` });
+      await navigator.share({ files: [file], title: `${isQuote() ? DOC[inv.lang === 'en' ? 'en' : 'ar'].quote : DOC[inv.lang === 'en' ? 'en' : 'ar'].invoice} ${inv.no}` });
       return;
     } catch (e) {
       if (e && e.name === 'AbortError') return;
@@ -433,105 +554,164 @@ async function makePdf() {
   a.remove();
 }
 async function sendWhatsapp() {
-  if (!inv.savedAt) await saveInvoice();
-  if (!inv.verifyUrl) return toast('فعّل باركود التحقق من الإعدادات ثم احفظ الفاتورة');
+  if (!inv.savedAt) await saveDoc();
+  if (!inv.verifyUrl) return toast(t('needKey'));
   const phone = digits(inv.cust.phone).replace(/\D/g, '');
   const to = phone.length === 8 ? `965${phone}` : phone;
-  const msg = `${SHOP.name}\nفاتورتك رقم ${inv.no} بتاريخ ${inv.date}.\nللتحقق من الفاتورة والضمان:\n${inv.verifyUrl}`;
+  const S = CFG.shop[inv.lang === 'en' ? 'en' : 'ar'];
+  const msg =
+    inv.lang === 'en'
+      ? `${S.name}\nYour invoice no. ${inv.no} dated ${inv.date}.\nVerify the invoice and its warranty:\n${inv.verifyUrl}`
+      : `${S.name}\nفاتورتك رقم ${inv.no} بتاريخ ${inv.date}.\nللتحقق من الفاتورة والضمان:\n${inv.verifyUrl}`;
   window.open(`https://wa.me/${to}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
 }
 
 // ---------------------------------------------------------------- الأرشيف
 function renderArchive() {
   const q = digits($('a_q').value).trim().toLowerCase();
-  const list = lsGet(LS.archive, []).filter((a) => !q || `${a.no} ${a.cust.name} ${a.cust.phone}`.toLowerCase().includes(q));
+  const f = (document.querySelector('input[name=af]:checked') || {}).value || '';
+  const list = lsGet(LS.archive, []).filter((a) => (!f || (a.type || 'invoice') === f) && (!q || `${a.no} ${a.cust.name} ${a.cust.phone}`.toLowerCase().includes(q)));
   $('a_list').replaceChildren(
     ...(list.length
-      ? list.map((a) =>
-          h('div', { class: 'row' },
-            h('div', {}, h('b', { text: `#${a.no} — ${a.cust.name || 'بدون اسم'}` }), h('div', { class: 'meta', text: `${a.date} · ${kwd(totals(a).total)} د.ك · ${a.verifyUrl ? 'موقّعة' : 'بلا باركود'}` })),
+      ? list.map((a) => {
+          const quote = a.type === 'quote';
+          return h('div', { class: 'row' },
+            h('div', {},
+              h('b', { text: `#${a.no} — ${a.cust.name || '—'}` }),
+              h('span', { class: 'tag', text: `${quote ? t('typeQuote') : t('typeInvoice')} · ${a.lang === 'en' ? 'EN' : 'ع'}` }),
+              h('div', { class: 'meta', text: [a.date, kwd(totals(a).total), quote ? '' : a.verifyUrl ? t('signed') : t('unsigned')].filter(Boolean).join(' · ') })),
             h('div', { class: 'btns' },
-              h('button', { type: 'button', text: 'فتح', onclick: () => { inv = structuredClone(a); fillForm(); show('edit'); } }),
-              h('button', { type: 'button', text: 'نسخ', onclick: () => { inv = { ...structuredClone(a), id: crypto.randomUUID(), no: nextNo(), date: today(), verifyUrl: null, savedAt: null }; fillForm(); show('edit'); toast('نسخة جديدة — راجعها واحفظ'); } }),
-              h('button', { type: 'button', class: 'danger', text: 'حذف', onclick: () => { if (confirm(`حذف الفاتورة ${a.no} من هذا الجهاز؟`)) { lsSet(LS.archive, lsGet(LS.archive, []).filter((x) => x.id !== a.id)); renderArchive(); } } }))))
-      : [h('p', { class: 'hint', text: 'لا توجد فواتير محفوظة.' })])
+              h('button', { type: 'button', text: t('open'), onclick: () => { inv = structuredClone(a); inv.type = inv.type || 'invoice'; inv.lang = inv.lang || 'ar'; fillForm(); show('edit'); } }),
+              h('button', { type: 'button', text: t('copy'), onclick: () => { inv = { ...structuredClone(a), type: a.type || 'invoice', lang: a.lang || 'ar', id: crypto.randomUUID(), no: nextNo(a.type || 'invoice'), date: today(), verifyUrl: null, savedAt: null }; fillForm(); show('edit'); toast(t('copied')); } }),
+              h('button', { type: 'button', class: 'danger', text: t('del'), onclick: () => { if (confirm(t('confirmDel', a.no))) { lsSet(LS.archive, lsGet(LS.archive, []).filter((y) => y.id !== a.id)); renderArchive(); } } })));
+        })
+      : [h('p', { class: 'hint', text: t('none') })])
   );
 }
 function exportArchive() {
-  const blob = new Blob([JSON.stringify({ archive: lsGet(LS.archive, []), next: lsGet(LS.next, 1), terms: lsGet(LS.terms, null) }, null, 2)], { type: 'application/json' });
-  const a = h('a', { href: URL.createObjectURL(blob), download: `mazuna-invoices-${today()}.json` });
+  const blob = new Blob([JSON.stringify({ archive: lsGet(LS.archive, []), next: lsGet(LS.next, 1), nextQ: lsGet(LS.nextQ, 1), terms: lsGet(LS.terms, {}) }, null, 2)], { type: 'application/json' });
+  const a = h('a', { href: URL.createObjectURL(blob), download: `${P}-documents-${today()}.json` });
   document.body.append(a);
   a.click();
   a.remove();
 }
 async function importArchive(e) {
-  const f = e.target.files[0];
-  if (!f) return;
+  const file = e.target.files[0];
+  if (!file) return;
   try {
-    const data = JSON.parse(await f.text());
+    const data = JSON.parse(await file.text());
     const cur = lsGet(LS.archive, []);
     const ids = new Set(cur.map((x) => x.id));
     const merged = cur.concat((data.archive || []).filter((x) => !ids.has(x.id)));
     lsSet(LS.archive, merged);
-    if (data.next && Number(data.next) > Number(nextNo())) lsSet(LS.next, Number(data.next));
-    if (data.terms) lsSet(LS.terms, data.terms);
-    toast(`تم الاسترجاع — ${merged.length} فاتورة`);
+    if (data.next && Number(data.next) > Number(lsGet(LS.next, 1))) lsSet(LS.next, Number(data.next));
+    if (data.nextQ && Number(data.nextQ) > Number(lsGet(LS.nextQ, 1))) lsSet(LS.nextQ, Number(data.nextQ));
+    if (data.terms && typeof data.terms === 'object') lsSet(LS.terms, data.terms);
+    toast(t('restored', merged.length));
     renderArchive();
   } catch (_) {
-    toast('ملف غير صالح');
+    toast(t('badFile'));
   }
   e.target.value = '';
 }
 
-// ---------------------------------------------------------------- التنقل والإعدادات
+// ---------------------------------------------------------------- الواجهة واللغة
+function applyUi() {
+  document.documentElement.lang = UI;
+  document.documentElement.dir = UI === 'en' ? 'ltr' : 'rtl';
+  document.title = t('appTitle');
+  $('barTitle').textContent = t('appTitle');
+  document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-ph]').forEach((el) => { el.placeholder = t(el.dataset.i18nPh); });
+  document.querySelectorAll('input[name=ul]').forEach((r) => { r.checked = r.value === UI; });
+}
 function show(view) {
   for (const v of ['edit', 'archive', 'settings']) $(`v-${v}`).hidden = v !== view;
-  document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('on', t.dataset.view === view));
+  document.querySelectorAll('.tab').forEach((x) => x.classList.toggle('on', x.dataset.view === view));
   if (view === 'archive') renderArchive();
   if (view === 'settings') {
-    $('s_next').value = nextNo();
-    $('s_terms').value = lsGet(LS.terms, null) || DEFAULT_TERMS;
+    $('s_next').value = lsGet(LS.next, 1);
+    $('s_nextQ').value = lsGet(LS.nextQ, 1);
+    loadTermsEditor();
     refreshKeyStatus();
   }
   window.scrollTo(0, 0);
 }
+const termsKey = () => `${$('s_termsType').value}_${$('s_termsLang').value}`;
+function loadTermsEditor() {
+  const [type, lang] = termsKey().split('_');
+  $('s_terms').value = lsGet(LS.terms, {})[termsKey()] || CFG.terms[type][lang].join('\n');
+  $('s_terms').dir = lang === 'en' ? 'ltr' : 'rtl';
+}
+function askNewDoc() {
+  const dlg = $('newDlg');
+  dlg.querySelectorAll('input[name=nl]').forEach((r) => { r.checked = r.value === UI; });
+  const done = () => {
+    dlg.removeEventListener('close', done);
+    if (dlg.returnValue !== 'ok') return;
+    const type = (dlg.querySelector('input[name=nt]:checked') || {}).value || 'invoice';
+    const lang = (dlg.querySelector('input[name=nl]:checked') || {}).value || 'ar';
+    inv = newDoc(type, lang);
+    lsSet(LS.draft, inv);
+    fillForm();
+    show('edit');
+  };
+  dlg.addEventListener('close', done);
+  dlg.returnValue = '';
+  dlg.showModal();
+}
 
 async function init() {
   CODES = await (await fetch('/invoice/codes.json', { cache: 'no-cache' })).json();
-  inv = lsGet(LS.draft, null) || newInvoice();
-  fillForm();
-  refreshKeyStatus();
+  UI = lsGet(LS.ui, 'ar') === 'en' ? 'en' : 'ar';
+  applyUi();
+  inv = lsGet(LS.draft, null);
+  if (inv) {
+    inv.type = inv.type || 'invoice';
+    inv.lang = inv.lang || 'ar';
+    fillForm();
+  } else {
+    inv = newDoc('invoice', UI);
+    fillForm();
+    askNewDoc();
+  }
 
-  document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () => show(t.dataset.view)));
-  ['i_no', 'i_date', 'c_name', 'c_phone', 'c_area', 'c_addr', 't_disc', 't_dep', 'n_notes', 'd_date'].forEach((id) => $(id).addEventListener('input', onChange));
+  document.querySelectorAll('.tab').forEach((x) => x.addEventListener('click', () => show(x.dataset.view)));
+  ['i_no', 'i_date', 'q_valid', 'c_name', 'c_phone', 'c_area', 'c_addr', 't_disc', 't_dep', 'n_notes', 'd_date'].forEach((id) => $(id).addEventListener('input', onChange));
   $('d_days').addEventListener('input', () => {
     const d = parseInt(digits($('d_days').value), 10);
     if (d > 0) $('d_date').value = addDays($('i_date').value || today(), d);
     onChange();
   });
   $('addItem').addEventListener('click', () => { inv.items.push(blankItem()); renderItems(); onChange(); });
-  $('btnSave').addEventListener('click', saveInvoice);
-  $('btnPdf').addEventListener('click', () => makePdf().catch(() => toast('تعذّر إنشاء الـ PDF')));
+  $('btnSave').addEventListener('click', saveDoc);
+  $('btnPdf').addEventListener('click', () => makePdf().catch(() => toast(t('pdfFail'))));
   $('btnWa').addEventListener('click', sendWhatsapp);
+  $('btnConvert').addEventListener('click', convertToInvoice);
   $('btnNew').addEventListener('click', () => {
-    if (!inv.savedAt && inv.items.some((it) => num(it.qty) > 0) && !confirm('الفاتورة الحالية غير محفوظة. بدء فاتورة جديدة؟')) return;
-    inv = newInvoice();
-    lsSet(LS.draft, inv);
-    fillForm();
+    if (!inv.savedAt && inv.items.some((it) => num(it.qty) > 0) && !confirm(t('unsaved'))) return;
+    askNewDoc();
   });
   $('a_q').addEventListener('input', renderArchive);
+  document.querySelectorAll('input[name=af]').forEach((r) => r.addEventListener('change', renderArchive));
   $('btnExport').addEventListener('click', exportArchive);
   $('importFile').addEventListener('change', importArchive);
   $('saveNext').addEventListener('click', () => {
-    const n = parseInt(digits($('s_next').value), 10);
-    if (!(n > 0)) return toast('رقم غير صالح');
-    lsSet(LS.next, n);
-    if (!inv.savedAt) { inv.no = String(n); $('i_no').value = inv.no; lsSet(LS.draft, inv); }
-    toast(`الفاتورة التالية رقم ${n}`);
+    const a = parseInt(digits($('s_next').value), 10);
+    const b = parseInt(digits($('s_nextQ').value), 10);
+    if (!(a > 0) || !(b > 0)) return toast(t('badNum'));
+    lsSet(LS.next, a);
+    lsSet(LS.nextQ, b);
+    if (!inv.savedAt) { inv.no = String(isQuote() ? b : a); lsSet(LS.draft, inv); fillForm(); }
+    toast(t('nextSet'));
   });
-  $('saveTerms').addEventListener('click', () => { lsSet(LS.terms, $('s_terms').value.trim()); toast('حُفظت الشروط'); });
+  $('s_termsType').addEventListener('change', loadTermsEditor);
+  $('s_termsLang').addEventListener('change', loadTermsEditor);
+  $('saveTerms').addEventListener('click', () => { const s = lsGet(LS.terms, {}); s[termsKey()] = $('s_terms').value.trim(); lsSet(LS.terms, s); toast(t('termsSaved')); });
+  $('resetTerms').addEventListener('click', () => { const s = lsGet(LS.terms, {}); delete s[termsKey()]; lsSet(LS.terms, s); loadTermsEditor(); });
+  document.querySelectorAll('input[name=ul]').forEach((r) => r.addEventListener('change', () => { UI = r.value; lsSet(LS.ui, UI); applyUi(); fillForm(); show('settings'); }));
   $('activateKey').addEventListener('click', activateKey);
 
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('/invoice/sw.js', { scope: '/invoice/' }).catch(() => {});
 }
-init().catch(() => toast('تعذّر تشغيل التطبيق — تحقق من الاتصال'));
+init().catch(() => toast(I18N.ar.startFail));
