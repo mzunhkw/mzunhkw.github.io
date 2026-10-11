@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { visibleProducts } from '@/data/products';
 import { areaPages } from '@/data/area-pages';
 import { siteConfig, whatsappLink } from '@/data/site-config';
-import { woodMin, woodMax } from '@/data/wood-tiers';
+import { woodMin, woodMax, bedroomPrice } from '@/data/wood-tiers';
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
 import ProductCard from '@/components/ProductCard';
@@ -14,7 +14,7 @@ import ProductCard from '@/components/ProductCard';
 const PATH = '/tafseel-kabatat-kuwait/';
 const TITLE = 'تفصيل كبتات ملابس في الكويت | نجار كبتات — منجرة مزونة';
 const H1 = 'تفصيل كبتات ملابس في الكويت — كبت بطول الجدار وغرفة ملابس';
-const DESCRIPTION = `نجار كبتات في الكويت: منجرة مزونة تفصّل كبت الملابس بطول الجدار، كبت زاوية، وغرفة ملابس بأبواب مفصلية أو سحّابة، مع تسريحة وأدراج. من ${woodMin} إلى ${woodMax} د.ك للمتر حسب الخشب.`;
+const DESCRIPTION = `نجار كبتات في الكويت: منجرة مزونة تفصّل كبت الملابس بطول الجدار، كبت زاوية، وغرفة ملابس بأبواب مفصلية أو سحّابة، مع تسريحة وأدراج. ${bedroomPrice} د.ك للمتر المربع ميلامين.`;
 
 const TYPES = [
   'كبت ملابس بطول الجدار حتى السقف، بخزائن علوية تستغل كل المساحة.',
@@ -36,7 +36,7 @@ const FINISHES = [
 const FAQS = [
   {
     q: 'كم سعر تفصيل كبت الملابس في الكويت؟',
-    a: `نسعّر الكبتات بالمتر حسب نوع الخشب، من ${woodMin} إلى ${woodMax} د.ك للمتر. الإجمالي يعتمد على طول الكبت والتقسيم الداخلي والإضافات مثل التسريحة والإضاءة، والأسعار تقديرية ونتفق على السعر النهائي معك عبر واتساب بعد معرفة المقاسات.`,
+    a: `نسعّر الكبتات بالمتر المربع: ${bedroomPrice} د.ك للمتر المربع بخامة الميلامين، و${woodMin} د.ك للخشب مع الصبغ. الإجمالي يعتمد على طول الكبت والتقسيم الداخلي والإضافات مثل التسريحة والإضاءة، والأسعار تقديرية ونتفق على السعر النهائي معك عبر واتساب بعد معرفة المقاسات.`,
   },
   {
     q: 'أيهما أفضل: أبواب مفصلية أم سحّابة؟',
@@ -148,7 +148,7 @@ export default function WardrobesPage() {
       <section className="mt-12 max-w-3xl" aria-labelledby="price-title">
         <h2 id="price-title" className="text-xl sm:text-2xl mb-3">الخامات وسعر تفصيل الكبت بالمتر</h2>
         <p className="text-ink/75 leading-relaxed mb-3">
-          سعر تفصيل الكبت من {woodMin} إلى {woodMax} د.ك للمتر حسب نوع الخشب الذي تختاره. الأسعار تقديرية، ونتفق معك على
+          سعر تفصيل الكبت {bedroomPrice} د.ك للمتر المربع بخامة الميلامين، و{woodMin} د.ك للمتر المربع للخشب مع الصبغ. الأسعار تقديرية، ونتفق معك على
           السعر النهائي عبر واتساب بعد معرفة المقاسات والتفاصيل.
         </p>
         <ul className="list-disc ps-5 space-y-1.5 text-ink/75 leading-relaxed">
