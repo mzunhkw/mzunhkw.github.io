@@ -3,35 +3,33 @@ import Link from 'next/link';
 import { visibleProducts } from '@/data/products';
 import { areaPages } from '@/data/area-pages';
 import { siteConfig, whatsappLink } from '@/data/site-config';
-import { woodMin, woodMax, bedroomPrice } from '@/data/wood-tiers';
+import { woodMin, woodMax, bedroomPrice, woodTiers } from '@/data/wood-tiers';
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
 import ProductCard from '@/components/ProductCard';
 
 // صفحة «تفصيل كبتات ملابس» — مبنية على أحجام بحث Ubersuggest للكويت (أكتوبر 2026):
 // كبت ملابس ~320/شهر، نجار كبتات ~260 (صعوبة 13)، كبتات ملابس ~70، تفصيل كبتات ~70، غرفة ملابس ~70.
+// اقتراحات جوجل (أكتوبر 2026): كبت ملابس الكويت، كبت ملابس زاوية، كبت ملابس زجاج، كبت ملابس مفتوح.
 // الكبتات تبقى بيانات ضمن قسم غرف النوم (نفس التسعير بالمتر حسب الخشب)، وتُعرض هنا من أعمالنا الفعلية فقط.
 const PATH = '/tafseel-kabatat-kuwait/';
-const TITLE = 'تفصيل كبتات ملابس في الكويت | نجار كبتات — منجرة مزونة';
-const H1 = 'تفصيل كبتات ملابس في الكويت — كبت بطول الجدار وغرفة ملابس';
+const TITLE = 'تفصيل كبت ملابس في الكويت | نجار كبتات ميلامين — منجرة مزونة';
+const H1 = 'تفصيل كبتات ملابس في الكويت — كبت ملابس بطول الجدار وكبت زاوية وغرفة ملابس';
 const DESCRIPTION = `نجار كبتات في الكويت: منجرة مزونة تفصّل كبت الملابس بطول الجدار، كبت زاوية، وغرفة ملابس بأبواب مفصلية أو سحّابة، مع تسريحة وأدراج. ${bedroomPrice} د.ك للمتر المربع ميلامين.`;
 
 const TYPES = [
   'كبت ملابس بطول الجدار حتى السقف، بخزائن علوية تستغل كل المساحة.',
-  'كبت زاوية للغرف الصغيرة أو الجدران المتقابلة.',
+  'كبت ملابس زاوية للغرف الصغيرة أو الجدران المتقابلة.',
+  'كبت ملابس بأبواب زجاج بإطار أسود وإضاءة داخلية، مفصلية أو سحّابة.',
+  'كبت ملابس مفتوح برفوف مضيئة ومقعد أحذية لغرفة الملابس.',
   'غرفة ملابس (Walk-in Closet) بأبواب زجاجية ورفوف مضيئة.',
   'كبت مع تسريحة ومرآة مضيئة في نفس الوحدة.',
   'كبت برفوف أحذية وأدراج داخلية حسب احتياجك.',
   'كبتات غرف الأطفال، مثبتة في الجدار لمنع الانقلاب.',
 ];
 
-const FINISHES = [
-  'ميلامين: اقتصادي وعملي بألوان خشبية وسادة.',
-  'MDF بتشطيب UV أو أكريليك: سطح ناعم مقاوم للخدوش.',
-  'بولي لاك أو هاي جلوس: تشطيب لامع أو مطفي بالألوان التي تختارها.',
-  'قشر جوز: عروق خشب داكنة.',
-  'خشب طبيعي: الأعلى متانة.',
-];
+// الخامات تُقرأ من ملف الأسعار نفسه (wood-tiers.ts) حتى لا تختلف هذه القائمة عن الأسعار المعروضة
+const FINISHES = woodTiers.map((t) => `${t.name} — ${t.price} د.ك للمتر المربع: ${t.note}.`);
 
 const FAQS = [
   {
@@ -174,6 +172,7 @@ export default function WardrobesPage() {
           <Link href="/category/bedrooms/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">غرف نوم مودرن</Link>
           <Link href="/articles/wardrobe-ideas-kuwait/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">أفكار كبت ملابس وكبت زاوية</Link>
           <Link href="/category/kids-beds/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">أسرّة أطفال</Link>
+          <Link href="/tafseel-tasriha-kuwait/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">تفصيل تسريحة غرفة نوم</Link>
           {areaPages.map((a) => (
             <Link key={a.slug} href={a.path} className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">نجار {a.governorate}</Link>
           ))}

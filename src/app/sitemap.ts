@@ -127,6 +127,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    // صفحة تفصيل التسريحة — تعرض التسريحات من قسم غرف النوم
+    {
+      url: `${base}/tafseel-tasriha-kuwait/`,
+      lastModified: latest(
+        gitLastModified('src/app/tafseel-tasriha-kuwait/page.tsx'),
+        newestProduct(visibleProducts.filter((p) => p.categorySlug === 'bedrooms' && /تسريحة/.test(p.title)))
+      ),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
   ];
 
   // المرحلة 3: قسم المقالات — dateModified المكتوب بكل مقال هو التاريخ الفعلي لآخر تحديث للمحتوى
