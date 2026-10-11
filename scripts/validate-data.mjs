@@ -57,6 +57,13 @@ products.forEach((p, i) => {
   if (p.materials !== undefined && !(Array.isArray(p.materials) && p.materials.every(isStr))) err(`${at}: materials لازم قائمة نصوص.`);
   if (typeof p.published !== 'boolean') err(`${at}: published لازم true/false.`);
   if (p.featured !== undefined && typeof p.featured !== 'boolean') err(`${at}: featured لازم true/false.`);
+  // غرف النوم لدى مزونة ميلامين أو خشب مع صبغ فقط — لا توجد غرف نوم زان (تأكيد المالك 2026-10-11)
+  if (p.categorySlug === 'bedrooms') {
+    const text = [p.title, p.seoTitle, p.shortDescription, p.description, p.metaDescription, p.size, ...(p.materials || []), ...(p.imageAlts || [])]
+      .filter(isStr)
+      .join(' ');
+    if (/(^|[^\u0600-\u06FF])(ال)?زان([^\u0600-\u06FF]|$)/.test(text)) err(`${at}: غرف النوم لا تُوصف بالزان — استخدم «ميلامين».`);
+  }
   if (!Array.isArray(p.images) || !p.images.every(isStr)) {
     err(`${at}: images لازم قائمة نصوص.`);
   } else {
