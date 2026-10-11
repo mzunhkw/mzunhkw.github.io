@@ -46,7 +46,7 @@ export default function HomePage() {
         <div className="hero-panel">
           <div className="hero-copy">
             <span className="eyebrow">منجرة مزونة · نجار وتفصيل أثاث في الكويت منذ {siteConfig.foundedYear}</span>
-            <h1>منجرة مزونة: نجار في الكويت لتفصيل الأثاث وتنجيد الكنب</h1>
+            <h1>منجرة مزونة: نجار الكويت لتفصيل الأثاث وغرف النوم وتنجيد الكنب</h1>
             <p>{siteConfig.about}</p>
 
             <div className="hero-actions">
