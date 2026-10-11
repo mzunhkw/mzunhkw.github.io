@@ -1,19 +1,21 @@
-// أسعار غرف النوم والكبتات بالمتر حسب نوع الخشب الذي يختاره العميل (د.ك/متر).
-// المتوسط يُستخدم كسعر معروض للمنتج في الموقع وفي بيانات Google.
+// أسعار تفصيل غرف النوم والكبتات بالمتر المربع حسب الخامة (د.ك/م²) — تأكيد المالك 2026-10-11.
+// الميلامين هو الخامة الأساسية والسعر المعروض لكل غرف النوم في الموقع وفي بيانات Google.
+// هذا الملف هو المصدر الوحيد للأسعار: صفحة المنتج، بطاقة المنتج، صفحة الكبتات وبيانات Schema كلها تقرأ منه.
 export type WoodTier = { id: string; name: string; note: string; price: number };
 
 export const woodTiers: WoodTier[] = [
-  { id: 'melamine', name: 'ميلامين', note: 'اقتصادي وعملي، ألوان خشبية وسادة متعددة', price: 35 },
-  { id: 'mdf-uv', name: 'MDF بتشطيب UV أو أكريليك', note: 'سطح ناعم مقاوم للخدوش', price: 50 },
-  { id: 'polylac', name: 'بولي لاك / هاي جلوس', note: 'تشطيب لامع أو مطفي بألوان حسب الطلب', price: 65 },
-  { id: 'beech-veneer', name: 'قشر زان', note: 'مظهر الخشب الطبيعي بسعر متوسط', price: 80 },
-  { id: 'walnut-veneer', name: 'قشر جوز', note: 'عروق خشب داكنة فاخرة', price: 95 },
-  { id: 'solid-wood', name: 'خشب طبيعي', note: 'أعلى متانة وعمر أطول', price: 110 },
+  { id: 'melamine', name: 'ميلامين', note: 'الخامة الأساسية لغرف النوم والكبتات، بألوان خشبية وسادة متعددة', price: 55 },
+  { id: 'painted-wood', name: 'خشب مع صبغ', note: 'خشب مصبوغ باللون الذي تختاره', price: 35 },
 ];
 
+// السعر الأساسي المعروض لغرف النوم = سعر الميلامين
+export const bedroomPrice = woodTiers.find((t) => t.id === 'melamine')!.price;
 export const woodMin = Math.min(...woodTiers.map((t) => t.price));
 export const woodMax = Math.max(...woodTiers.map((t) => t.price));
-export const woodAvg = Math.round((woodTiers.reduce((s, t) => s + t.price, 0) / woodTiers.length) * 10) / 10;
 
-// الأقسام التي تُسعّر حسب نوع الخشب
+// وحدة التسعير: متر مربع (UN/CEFACT: MTK)
+export const priceUnitText = 'متر مربع';
+export const priceUnitCode = 'MTK';
+
+// الأقسام التي تُسعّر بالمتر المربع حسب الخامة
 export const woodPricedCategories = ['bedrooms'];

@@ -4,7 +4,7 @@ import { visibleProducts } from '@/data/products';
 import { categories } from '@/data/categories';
 import { availabilityLabels } from '@/lib/types';
 import { formatPrice } from '@/lib/catalog';
-import { woodTiers, woodMin, woodMax, woodAvg, woodPricedCategories } from '@/data/wood-tiers';
+import { woodTiers, bedroomPrice, woodPricedCategories, priceUnitCode, priceUnitText } from '@/data/wood-tiers';
 import { whatsappLinkForProduct, deliveryDays } from '@/data/site-config';
 import Gallery from '@/components/Gallery';
 import Link from 'next/link';
@@ -93,8 +93,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                     '@type': 'UnitPriceSpecification',
                     price: formatPrice(product.price),
                     priceCurrency: 'KWD',
-                    unitCode: 'MTR',
-                    unitText: 'متر',
+                    unitCode: /مربع/.test(product.size || '') ? 'MTK' : 'MTR',
+                    unitText: /مربع/.test(product.size || '') ? 'متر مربع' : 'متر',
                   },
                 }
               : {}),
@@ -125,7 +125,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       : {}),
   };
 
-  // غرف النوم: كل نوع خشب = متغيّر (variant) بسعره، ضمن ProductGroup يفهمه Google كمنتج احترافي بخيارات
+  // غرف النوم: كل خامة = متغيّر (variant) بسعره، ضمن ProductGroup يفهمه Google كمنتج احترافي بخيارات
   const woodPriced = woodPricedCategories.includes(product.categorySlug);
   const baseOffer = (productLd.offers || {}) as Record<string, unknown>;
   const structuredData: Record<string, unknown> = woodPriced
@@ -156,8 +156,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               '@type': 'UnitPriceSpecification',
               price: formatPrice(t.price),
               priceCurrency: 'KWD',
-              unitCode: 'MTR',
-              unitText: 'متر',
+              unitCode: priceUnitCode,
+              unitText: priceUnitText,
             },
           },
         })),
@@ -209,9 +209,9 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         {category && <p className="text-sm text-sage">{category.name}</p>}
         <h1 className="text-xl sm:text-3xl mt-1 leading-snug">{product.title}</h1>
         <p className="text-2xl mt-2 text-sage font-medium">
-            {woodPriced ? `من ${woodMin} إلى ${woodMax} د.ك للمتر` : `${formatPrice(product.price)} د.ك`}
+            {woodPriced ? `${bedroomPrice} د.ك للمتر المربع` : `${formatPrice(product.price)} د.ك`}
           </p>
-          {woodPriced && <p className="text-sm text-ink/60 mt-1">متوسط السعر {formatPrice(woodAvg)} د.ك للمتر حسب نوع الخشب</p>}
+          {woodPriced && <p className="text-sm text-ink/60 mt-1">بخامة الميلامين — سعر تقديري ونتفق على السعر النهائي عبر واتساب</p>}
         <p className="text-sm text-ink/60 mt-1">
           {product.size} · {product.region}
         </p>
@@ -236,7 +236,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
         {woodPriced && (
           <div className="mt-6">
-            <h2 className="text-base font-medium mb-2">السعر حسب نوع الخشب (للمتر)</h2>
+            <h2 className="text-base font-medium mb-2">السعر حسب الخامة (للمتر المربع)</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border border-sand rounded-xl overflow-hidden">
                 <tbody>
@@ -250,7 +250,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                 </tbody>
               </table>
             </div>
-            <p className="text-xs text-ink/55 mt-2">الإجمالي = عدد الأمتار × سعر المتر للخشب المختار. نحدد المقاسات بدقة في زيارة القياس.</p>
+            <p className="text-xs text-ink/55 mt-2">الإجمالي = المساحة بالمتر المربع × سعر المتر للخامة المختارة. نحدد المقاسات بدقة في زيارة القياس.</p>
           </div>
         )}
 
