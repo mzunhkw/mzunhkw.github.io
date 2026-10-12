@@ -10,6 +10,7 @@ import { siteConfig, whatsappLink } from '@/data/site-config';
 import { breadcrumbLd, absoluteUrl } from '@/lib/seo';
 import ProductCard from '@/components/ProductCard';
 import JsonLd from '@/components/JsonLd';
+import { isHiddenHref } from '@/data/hidden-sections';
 
 export function generateStaticParams() {
   const params = categories.map((c) => ({ slug: c.slug }));
@@ -104,9 +105,9 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
           ))}
         </div>
       )}
-      {seo.links && seo.links.length > 0 && (
+      {seo.links && seo.links.some((l) => !isHiddenHref(l.href)) && (
         <nav aria-label="صفحات ذات صلة" className="mt-5 flex flex-wrap gap-2">
-          {seo.links.map((l) => (
+          {seo.links.filter((l) => !isHiddenHref(l.href)).map((l) => (
             <Link
               key={l.href}
               href={l.href}

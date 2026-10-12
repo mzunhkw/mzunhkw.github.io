@@ -6,9 +6,10 @@ import { siteConfig, whatsappLink } from '@/data/site-config';
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
 import ProductCard from '@/components/ProductCard';
+import { isHiddenHref } from '@/data/hidden-sections';
 
 // الأعمال التي تنفذها منجرة مزونة فعليًا (بدون أبواب أو مطابخ)
-const AREA_SERVICES = [
+const ALL_AREA_SERVICES = [
   { name: 'كنب وقنفات', href: '/category/sofas/' },
   { name: 'غرف نوم', href: '/category/bedrooms/' },
   { name: 'كبتات ملابس', href: '/tafseel-kabatat-kuwait/' },
@@ -18,6 +19,8 @@ const AREA_SERVICES = [
   { name: 'مجالس وديوانيات', href: '/category/majlis/' },
   { name: 'مساند عربية', href: '/category/cushions/' },
 ];
+// بدون الأقسام المخفية مؤقتًا (hidden-sections.ts)
+const AREA_SERVICES = ALL_AREA_SERVICES.filter((sv) => !isHiddenHref(sv.href));
 
 export default function AreaLandingPage({ area }: { area: AreaPage }) {
   // أعمالنا الفعلية المنفذة في مناطق المحافظة (حسب حقل region بالمنتج)
