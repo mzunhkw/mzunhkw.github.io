@@ -127,6 +127,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    // صفحة أثاث الضجيج — تعرض أعمالًا من الأقسام الظاهرة
+    {
+      url: `${base}/athath-dajeej/`,
+      lastModified: latest(gitLastModified('src/app/athath-dajeej/page.tsx'), newestProduct(visibleProducts)),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // صفحة تفصيل التسريحة — تعرض التسريحات من قسم غرف النوم
     {
       url: `${base}/tafseel-tasriha-kuwait/`,

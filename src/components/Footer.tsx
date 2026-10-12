@@ -73,6 +73,9 @@ export default function Footer() {
         <Link href="/tafseel-kabatat-kuwait/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
           تفصيل كبتات ملابس
         </Link>
+        <Link href="/athath-dajeej/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
+          أثاث الضجيج
+        </Link>
         <Link href="/tafseel-tasriha-kuwait/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
           تسريحة غرفة نوم
         </Link>
