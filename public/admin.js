@@ -761,7 +761,8 @@ function fillCategorySelects() {
   const prevForm = formSel.value;
   const prevFilter = filterSel.value;
   formSel.replaceChildren(
-    ...(state.categories.length ? [] : [h('option', { value: '', text: '— لا توجد تصنيفات —' })]),
+    // بدون اختيار افتراضي: المنتج الجديد كان يُحفظ بالخطأ في أول تصنيف (الكنب) إذا نُسي الاختيار
+    h('option', { value: '', text: state.categories.length ? '— اختر التصنيف —' : '— لا توجد تصنيفات —' }),
     ...state.categories.map((c) => h('option', { value: c.slug, text: catLabel(c) }))
   );
   filterSel.replaceChildren(h('option', { value: '', text: 'كل التصنيفات' }), ...state.categories.map((c) => h('option', { value: c.slug, text: catLabel(c) })));
@@ -887,7 +888,7 @@ function fillForm(p, opts) {
   $('f_title').value = p.title || '';
   $('f_slug').value = o.editing ? p.slug : '';
   $('f_slug').disabled = !!o.editing;
-  $('f_category').value = p.categorySlug && state.categories.some((c) => c.slug === p.categorySlug) ? p.categorySlug : (state.categories[0] || {}).slug || '';
+  $('f_category').value = p.categorySlug && state.categories.some((c) => c.slug === p.categorySlug) ? p.categorySlug : '';
   $('f_price').value = p.price != null ? String(p.price) : '';
   $('f_size').value = p.size || '';
   $('f_region').value = p.region || 'الكويت';
