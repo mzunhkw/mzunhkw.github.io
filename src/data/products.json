@@ -1,5 +1,41 @@
 [
   {
+    "slug": "product-eivmi",
+    "title": "غرفة نوم تفصيل الكويت",
+    "categorySlug": "sofas",
+    "price": 55,
+    "size": "3x5.5",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "غرفة نوم تفصيل مزونة",
+    "description": "غرفة نوم معاريس\nخشب ميلامين لامع \nمع انارة LED مميزة",
+    "materials": [
+      "ميلامين"
+    ],
+    "seoTitle": "تفصيل غرف نوم الكويت منجرة",
+    "metaDescription": "منجرة الكويت تفصيل غرف نوم \nتفصيل سرير كبت تسريحة معاريس",
+    "keywords": [],
+    "imageAlts": [
+      "غرفة نوم تفصيل الكويت",
+      "غرفة نوم تفصيل الكويت — صورة 2",
+      "غرفة نوم تفصيل الكويت — صورة 3",
+      "غرفة نوم تفصيل الكويت — صورة 4",
+      "غرفة نوم تفصيل الكويت — صورة 5",
+      "غرفة نوم تفصيل الكويت — صورة 6"
+    ],
+    "images": [
+      "/images/product-eivmi/mv5pwfav-0.webp",
+      "/images/product-eivmi/mv5pwfav-1.webp",
+      "/images/product-eivmi/mv5pwfav-2.webp",
+      "/images/product-eivmi/mv5pwfav-3.webp",
+      "/images/product-eivmi/mv5pwfav-4.webp",
+      "/images/product-eivmi/mv5pwfav-5.webp"
+    ],
+    "featured": false,
+    "published": true,
+    "updatedAt": "2026-10-12T20:41:36.673Z"
+  },
+  {
     "slug": "product-82z77",
     "title": "غرفة نوم ميلامين تفصيل",
     "categorySlug": "sofas",
