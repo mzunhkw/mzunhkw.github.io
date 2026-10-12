@@ -1,5 +1,37 @@
 [
   {
+    "slug": "product-82z77",
+    "title": "غرفة نوم ميلامين تفصيل",
+    "categorySlug": "sofas",
+    "price": 55,
+    "size": "3.20x4.80",
+    "region": "الكويت",
+    "availability": "custom-order",
+    "shortDescription": "غرفة نوم ميلامين مع انارة",
+    "description": "غرفة نوم \nاعمالنا \nتفصيل منجرة مزونة",
+    "materials": [
+      "خشب ميلامين"
+    ],
+    "seoTitle": "تفصيل غرف نوم الكويت معاريس",
+    "metaDescription": "غرفة نوم ميلامين مع انارة",
+    "keywords": [],
+    "imageAlts": [
+      "غرفة نوم ميلامين تفصيل",
+      "غرفة نوم ميلامين تفصيل — صورة 2",
+      "غرفة نوم ميلامين تفصيل — صورة 3",
+      "غرفة نوم ميلامين تفصيل — صورة 4"
+    ],
+    "images": [
+      "/images/product-82z77/mv5psskq-0.webp",
+      "/images/product-82z77/mv5psskq-1.webp",
+      "/images/product-82z77/mv5psskq-2.webp",
+      "/images/product-82z77/mv5psskq-3.webp"
+    ],
+    "featured": true,
+    "published": true,
+    "updatedAt": "2026-10-12T20:38:47.250Z"
+  },
+  {
     "slug": "product-bunk-bed-slide-desk",
     "title": "سرير دورين بزحليقة ومكتب دراسة للبنات — الكويت",
     "categorySlug": "kids-beds",
