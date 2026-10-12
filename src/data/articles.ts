@@ -1,3 +1,4 @@
+import { HIDDEN_ARTICLE_SLUGS, isHiddenHref } from './hidden-sections';
 // مقالات المرحلة 3 — محتوى مكتوب يدويًا عن خدمات منجرة مزونة الفعلية فقط
 // (كنب، غرف نوم، كبتات، طاولات، مجالس، مساند، تنجيد). لا أبواب ولا مطابخ.
 // الأسعار المذكورة هي أسعار مزونة المعتمدة فقط، ولا تُختلق أسعار لخدمات غير مسعّرة.
@@ -31,7 +32,7 @@ export type Article = {
   productSlugs?: string[]; // منتجات مرتبطة تظهر كبطاقات داخل المقال
 };
 
-export const articles: Article[] = [
+const allArticles: Article[] = [
   {
     slug: 'tanjeed-sofa-prices-kuwait',
     path: '/articles/tanjeed-sofa-prices-kuwait/',
@@ -549,6 +550,16 @@ export const articles: Article[] = [
     productSlugs: ['product-yngjo', 'product-2k5za', 'product-991sj', 'product-wpuvo', 'product-msanddecorrsmih', 'product-9k578', 'product-swe6o', 'product-04ghr'],
   },
 ];
+
+// المقالات الظاهرة: بدون مقالات الأقسام المخفية، وبدون أي رابط داخلي لصفحة مخفية (hidden-sections.ts)
+const keepLink = (l: { href: string }) => !isHiddenHref(l.href);
+export const articles: Article[] = allArticles
+  .filter((a) => !HIDDEN_ARTICLE_SLUGS.includes(a.slug))
+  .map((a) => ({
+    ...a,
+    related: a.related.filter(keepLink),
+    sections: a.sections.map((sec) => (sec.links ? { ...sec, links: sec.links.filter(keepLink) } : sec)),
+  }));
 
 export const getArticle = (slug: string) => articles.find((a) => a.slug === slug);
 

@@ -103,8 +103,8 @@ const jsonLd = {
   foundingDate: String(siteConfig.foundedYear),
   numberOfEmployees: { '@type': 'QuantitativeValue', value: siteConfig.teamSize },
   areaServed: { '@type': 'Country', name: 'الكويت' },
-  // نطاق الأسعار التقديرية المعروضة في الموقع (من مساند الظهر بالمتر إلى طاولات الطعام الرخام)
-  priceRange: '9 - 450 KWD',
+  // نطاق الأسعار التقديرية بالمتر للأقسام الظاهرة (من مساند الظهر إلى المجالس الرسمية)
+  priceRange: '9 - 70 KWD',
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'مجمع علي عبدالوهاب',

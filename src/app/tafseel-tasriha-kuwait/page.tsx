@@ -7,6 +7,7 @@ import { woodMin, woodMax, bedroomPrice, woodTiers } from '@/data/wood-tiers';
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo';
 import JsonLd from '@/components/JsonLd';
 import ProductCard from '@/components/ProductCard';
+import { isHiddenHref } from '@/data/hidden-sections';
 
 // صفحة «تفصيل تسريحة غرفة نوم» — أحجام بحث Ubersuggest للكويت (أكتوبر 2026): تسريحة غرفة نوم ~320/شهر،
 // واقتراحات جوجل: «تسريحة غرفة نوم الكويت». («تسريحات» وحدها يغلب عليها تسريحات الشعر، فلا نستهدفها.)
@@ -167,7 +168,7 @@ export default function DressingTablesPage() {
         <div className="flex flex-wrap gap-2">
           <Link href="/category/bedrooms/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">تفصيل غرف نوم</Link>
           <Link href="/tafseel-kabatat-kuwait/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">تفصيل كبتات ملابس</Link>
-          <Link href="/category/kids-beds/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">أسرّة أطفال</Link>
+          {!isHiddenHref('/category/kids-beds/') && (<Link href="/category/kids-beds/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">أسرّة أطفال</Link>)}
           {areaPages.map((a) => (
             <Link key={a.slug} href={a.path} className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">نجار {a.governorate}</Link>
           ))}
