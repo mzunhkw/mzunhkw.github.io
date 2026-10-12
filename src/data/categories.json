@@ -17,18 +17,22 @@
   },
   {
     "slug": "kids-beds",
-    "name": "أسرّة أطفال"
+    "name": "أسرّة أطفال",
+    "hidden": true
   },
   {
     "slug": "tables",
-    "name": "طاولات طعام"
+    "name": "طاولات طعام",
+    "hidden": true
   },
   {
     "slug": "coffee-tables",
-    "name": "طاولات قهوة وجانبية"
+    "name": "طاولات قهوة وجانبية",
+    "hidden": true
   },
   {
     "slug": "decor",
-    "name": "كونسول وكراسي مداخل"
+    "name": "كونسول وكراسي مداخل",
+    "hidden": true
   }
 ]

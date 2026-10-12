@@ -326,8 +326,13 @@ function blobToBase64(blob) {
   });
 }
 
+// ملفات مستكشف الملفات قد تصل بلا نوع (type فارغ) — نعتمد الامتداد أيضًا
+const IMAGE_EXT_RE = /\.(jpe?g|png|webp|gif|bmp|avif|heic|heif)$/i;
+const isImageFile = (file) => /^image\//.test(file.type) || IMAGE_EXT_RE.test(file.name || '');
+const isHeic = (file) => /hei[cf]/i.test(file.type) || /\.hei[cf]$/i.test(file.name || '');
+
 async function processImage(file) {
-  if (!/^image\//.test(file.type)) throw new Error(`«${file.name}» ليس ملف صورة.`);
+  if (!isImageFile(file)) throw new Error(`«${file.name}» ليس ملف صورة (المقبول: JPG وPNG وWebP).`);
   if (file.size > MAX_INPUT_MB * 1024 * 1024) throw new Error(`«${file.name}» أكبر من ${MAX_INPUT_MB}MB.`);
   let src;
   let w;
@@ -342,6 +347,7 @@ async function processImage(file) {
       w = src.naturalWidth;
       ht = src.naturalHeight;
     } catch (__) {
+      if (isHeic(file)) throw new Error(`«${file.name}» بصيغة HEIC (عالية الكفاءة) والمتصفح ما يقدر يقرأها. غيّر إعداد الكاميرا إلى JPG، أو افتح الصورة وشاركها/احفظها كـ JPG ثم ارفعها.`);
       throw new Error(`تعذر قراءة «${file.name}». جرّب صيغة JPG أو PNG.`);
     }
   }
@@ -745,6 +751,10 @@ function categoryName(slug) {
 // ---------------------------------------------------------------------------
 // عرض: المنتجات
 // ---------------------------------------------------------------------------
+// القسم المخفي مؤقتًا (hidden: true في categories.json) لا يظهر بالموقع ولا بجوجل
+const isHiddenCat = (slug) => state.categories.some((c) => c.slug === slug && c.hidden === true);
+const catLabel = (c) => (c.hidden ? `${c.name} (مخفي من الموقع)` : c.name);
+
 function fillCategorySelects() {
   const formSel = $('f_category');
   const filterSel = $('filterCat');
@@ -752,9 +762,9 @@ function fillCategorySelects() {
   const prevFilter = filterSel.value;
   formSel.replaceChildren(
     ...(state.categories.length ? [] : [h('option', { value: '', text: '— لا توجد تصنيفات —' })]),
-    ...state.categories.map((c) => h('option', { value: c.slug, text: c.name }))
+    ...state.categories.map((c) => h('option', { value: c.slug, text: catLabel(c) }))
   );
-  filterSel.replaceChildren(h('option', { value: '', text: 'كل التصنيفات' }), ...state.categories.map((c) => h('option', { value: c.slug, text: c.name })));
+  filterSel.replaceChildren(h('option', { value: '', text: 'كل التصنيفات' }), ...state.categories.map((c) => h('option', { value: c.slug, text: catLabel(c) })));
   if (state.categories.some((c) => c.slug === prevForm)) formSel.value = prevForm;
   if (state.categories.some((c) => c.slug === prevFilter)) filterSel.value = prevFilter;
   else state.filters.cat = '';
@@ -800,9 +810,10 @@ function productRow(p) {
     { class: 'badges' },
     !p.published && h('span', { class: 'badge draft', text: 'مسودة' }),
     p.featured && h('span', { class: 'badge feat', text: 'مميز' }),
-    (p.availability === 'archived' || p.availability === 'temporarily-unavailable') && h('span', { class: 'badge off', text: availabilityLabel(p.availability) })
+    (p.availability === 'archived' || p.availability === 'temporarily-unavailable') && h('span', { class: 'badge off', text: availabilityLabel(p.availability) }),
+    isHiddenCat(p.categorySlug) && h('span', { class: 'badge off', text: 'قسمه مخفي' })
   );
-  const visible = p.published && p.availability !== 'archived';
+  const visible = p.published && p.availability !== 'archived' && !isHiddenCat(p.categorySlug);
   return h(
     'div',
     { class: 'list-item' + (state.editing === p.slug ? ' is-editing' : '') },
@@ -1096,6 +1107,7 @@ async function addFiles(fileList) {
     }
   }
   $('f_images').value = '';
+  if ($('f_imagesFiles')) $('f_imagesFiles').value = '';
   $('e_images').textContent = '';
   if (problems.length) toast(problems.join(' '), 'error');
   else toast('', '');
@@ -1250,13 +1262,20 @@ function renderCategories() {
       return h(
         'div',
         { class: 'list-item' },
-        h('div', { class: 'meta' }, h('strong', { text: c.name }), h('div', { class: 'line', dir: 'ltr', text: `${c.slug} · ${n} منتج` })),
+        h(
+          'div',
+          { class: 'meta' },
+          h('strong', { text: c.name }),
+          h('div', { class: 'line', dir: 'ltr', text: `${c.slug} · ${n} منتج` }),
+          c.hidden && h('div', { class: 'badges' }, h('span', { class: 'badge off', text: 'مخفي من الموقع ومن جوجل' }))
+        ),
         h(
           'div',
           { class: 'btns' },
           h('button', { type: 'button', class: 'small', text: 'تقديم', disabled: i === 0, onclick: () => moveCategory(c.slug, -1) }),
           h('button', { type: 'button', class: 'small', text: 'تأخير', disabled: i === state.categories.length - 1, onclick: () => moveCategory(c.slug, 1) }),
           h('button', { type: 'button', class: 'small', text: 'تعديل الاسم', onclick: () => editCategory(c.slug) }),
+          h('button', { type: 'button', class: 'small', text: c.hidden ? 'إظهار بالموقع' : 'إخفاء من الموقع', onclick: () => toggleCategoryHidden(c.slug) }),
           h('button', { type: 'button', class: 'small danger', text: 'حذف', disabled: n > 0, title: n > 0 ? 'انقل المنتجات لتصنيف ثاني أو احذفها أولًا' : '', onclick: () => deleteCategory(c.slug) })
         )
       );
@@ -1339,6 +1358,28 @@ async function editCategory(slug) {
   });
 }
 
+// إخفاء/إظهار قسم كامل: صفحته ومنتجاته وروابطه تختفي من الموقع وخريطة الموقع (أو تعود) بعد النشر
+async function toggleCategoryHidden(slug) {
+  const cat = state.categories.find((c) => c.slug === slug);
+  if (!cat) return;
+  const n = categoryCount(slug);
+  const hide = !cat.hidden;
+  const msg = hide
+    ? `إخفاء قسم «${cat.name}» (${n} منتج) من الموقع؟ ستختفي صفحته ومنتجاته من الموقع ومن خريطة الموقع، ويحذفها جوجل من النتائج تدريجيًا. المنتجات تبقى محفوظة وتقدر ترجعها بأي وقت.`
+    : `إظهار قسم «${cat.name}» (${n} منتج) بالموقع من جديد؟ ترجع صفحته ومنتجاته وروابطه، ويعيد جوجل فهرستها خلال أيام إلى أسابيع.`;
+  if (!(await confirmAction(hide ? 'إخفاء قسم' : 'إظهار قسم', msg, hide ? 'إخفاء' : 'إظهار', hide))) return;
+  await commitCategories(`${hide ? 'إخفاء' : 'إظهار'} قسم: ${cat.name}`, (cats) => {
+    if (!cats.some((c) => c.slug === slug)) throw new Error('هذا التصنيف انحذف من مكان ثاني. حدّث الصفحة.');
+    return cats.map((c) => {
+      if (c.slug !== slug) return c;
+      const next = { ...c, updatedAt: new Date().toISOString() };
+      if (hide) next.hidden = true;
+      else delete next.hidden;
+      return next;
+    });
+  });
+}
+
 async function moveCategory(slug, delta) {
   await commitCategories('ترتيب التصنيفات', (cats) => {
     const i = cats.findIndex((c) => c.slug === slug);
@@ -1409,6 +1450,7 @@ async function addOfferFile(fileList) {
     toast(e.message, 'error');
   } finally {
     $('f_offerImage').value = '';
+    if ($('f_offerImageFiles')) $('f_offerImageFiles').value = '';
   }
 }
 
@@ -1682,6 +1724,7 @@ function wire() {
     }
   });
   $('f_offerImage').addEventListener('change', (e) => addOfferFile(e.target.files));
+  $('f_offerImageFiles').addEventListener('change', (e) => addOfferFile(e.target.files));
   const odz = $('offerDropzone');
   ['dragenter', 'dragover'].forEach((ev) => odz.addEventListener(ev, (e) => { e.preventDefault(); odz.classList.add('drag'); }));
   ['dragleave', 'drop'].forEach((ev) => odz.addEventListener(ev, (e) => { e.preventDefault(); odz.classList.remove('drag'); }));
@@ -1715,6 +1758,7 @@ function wire() {
   });
 
   $('f_images').addEventListener('change', (e) => addFiles(e.target.files));
+  $('f_imagesFiles').addEventListener('change', (e) => addFiles(e.target.files));
   const dz = $('dropzone');
   ['dragenter', 'dragover'].forEach((ev) => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.add('drag'); }));
   ['dragleave', 'drop'].forEach((ev) => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.remove('drag'); }));

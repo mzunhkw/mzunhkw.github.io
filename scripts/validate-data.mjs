@@ -37,6 +37,7 @@ categories.forEach((c, i) => {
   if (catSlugs.has(c.slug)) err(`${at}: slug مكرر «${c.slug}».`);
   catSlugs.add(c.slug);
   if (!isStr(c.name) || !c.name.trim()) err(`${at}: الاسم فارغ.`);
+  if (c.hidden !== undefined && typeof c.hidden !== 'boolean') err(`${at}: hidden لازم true/false.`);
 });
 
 // ---- المنتجات

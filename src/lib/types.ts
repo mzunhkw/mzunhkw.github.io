@@ -29,6 +29,7 @@ export type Category = {
   seoTitle?: string;
   metaDescription?: string;
   updatedAt?: string; // ISO date — يُحدَّث تلقائيًا من لوحة الإدارة عند كل إضافة/تعديل/ترتيب
+  hidden?: boolean; // true = القسم مخفي مؤقتًا من الموقع ومن جوجل (src/data/hidden-sections.ts)
 };
 
 export type Product = {
