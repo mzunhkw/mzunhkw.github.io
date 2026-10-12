@@ -127,6 +127,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    // صفحة الكنب الأمريكي — تعرض أعمال قسم الكنب
+    {
+      url: `${base}/kanab-amriki-kuwait/`,
+      lastModified: latest(
+        gitLastModified('src/app/kanab-amriki-kuwait/page.tsx'),
+        newestProduct(visibleProducts.filter((p) => p.categorySlug === 'sofas'))
+      ),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // صفحة أثاث الضجيج — تعرض أعمالًا من الأقسام الظاهرة
     {
       url: `${base}/athath-dajeej/`,
