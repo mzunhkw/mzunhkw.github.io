@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Product, availabilityLabels } from '@/lib/types';
-import { formatPrice } from '@/lib/catalog';
-import { bedroomPrice, woodPricedCategories } from '@/data/wood-tiers';
+import { priceText } from '@/lib/catalog';
+import { bedroomPrice, isWoodPriced } from '@/data/wood-tiers';
 import { getSrcSet } from '@/lib/image';
 
 type ProductCardProps = {
@@ -60,7 +60,7 @@ export default function ProductCard({ product, featured = false, compact = false
         )}
 
         <div className="product-meta">
-          <span>{woodPricedCategories.includes(product.categorySlug) ? `${bedroomPrice} د.ك/م²` : `${formatPrice(product.price)} د.ك`}</span>
+          <span>{isWoodPriced(product) ? `${bedroomPrice} د.ك/م²` : priceText(product)}</span>
           <span>{availabilityLabels[product.availability]}</span>
         </div>
       </div>
