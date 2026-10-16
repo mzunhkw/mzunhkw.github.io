@@ -1117,8 +1117,10 @@ async function addFiles(fileList) {
 // ---------------------------------------------------------------------------
 // حفظ / حذف / نشر المنتجات
 // ---------------------------------------------------------------------------
-function buildProduct(v, images) {
+function buildProduct(v, images, prev = {}) {
+  // يحافظ على الحقول الإضافية غير الموجودة في النموذج (مثل ownPrice) عند التعديل
   return {
+    ...prev,
     slug: v.slug,
     title: v.title,
     categorySlug: v.categorySlug,
@@ -1168,7 +1170,7 @@ async function saveProduct() {
     }
     const original = isEdit ? (state.products.find((p) => p.slug === values.slug) || {}).images || [] : [];
     const removed = original.filter((u) => !finalUrls.includes(u));
-    const product = buildProduct(values, finalUrls);
+    const product = buildProduct(values, finalUrls, isEdit ? state.products.find((p) => p.slug === values.slug) || {} : {});
 
     toast('جارٍ الحفظ على GitHub (Commit واحد)…', 'busy');
     const result = await commitData({

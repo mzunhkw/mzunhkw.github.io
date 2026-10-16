@@ -19,3 +19,8 @@ export const priceUnitCode = 'MTK';
 
 // الأقسام التي تُسعّر بالمتر المربع حسب الخامة
 export const woodPricedCategories = ['bedrooms'];
+
+// منتج في قسم مُسعّر بالخامة يُعرض بسعر الخامة الموحّد، إلا إذا كان له سعر خاص (ownPrice) —
+// مثل الكبتات الميلامين المسعّرة بالمتر بسعر مختلف (طلب المالك 2026-10-17).
+export const isWoodPriced = (p: { categorySlug: string; ownPrice?: boolean }) =>
+  woodPricedCategories.includes(p.categorySlug) && !p.ownPrice;

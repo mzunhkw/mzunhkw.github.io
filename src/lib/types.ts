@@ -48,6 +48,7 @@ export type Product = {
   metaDescription?: string;
   keywords?: string[];
   imageAlts?: string[];
+  ownPrice?: boolean; // true = يتجاهل سعر الخامة الموحّد لقسمه ويعرض سعره الخاص
   images: string[];
   featured?: boolean;
   published: boolean;
