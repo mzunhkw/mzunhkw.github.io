@@ -58,10 +58,12 @@ export const metadata: Metadata = {
   openGraph: { title: TITLE, description: DESCRIPTION, url: PATH, siteName: siteConfig.name, locale: 'ar_KW', type: 'website', images: ['/og-image.jpg'] },
 };
 
-// أعمالنا الفعلية: منتجات غرف النوم التي فيها كبت أو غرفة ملابس — الكبتات المنفردة أولًا، ثم غرف النوم التي يظهر فيها الكبت
+// أعمالنا الفعلية: منتجات غرف النوم التي فيها كبت أو غرفة ملابس — الكبتات المنفردة أولًا، ثم غرف النوم التي يظهر فيها الكبت.
+// المنتجات ذات السعر الخاص (ownPrice) مثل كبتات الميلامين الجاهزة تختلف عن التفصيل بسعر الخامة، فلا تظهر هنا
+// حتى لا يتعارض سعرها مع سعر الصفحة (طلب المالك 2026-10-17).
 const wardrobeWorks = () =>
   visibleProducts
-    .filter((p) => p.categorySlug === 'bedrooms' && /كبت|غرفة ملابس/.test(p.title))
+    .filter((p) => p.categorySlug === 'bedrooms' && !p.ownPrice && /كبت|غرفة ملابس/.test(p.title))
     .sort((a, b) => Number(!a.title.startsWith('كبت')) - Number(!b.title.startsWith('كبت')));
 
 export default function WardrobesPage() {
