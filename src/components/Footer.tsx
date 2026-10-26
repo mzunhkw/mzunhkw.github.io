@@ -76,9 +76,6 @@ export default function Footer() {
         <Link href="/athath-dajeej/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
           أثاث الضجيج
         </Link>
-        <Link href="/tafseel-tasriha-kuwait/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
-          تسريحة غرفة نوم
-        </Link>
         <Link href="/warranty/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/80 hover:border-sage-soft">
           الضمان والإرجاع
         </Link>

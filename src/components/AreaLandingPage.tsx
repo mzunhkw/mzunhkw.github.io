@@ -13,11 +13,9 @@ const ALL_AREA_SERVICES = [
   { name: 'كنب وقنفات', href: '/category/sofas/' },
   { name: 'غرف نوم', href: '/category/bedrooms/' },
   { name: 'كبتات ملابس', href: '/tafseel-kabatat-kuwait/' },
-  { name: 'تسريحات غرف نوم', href: '/tafseel-tasriha-kuwait/' },
-  { name: 'طاولات طعام', href: '/category/tables/' },
-  { name: 'طاولات قهوة', href: '/category/coffee-tables/' },
   { name: 'مجالس وديوانيات', href: '/category/majlis/' },
   { name: 'مساند عربية', href: '/category/cushions/' },
+  // القطع المفردة (تسريحة، طاولات) لم تعد ضمن خدمات صفحات المناطق — التركيز على غرف النوم والكنب (focus.ts)
 ];
 // بدون الأقسام المخفية مؤقتًا (hidden-sections.ts)
 const AREA_SERVICES = ALL_AREA_SERVICES.filter((sv) => !isHiddenHref(sv.href));

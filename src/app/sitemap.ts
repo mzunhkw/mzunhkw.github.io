@@ -1,3 +1,4 @@
+import { isFocusCategory } from '@/data/focus';
 import type { MetadataRoute } from 'next';
 import { execSync } from 'node:child_process';
 import { visibleProducts } from '@/data/products';
@@ -83,7 +84,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       newestProduct(visibleProducts.filter((p) => p.categorySlug === c.slug))
     ),
     changeFrequency: 'weekly',
-    priority: 0.9,
+    // أقسام التركيز (غرف نوم، كنب، مجالس، مساند) أعلى من القطع المفردة — focus.ts
+    priority: isFocusCategory(c.slug) ? 0.9 : 0.6,
   }));
 
   const productUrls: MetadataRoute.Sitemap = visibleProducts.map((p) => ({
@@ -93,7 +95,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // fallback مؤقت لحد أول تعديل عليها من اللوحة.
     lastModified: p.updatedAt ? new Date(p.updatedAt) : gitLastModified('src/data/products.json'),
     changeFrequency: 'monthly',
-    priority: 0.6,
+    priority: isFocusCategory(p.categorySlug) ? 0.7 : 0.5,
   }));
 
   const serviceUrls: MetadataRoute.Sitemap = services.map((s) => ({

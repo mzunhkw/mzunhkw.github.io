@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { visibleProducts } from '@/data/products';
-import { categories } from '@/data/categories';
+import { categories, focusCategories, secondaryCategories } from '@/data/categories';
 import { getCategorySeo } from '@/data/category-seo';
 import { services } from '@/data/services';
-import { siteConfig, whatsappGeneralLink } from '@/data/site-config';
+import { siteConfig, whatsappGeneralLink, whatsappLink } from '@/data/site-config';
 import ProductCard from '@/components/ProductCard';
 import OffersStrip from '@/components/OffersStrip';
-import { visibleOffers } from '@/data/offers';
+import { focusOffers } from '@/data/offers';
 import { getSrcSet } from '@/lib/image';
 import TrustSection from '@/components/TrustSection';
 
@@ -30,11 +30,32 @@ export const metadata: Metadata = {
 export default function HomePage() {
   const whatsapp = whatsappGeneralLink();
 
-  // آخر منتج من كل قسم — تظهر بشريط "أعمال مختارة" المتحرك
+  // شريط "أعمال مختارة": أحدث أعمال أقسام التركيز فقط (غرف نوم، كنب، مجالس، مساند) — focus.ts
   const byNewest = [...visibleProducts].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
-  const featuredWorks = categories
-    .map((c) => byNewest.find((p) => p.categorySlug === c.slug))
-    .filter((p): p is (typeof visibleProducts)[number] => !!p);
+  const latestOf = (slug: string, n: number) => byNewest.filter((p) => p.categorySlug === slug).slice(0, n);
+  const featuredWorks = focusCategories.flatMap((c) =>
+    latestOf(c.slug, c.slug === 'bedrooms' || c.slug === 'sofas' ? 3 : 1)
+  );
+
+  // القسمان الرئيسيان في الرئيسية: تفصيل غرف النوم وتفصيل الكنب، بأحدث أعمالهما الفعلية
+  const showcases = [
+    {
+      slug: 'bedrooms',
+      eyebrow: 'تخصصنا الأول',
+      title: 'تفصيل غرف نوم كاملة',
+      text: 'سرير وكومودينات وكبت ملابس وتسريحة بخامة ولون موحّد، بمقاس الغرفة. نزورك لأخذ المقاسات وعرض العينات، والتصنيع في منجرتنا في الضجيج.',
+      cta: 'كل غرف النوم',
+      wa: 'تفصيل غرفة نوم كاملة',
+    },
+    {
+      slug: 'sofas',
+      eyebrow: 'تفصيل وتنجيد',
+      title: 'تفصيل كنب وقنفات',
+      text: 'كنب زاوية ومودرن وأمريكي بالمقاس والقماش واللون الذي تختاره، نجارة وتنجيد داخل منجرتنا.',
+      cta: 'كل الكنب والقنفات',
+      wa: 'تفصيل كنب',
+    },
+  ].filter((sc) => categories.some((c) => c.slug === sc.slug));
 
   const coverOf = (slug: string) => visibleProducts.find((p) => p.categorySlug === slug && p.images[0])?.images[0];
   const countOf = (slug: string) => visibleProducts.filter((p) => p.categorySlug === slug).length;
@@ -46,13 +67,16 @@ export default function HomePage() {
         <div className="hero-panel">
           <div className="hero-copy">
             <span className="eyebrow">منجرة مزونة · نجار وتفصيل أثاث في الكويت منذ {siteConfig.foundedYear}</span>
-            <h1>منجرة مزونة: نجار الكويت لتفصيل الأثاث وغرف النوم وتنجيد الكنب</h1>
+            <h1>منجرة مزونة: نجار الكويت لتفصيل غرف النوم الكاملة والكنب والمجالس</h1>
             <p>{siteConfig.about}</p>
 
             <div className="hero-actions">
-              <Link href="/products/" className="primary-cta">
-                استكشف المنتجات
+              <Link href="/category/bedrooms/" className="primary-cta">
+                تفصيل غرف النوم
                 <span aria-hidden="true">←</span>
+              </Link>
+              <Link href="/category/sofas/" className="secondary-cta">
+                تفصيل الكنب
               </Link>
               <a href={whatsapp} target="_blank" rel="noreferrer" className="secondary-cta">
                 تواصل عبر واتساب
@@ -60,7 +84,7 @@ export default function HomePage() {
             </div>
 
             <nav className="hero-chips" aria-label="تصفح سريع للأقسام">
-              {categories.map((c) => (
+              {focusCategories.map((c) => (
                 <Link key={c.slug} href={`/category/${c.slug}/`}>{c.name}</Link>
               ))}
             </nav>
@@ -74,7 +98,39 @@ export default function HomePage() {
         </div>
       </section>
 
-      <OffersStrip offers={visibleOffers} />
+      <OffersStrip offers={focusOffers} />
+
+      {showcases.map((sc) => {
+        const works = latestOf(sc.slug, 4);
+        if (!works.length) return null;
+        return (
+          <section key={sc.slug} className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-14" aria-labelledby={`focus-${sc.slug}-title`}>
+            <div className="section-heading">
+              <div>
+                <span className="eyebrow">{sc.eyebrow}</span>
+                <h2 id={`focus-${sc.slug}-title`}>{sc.title}</h2>
+              </div>
+              <Link href={`/category/${sc.slug}/`} className="section-link">
+                {sc.cta} <span aria-hidden="true">←</span>
+              </Link>
+            </div>
+            <p className="text-ink/75 leading-relaxed max-w-3xl mb-5">{sc.text}</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+              {works.map((p) => (
+                <ProductCard key={p.slug} product={p} compact />
+              ))}
+            </div>
+            <a
+              href={whatsappLink(sc.wa, `/category/${sc.slug}/`)}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-grid mt-5 min-h-12 px-8 place-items-center bg-sage text-white rounded-full"
+            >
+              اطلب زيارة لأخذ المقاسات — {sc.title}
+            </a>
+          </section>
+        );
+      })}
 
       <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-14" aria-labelledby="categories-title">
         <div className="section-heading">
@@ -88,7 +144,7 @@ export default function HomePage() {
         </div>
 
         <div className="category-grid visual">
-          {categories.map((c) => {
+          {focusCategories.map((c) => {
             const seo = getCategorySeo(c.slug, c.name);
             const cover = coverOf(c.slug);
             const count = countOf(c.slug);
@@ -109,6 +165,17 @@ export default function HomePage() {
             );
           })}
         </div>
+
+        {secondaryCategories.length > 0 && (
+          <nav className="flex flex-wrap items-center gap-2 mt-5 text-sm" aria-label="أقسام أخرى">
+            <span className="text-ink/55">أقسام أخرى:</span>
+            {secondaryCategories.map((c) => (
+              <Link key={c.slug} href={`/category/${c.slug}/`} className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/70 hover:border-sage-soft">
+                {c.name}
+              </Link>
+            ))}
+          </nav>
+        )}
       </section>
 
       <section id="upholstery" className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16 scroll-mt-24" aria-labelledby="upholstery-title">

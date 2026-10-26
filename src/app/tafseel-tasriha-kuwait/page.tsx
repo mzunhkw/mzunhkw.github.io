@@ -63,6 +63,7 @@ const dressingTableWorks = () =>
 export default function DressingTablesPage() {
   const works = dressingTableWorks();
   const whatsapp = whatsappLink('تفصيل تسريحة غرفة نوم', PATH);
+  const bedroomWhatsapp = whatsappLink('تفصيل غرفة نوم كاملة مع تسريحة', PATH);
 
   const serviceLd = {
     '@context': 'https://schema.org',
@@ -118,8 +119,22 @@ export default function DressingTablesPage() {
           الضجيج، والتوصيل مجاني داخل الكويت.
         </p>
       </div>
-      <a href={whatsapp} target="_blank" rel="noreferrer" className="inline-grid mt-5 min-h-12 px-8 place-items-center bg-sage text-white rounded-full">
-        اطلب زيارة لأخذ مقاس التسريحة عبر واتساب
+      <div className="mt-6 max-w-3xl bg-cream border border-sand rounded-2xl p-5">
+        <h2 className="text-lg sm:text-xl mb-2">تفصيل غرفة نوم كاملة مع التسريحة</h2>
+        <p className="text-ink/75 leading-relaxed">
+          نفصّل التسريحة ضمن غرفة النوم كاملة: سرير وكومودينات وكبت ملابس وتسريحة بخامة ولون موحّد ومقاس الغرفة.
+        </p>
+        <div className="flex flex-wrap gap-3 mt-4">
+          <a href={bedroomWhatsapp} target="_blank" rel="noreferrer" className="inline-grid min-h-12 px-8 place-items-center bg-sage text-white rounded-full">
+            اطلب زيارة لتفصيل غرفة نوم كاملة
+          </a>
+          <Link href="/category/bedrooms/" className="inline-grid min-h-12 px-6 place-items-center border border-sage text-sage rounded-full">
+            شاهد غرف النوم من أعمالنا
+          </Link>
+        </div>
+      </div>
+      <a href={whatsapp} target="_blank" rel="noreferrer" className="inline-block mt-4 text-sm text-sage underline underline-offset-4">
+        الاستفسار عن تسريحة عبر واتساب
       </a>
 
       {works.length > 0 && (
