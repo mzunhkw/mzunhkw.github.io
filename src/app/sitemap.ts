@@ -1,4 +1,3 @@
-import { isFocusCategory } from '@/data/focus';
 import type { MetadataRoute } from 'next';
 import { execSync } from 'node:child_process';
 import { visibleProducts } from '@/data/products';
@@ -84,8 +83,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       newestProduct(visibleProducts.filter((p) => p.categorySlug === c.slug))
     ),
     changeFrequency: 'weekly',
-    // أقسام التركيز (غرف نوم، كنب، مجالس، مساند) أعلى من القطع المفردة — focus.ts
-    priority: isFocusCategory(c.slug) ? 0.9 : 0.6,
+    priority: 0.9,
   }));
 
   const productUrls: MetadataRoute.Sitemap = visibleProducts.map((p) => ({
@@ -95,7 +93,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // fallback مؤقت لحد أول تعديل عليها من اللوحة.
     lastModified: p.updatedAt ? new Date(p.updatedAt) : gitLastModified('src/data/products.json'),
     changeFrequency: 'monthly',
-    priority: isFocusCategory(p.categorySlug) ? 0.7 : 0.5,
+    priority: 0.6,
   }));
 
   const serviceUrls: MetadataRoute.Sitemap = services.map((s) => ({
@@ -143,6 +141,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${base}/athath-dajeej/`,
       lastModified: latest(gitLastModified('src/app/athath-dajeej/page.tsx'), newestProduct(visibleProducts)),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    // صفحة كنب الزاوية — تعرض أعمال قسم الكنب (طلب المالك 2026-10-26)
+    {
+      url: `${base}/kanab-zawiya-kuwait/`,
+      lastModified: latest(
+        gitLastModified('src/app/kanab-zawiya-kuwait/page.tsx'),
+        newestProduct(visibleProducts.filter((p) => p.categorySlug === 'sofas'))
+      ),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    // صفحة غرف نوم العرسان — تعرض غرف النوم الكاملة (طلب المالك 2026-10-26)
+    {
+      url: `${base}/ghuraf-nawm-arsan-kuwait/`,
+      lastModified: latest(
+        gitLastModified('src/app/ghuraf-nawm-arsan-kuwait/page.tsx'),
+        newestProduct(visibleProducts.filter((p) => p.categorySlug === 'bedrooms' && /^غرفة نوم/.test(p.title)))
+      ),
       changeFrequency: 'monthly',
       priority: 0.8,
     },

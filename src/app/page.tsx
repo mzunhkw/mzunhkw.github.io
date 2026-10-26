@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { visibleProducts } from '@/data/products';
-import { categories, focusCategories, secondaryCategories } from '@/data/categories';
+import { categories } from '@/data/categories';
 import { getCategorySeo } from '@/data/category-seo';
 import { services } from '@/data/services';
 import { siteConfig, whatsappGeneralLink, whatsappLink } from '@/data/site-config';
 import ProductCard from '@/components/ProductCard';
 import OffersStrip from '@/components/OffersStrip';
-import { focusOffers } from '@/data/offers';
+import { visibleOffers } from '@/data/offers';
 import { getSrcSet } from '@/lib/image';
 import TrustSection from '@/components/TrustSection';
 
@@ -30,10 +30,10 @@ export const metadata: Metadata = {
 export default function HomePage() {
   const whatsapp = whatsappGeneralLink();
 
-  // شريط "أعمال مختارة": أحدث أعمال أقسام التركيز فقط (غرف نوم، كنب، مجالس، مساند) — focus.ts
+  // شريط "أعمال مختارة": أحدث عمل من كل قسم، وثلاثة أعمال لغرف النوم والكنب
   const byNewest = [...visibleProducts].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
   const latestOf = (slug: string, n: number) => byNewest.filter((p) => p.categorySlug === slug).slice(0, n);
-  const featuredWorks = focusCategories.flatMap((c) =>
+  const featuredWorks = categories.flatMap((c) =>
     latestOf(c.slug, c.slug === 'bedrooms' || c.slug === 'sofas' ? 3 : 1)
   );
 
@@ -67,7 +67,7 @@ export default function HomePage() {
         <div className="hero-panel">
           <div className="hero-copy">
             <span className="eyebrow">منجرة مزونة · نجار وتفصيل أثاث في الكويت منذ {siteConfig.foundedYear}</span>
-            <h1>منجرة مزونة: نجار الكويت لتفصيل غرف النوم الكاملة والكنب والمجالس</h1>
+            <h1>منجرة مزونة: نجار الكويت لتفصيل غرف النوم والأثاث وتفصيل وتنجيد الكنب</h1>
             <p>{siteConfig.about}</p>
 
             <div className="hero-actions">
@@ -84,7 +84,7 @@ export default function HomePage() {
             </div>
 
             <nav className="hero-chips" aria-label="تصفح سريع للأقسام">
-              {focusCategories.map((c) => (
+              {categories.map((c) => (
                 <Link key={c.slug} href={`/category/${c.slug}/`}>{c.name}</Link>
               ))}
             </nav>
@@ -98,7 +98,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <OffersStrip offers={focusOffers} />
+      <OffersStrip offers={visibleOffers} />
 
       {showcases.map((sc) => {
         const works = latestOf(sc.slug, 4);
@@ -144,7 +144,7 @@ export default function HomePage() {
         </div>
 
         <div className="category-grid visual">
-          {focusCategories.map((c) => {
+          {categories.map((c) => {
             const seo = getCategorySeo(c.slug, c.name);
             const cover = coverOf(c.slug);
             const count = countOf(c.slug);
@@ -166,16 +166,6 @@ export default function HomePage() {
           })}
         </div>
 
-        {secondaryCategories.length > 0 && (
-          <nav className="flex flex-wrap items-center gap-2 mt-5 text-sm" aria-label="أقسام أخرى">
-            <span className="text-ink/55">أقسام أخرى:</span>
-            {secondaryCategories.map((c) => (
-              <Link key={c.slug} href={`/category/${c.slug}/`} className="bg-cream border border-sand rounded-full px-3 py-1.5 text-ink/70 hover:border-sage-soft">
-                {c.name}
-              </Link>
-            ))}
-          </nav>
-        )}
       </section>
 
       <section id="upholstery" className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16 scroll-mt-24" aria-labelledby="upholstery-title">
