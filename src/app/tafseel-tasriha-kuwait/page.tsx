@@ -168,7 +168,6 @@ export default function DressingTablesPage() {
         <div className="flex flex-wrap gap-2">
           <Link href="/category/bedrooms/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">تفصيل غرف نوم</Link>
           <Link href="/tafseel-kabatat-kuwait/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">تفصيل كبتات ملابس</Link>
-          {!isHiddenHref('/category/kids-beds/') && (<Link href="/category/kids-beds/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">أسرّة أطفال</Link>)}
           {areaPages.map((a) => (
             <Link key={a.slug} href={a.path} className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">نجار {a.governorate}</Link>
           ))}

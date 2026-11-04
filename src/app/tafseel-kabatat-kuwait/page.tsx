@@ -174,7 +174,6 @@ export default function WardrobesPage() {
         <div className="flex flex-wrap gap-2">
           <Link href="/category/bedrooms/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">غرف نوم مودرن</Link>
           <Link href="/articles/wardrobe-ideas-kuwait/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">أفكار كبت ملابس وكبت زاوية</Link>
-          {!isHiddenHref('/category/kids-beds/') && (<Link href="/category/kids-beds/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">أسرّة أطفال</Link>)}
           <Link href="/tafseel-tasriha-kuwait/" className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">تفصيل تسريحة غرفة نوم</Link>
           {areaPages.map((a) => (
             <Link key={a.slug} href={a.path} className="bg-cream border border-sand rounded-full px-3 py-1.5 text-sm hover:border-sage-soft">نجار {a.governorate}</Link>

@@ -17,7 +17,6 @@ const ALL_AREA_SERVICES = [
   { name: 'كبتات ملابس', href: '/tafseel-kabatat-kuwait/' },
   { name: 'تسريحات غرف نوم', href: '/tafseel-tasriha-kuwait/' },
   { name: 'طاولات طعام', href: '/category/tables/' },
-  { name: 'طاولات قهوة', href: '/category/coffee-tables/' },
   { name: 'مجالس وديوانيات', href: '/category/majlis/' },
   { name: 'مساند عربية', href: '/category/cushions/' },
 ];
