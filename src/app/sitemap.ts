@@ -72,7 +72,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.4,
   });
 
-  const categoryUrls: MetadataRoute.Sitemap = categories.map((c) => ({
+  // الأقسام الفارغة (بلا منتجات ظاهرة) غير مفهرسة — انظر category/[slug]/page.tsx
+  const categoryUrls: MetadataRoute.Sitemap = categories
+    .filter((c) => visibleProducts.some((p) => p.categorySlug === c.slug))
+    .map((c) => ({
     url: `${base}/category/${c.slug}/`,
     // تاريخ حقيقي من لوحة الإدارة إذا موجود (تصنيفات معدَّلة بعد هذا التحديث)،
     // وإلا آخر تعديل فعلي على ملف بيانات التصنيفات كامل عبر Git.

@@ -19,6 +19,8 @@ const ALL_AREA_SERVICES = [
   { name: 'طاولات طعام', href: '/category/tables/' },
   { name: 'مجالس وديوانيات', href: '/category/majlis/' },
   { name: 'مساند عربية', href: '/category/cushions/' },
+  { name: 'ديكورات شاشة', href: '/category/tv-wall-decor/' },
+  { name: 'وجار قهوة', href: '/category/coffee-wijar/' },
 ];
 // بدون الأقسام المخفية مؤقتًا (hidden-sections.ts)
 const AREA_SERVICES = ALL_AREA_SERVICES.filter((sv) => !isHiddenHref(sv.href));

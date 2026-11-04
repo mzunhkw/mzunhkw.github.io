@@ -23,7 +23,11 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   if (!category) return {};
   const seo = getCategorySeo(category.slug, category.name);
   const path = `/category/${category.slug}/`;
+  // قسم بلا منتجات ظاهرة (مثل قسم جديد قبل إضافة أول عمل): يبقى متاحًا للزوار ورابط واتساب،
+  // لكن لا يُفهرس حتى لا يعتبره جوجل صفحة فارغة ضعيفة. يُفهرس تلقائيًا مع أول منتج منشور.
+  const isEmpty = !visibleProducts.some((p) => p.categorySlug === category.slug);
   return {
+    ...(isEmpty ? { robots: { index: false, follow: true } } : {}),
     title: category.seoTitle?.trim() || seo.title,
     description: category.metaDescription?.trim() || seo.description,
     alternates: { canonical: path },
