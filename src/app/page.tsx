@@ -34,11 +34,19 @@ export default function HomePage() {
   const byNewest = [...visibleProducts].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
   const latestOf = (slug: string, n: number) => byNewest.filter((p) => p.categorySlug === slug).slice(0, n);
   const featuredWorks = categories.flatMap((c) =>
-    latestOf(c.slug, c.slug === 'bedrooms' || c.slug === 'sofas' ? 3 : 1)
+    latestOf(c.slug, c.slug === 'coffee-wijar' || c.slug === 'bedrooms' || c.slug === 'sofas' ? 3 : 1)
   );
 
   // القسمان الرئيسيان في الرئيسية: تفصيل غرف النوم وتفصيل الكنب، بأحدث أعمالهما الفعلية
   const showcases = [
+    {
+      slug: 'coffee-wijar',
+      eyebrow: 'تجهيز الديوانيات',
+      title: 'تفصيل وجار ديوانية',
+      text: 'وجار خشب من الأرض للسقف بمقاس جدار الديوانية: مكان للشاشة، رفوف لعرض الدلال، إضاءة مخفية وقاعدة لركن القهوة. 45 د.ك للمتر، والتصنيع والتركيب من منجرتنا في الضجيج.',
+      cta: 'كل أعمال الوجار',
+      wa: 'تفصيل وجار ديوانية',
+    },
     {
       slug: 'bedrooms',
       eyebrow: 'تخصصنا الأول',
@@ -67,13 +75,16 @@ export default function HomePage() {
         <div className="hero-panel">
           <div className="hero-copy">
             <span className="eyebrow">منجرة مزونة · نجار وتفصيل أثاث في الكويت منذ {siteConfig.foundedYear}</span>
-            <h1>منجرة مزونة: نجار الكويت لتفصيل غرف النوم والأثاث وتفصيل وتنجيد الكنب</h1>
+            <h1>منجرة مزونة: نجار الكويت لتفصيل وجار الديوانية وغرف النوم وتفصيل وتنجيد الكنب</h1>
             <p>{siteConfig.about}</p>
 
             <div className="hero-actions">
-              <Link href="/category/bedrooms/" className="primary-cta">
-                تفصيل غرف النوم
+              <Link href="/category/coffee-wijar/" className="primary-cta">
+                تفصيل وجار ديوانية
                 <span aria-hidden="true">←</span>
+              </Link>
+              <Link href="/category/bedrooms/" className="secondary-cta">
+                تفصيل غرف النوم
               </Link>
               <Link href="/category/sofas/" className="secondary-cta">
                 تفصيل الكنب
@@ -234,7 +245,7 @@ export default function HomePage() {
             <h2>أثاث وديكور بتفاصيل تناسب بيتك</h2>
             <p>
               مزونة منجرة ومعرض للأثاث والديكور في الكويت منذ {siteConfig.foundedYear}، ونفّذنا {siteConfig.projectsText}.
-              نوفّر <Link href="/category/sofas/">كنب وقنفات</Link>، <Link href="/category/majlis/">مجالس</Link>،
+              نوفّر <Link href="/category/coffee-wijar/">وجار ديوانية</Link>، <Link href="/category/sofas/">كنب وقنفات</Link>، <Link href="/category/majlis/">مجالس</Link>،
               <Link href="/category/cushions/"> مساند</Link> و<Link href="/category/bedrooms/"> غرف نوم</Link>،
               جاهزة أو بالتفصيل حسب الطلب بالمقاس والقماش واللون المناسب.
             </p>
