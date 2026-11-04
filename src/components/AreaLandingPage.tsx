@@ -19,7 +19,7 @@ const ALL_AREA_SERVICES = [
   { name: 'طاولات طعام', href: '/category/tables/' },
   { name: 'مجالس وديوانيات', href: '/category/majlis/' },
   { name: 'مساند عربية', href: '/category/cushions/' },
-  { name: 'ديكورات شاشة', href: '/category/tv-wall-decor/' },
+  { name: 'ديكور شاشة خشب', href: '/category/tv-wall-decor/' },
   { name: 'وجار ديوانية', href: '/category/coffee-wijar/' },
 ];
 // بدون الأقسام المخفية مؤقتًا (hidden-sections.ts)
