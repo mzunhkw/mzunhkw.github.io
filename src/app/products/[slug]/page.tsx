@@ -1,3 +1,4 @@
+import { productId, variantSku } from '@/lib/product-id';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { visibleProducts } from '@/data/products';
@@ -70,7 +71,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     name: product.title,
     description: product.shortDescription || product.description,
     url: absoluteUrl(path),
-    sku: product.slug,
+    sku: productId(product.slug),
     brand: { '@type': 'Brand', name: siteConfig.name },
     ...(product.materials?.length ? { material: product.materials[0] } : {}),
     ...(product.images.length ? { image: product.images.map(absoluteUrl) } : {}),
@@ -135,7 +136,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         name: product.title,
         description: productLd.description,
         url: absoluteUrl(path),
-        productGroupID: product.slug,
+        productGroupID: productId(product.slug),
         brand: productLd.brand,
         ...(productLd.image ? { image: productLd.image } : {}),
         variesBy: 'https://schema.org/material',
@@ -144,8 +145,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           name: `${product.title} — ${t.name}`,
           // Google يشترط description لكل متغيّر Product (كان ينقص فيُرفض التحقق في Search Console)
           description: `${productLd.description} الخامة: ${t.name}.`,
-          sku: `${product.slug}-${t.id}`,
-          inProductGroupWithID: product.slug,
+          sku: variantSku(product.slug, t.id),
+          inProductGroupWithID: productId(product.slug),
           material: t.name,
           ...(productLd.image ? { image: productLd.image } : {}),
           offers: {
