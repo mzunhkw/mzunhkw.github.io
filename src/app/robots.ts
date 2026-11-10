@@ -8,7 +8,8 @@ export default function robots(): MetadataRoute.Robots {
   const base = siteConfig.siteUrl.replace(/\/$/, '');
   return {
     rules: [
-      { userAgent: '*', allow: '/', disallow: ['/admin.html', '/invoice/'] },
+      // /invoice/ غير ممنوع هنا عمدًا: الصفحة عليها noindex, nofollow ويجب أن يستطيع جوجل قراءة الوسم
+      { userAgent: '*', allow: '/', disallow: ['/admin.html'] },
     ],
     sitemap: `${base}/sitemap.xml`,
   };
