@@ -31,7 +31,9 @@ const critters = new Critters({
   publicPath: '/',
   preload: 'swap', // <link rel=stylesheet> الأصلي يصير preload+swap، مع <noscript> احتياطي تلقائي
   compress: true,
-  inlineFonts: false, // next/font يتكفل بخط الموقع (Noto Kufi Arabic) وpreload الخاص فيه لحاله
+  // critters لا يتعرّف على خط معرَّف عبر متغير CSS (var(--font-arabic))، فنتركها false
+  // ونحقن قواعد @font-face بأنفسنا أسفل (راجع inlineFontFaces) — لا تحذف ذلك الحقن.
+  inlineFonts: false,
   preloadFonts: false,
   pruneSource: false, // مهم جدًا — راجع الشرح أعلاه
   logLevel: 'warn',
@@ -50,6 +52,58 @@ function listHtmlFiles(dir, out = []) {
   return out;
 }
 
+// ── حقن @font-face داخل الصفحة (إصلاح CLS الدائم، 2026-11-15) ──────────────
+// المشكلة: ملف الـ CSS الكامل صار يُحمَّل بعد أول رسم (preload + swap)، وقواعد
+// @font-face كانت موجودة فيه فقط. فالمتصفح يرسم أول شاشة بالخط الاحتياطي لأنه
+// لا يعرف الخط أصلًا، ثم لما يوصل الملف يتعرّف على الخط (وهو محمَّل مسبقًا
+// عبر preload) فيبدّله فورًا → عنوان الهيرو يعيد التفافه والأزرار تنزاح
+// (PageSpeed: CLS = 0.142 على الرئيسية). display: optional لا يحمي هنا لأن
+// فترة الحجب تبدأ عند أول استخدام للخط، أي بعد وصول الملف المتأخر.
+// الحل: قواعد @font-face تكون ضمن الأنماط المحقونة بالصفحة نفسها، فالمتصفح
+// يعرف الخط قبل أول رسم؛ ومع preload + optional إما يُرسم النص بالخط من أول
+// لحظة أو يبقى الاحتياطي طول الزيارة — بلا أي تبديل متأخر.
+const fontFaceCache = new Map();
+const inlinedFrom = new Set(); // ملفات CSS التي حُقنت خطوطها داخل الصفحات
+
+// بعد حقن @font-face في كل الصفحات تُحذف من ملف الـ CSS الخارجي. لو بقيت فيه
+// يعيد المتصفح تعريف الخط عند وصول الملف المتأخر (قاعدة جديدة بنفس الاسم =
+// فترة حجب جديدة)، فإن كانت الزيارة بدأت بالخط الاحتياطي يتبدّل الخط وقتها
+// ويرجع نفس الـ CLS. لا تُحذف إلا إذا نجحت معالجة كل الصفحات بلا استثناء،
+// حتى لا تبقى صفحة تعتمد على الملف الخارجي وحده بلا خط.
+function stripFontFacesFromCssFiles() {
+  for (const href of inlinedFrom) {
+    const file = join(OUT_DIR, href.split('?')[0]);
+    const css = readFileSync(file, 'utf8');
+    writeFileSync(file, css.replace(/@font-face\s*\{[^}]*\}/g, ''), 'utf8');
+  }
+}
+function fontFacesOf(href) {
+  if (!fontFaceCache.has(href)) {
+    let css = '';
+    try {
+      css = readFileSync(join(OUT_DIR, href.split('?')[0]), 'utf8');
+    } catch {
+      /* ملف غير موجود: لا شيء يُحقن */
+    }
+    fontFaceCache.set(href, (css.match(/@font-face\s*\{[^}]*\}/g) || []).join(''));
+  }
+  return fontFaceCache.get(href);
+}
+
+function inlineFontFaces(originalHtml, processedHtml) {
+  const hrefs = [...originalHtml.matchAll(/<link[^>]+rel="stylesheet"[^>]*>/g)]
+    .map((m) => m[0].match(/href="([^"]+\.css[^"]*)"/)?.[1])
+    .filter(Boolean);
+  const unique = [...new Set(hrefs)];
+  const faces = unique.map(fontFacesOf).join('');
+  if (!faces || processedHtml.includes('data-font-faces')) return processedHtml;
+  unique.forEach((h) => inlinedFrom.add(h));
+  // قبل أول <style> (أنماط critters) حتى يكون الخط معروفًا قبل أي قاعدة تستخدمه
+  const at = processedHtml.indexOf('<style');
+  if (at === -1) return processedHtml;
+  return processedHtml.slice(0, at) + `<style data-font-faces>${faces}</style>` + processedHtml.slice(at);
+}
+
 async function run() {
   const files = listHtmlFiles(OUT_DIR);
   let done = 0;
@@ -58,7 +112,9 @@ async function run() {
   for (const file of files) {
     try {
       const html = readFileSync(file, 'utf8');
-      const inlined = await critters.process(html);
+      // ملفات التحقق (مثل google*.html) ليست صفحات كاملة — تُترك كما هي
+      if (!/<head[\s>]/i.test(html)) continue;
+      const inlined = inlineFontFaces(html, await critters.process(html));
       writeFileSync(file, inlined, 'utf8');
       done++;
     } catch (err) {
@@ -69,6 +125,9 @@ async function run() {
       console.error(`[inline-critical-css] فشل على ${file}:`, err?.message || err);
     }
   }
+
+  if (failed === 0) stripFontFacesFromCssFiles();
+  else console.warn('[inline-critical-css] صفحات فشلت — أُبقيت @font-face في ملف CSS الخارجي احتياطًا.');
 
   console.log(`[inline-critical-css] ${done} صفحة تمت معالجتها، ${failed} فشلت، من أصل ${files.length}.`);
 }

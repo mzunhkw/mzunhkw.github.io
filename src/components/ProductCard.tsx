@@ -8,14 +8,17 @@ type ProductCardProps = {
   product: Product;
   featured?: boolean;
   compact?: boolean;
+  /** نسخة مكررة للزينة داخل حاوية aria-hidden (شريط الأعمال المتحرك): تُخرج من ترتيب Tab */
+  decorative?: boolean;
 };
 
-export default function ProductCard({ product, featured = false, compact = false }: ProductCardProps) {
+export default function ProductCard({ product, featured = false, compact = false, decorative = false }: ProductCardProps) {
   const image = product.images[0];
 
   return (
     <Link
       href={`/products/${product.slug}/`}
+      tabIndex={decorative ? -1 : undefined}
       className={`product-card ${featured ? 'product-card-featured' : ''} ${compact ? 'product-card-compact' : ''}`}
     >
       <div className="product-media">

@@ -123,7 +123,7 @@ export default function DajeejPage() {
         ])}
       />
 
-      <nav aria-label="مسار التنقل" className="text-sm text-ink/55 mb-4">
+      <nav aria-label="مسار التنقل" className="text-sm text-ink/75 mb-4">
         <Link href="/" className="hover:text-sage">الرئيسية</Link>
         <span className="mx-2">/</span>
         <span>أثاث الضجيج</span>

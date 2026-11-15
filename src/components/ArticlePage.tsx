@@ -54,7 +54,7 @@ export default function ArticlePage({ article }: { article: Article }) {
         ])}
       />
 
-      <nav aria-label="مسار التنقل" className="text-sm text-ink/55 mb-4">
+      <nav aria-label="مسار التنقل" className="text-sm text-ink/75 mb-4">
         <Link href="/" className="hover:text-sage">الرئيسية</Link>
         <span className="mx-2">/</span>
         <Link href="/articles/" className="hover:text-sage">المقالات</Link>
@@ -64,7 +64,7 @@ export default function ArticlePage({ article }: { article: Article }) {
 
       <header className="max-w-3xl">
         <h1 className="text-2xl sm:text-4xl leading-snug">{article.h1}</h1>
-        <p className="mt-3 text-sm text-ink/55">
+        <p className="mt-3 text-sm text-ink/75">
           <time dateTime={article.dateModified}>{article.dateModified}</time>
           <span className="mx-2">·</span>
           قراءة {article.readingMinutes} دقائق
@@ -96,7 +96,7 @@ export default function ArticlePage({ article }: { article: Article }) {
               );
             })}
           </div>
-          <p className="text-sm text-ink/55 mt-2">صور حقيقية من أعمال منجرة مزونة</p>
+          <p className="text-sm text-ink/75 mt-2">صور حقيقية من أعمال منجرة مزونة</p>
         </section>
       )}
 
@@ -174,7 +174,7 @@ export default function ArticlePage({ article }: { article: Article }) {
           {others.map((a) => (
             <Link key={a.slug} href={a.path} className="block bg-white border border-sand rounded-2xl p-4 hover:border-sage-soft">
               <strong className="block leading-relaxed">{a.h1}</strong>
-              <span className="block text-sm text-ink/60 mt-1 leading-relaxed">{a.excerpt}</span>
+              <span className="block text-sm text-ink/75 mt-1 leading-relaxed">{a.excerpt}</span>
             </Link>
           ))}
         </div>

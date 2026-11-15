@@ -35,7 +35,7 @@ export default function ArticlesIndex() {
       <JsonLd data={listLd} />
       <JsonLd data={breadcrumbLd([{ name: 'الرئيسية', path: '/' }, { name: 'المقالات', path: '/articles/' }])} />
 
-      <nav aria-label="مسار التنقل" className="text-sm text-ink/55 mb-4">
+      <nav aria-label="مسار التنقل" className="text-sm text-ink/75 mb-4">
         <Link href="/" className="hover:text-sage">الرئيسية</Link>
         <span className="mx-2">/</span>
         <span>المقالات</span>
@@ -50,7 +50,7 @@ export default function ArticlesIndex() {
         {articles.map((a) => (
           <Link key={a.slug} href={a.path} className="block bg-white border border-sand rounded-2xl p-5 hover:border-sage-soft">
             <h2 className="text-lg leading-relaxed">{a.h1}</h2>
-            <p className="text-sm text-ink/65 mt-2 leading-relaxed">{a.excerpt}</p>
+            <p className="text-sm text-ink/75 mt-2 leading-relaxed">{a.excerpt}</p>
             <span className="block text-sm text-sage mt-3">اقرأ المقال ←</span>
           </Link>
         ))}

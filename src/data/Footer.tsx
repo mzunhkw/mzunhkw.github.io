@@ -8,19 +8,19 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 grid gap-8 sm:grid-cols-2">
         <div className="space-y-3">
           <p className="text-lg text-sage font-medium">{siteConfig.name}</p>
-          <p className="text-sm text-ink/65 max-w-md leading-relaxed">{siteConfig.about}</p>
+          <p className="text-sm text-ink/75 max-w-md leading-relaxed">{siteConfig.about}</p>
         </div>
         <ul className="space-y-2 text-sm text-ink/80">
           <li>
-            <span className="text-ink/55">العنوان: </span>
+            <span className="text-ink/75">العنوان: </span>
             {siteConfig.address}
           </li>
           <li>
-            <span className="text-ink/55">الدوام: </span>
+            <span className="text-ink/75">الدوام: </span>
             {siteConfig.hours}
           </li>
           <li>
-            <span className="text-ink/55">واتساب: </span>
+            <span className="text-ink/75">واتساب: </span>
             <a
               href={whatsappGeneralLink()}
               target="_blank"
@@ -43,7 +43,7 @@ export default function Footer() {
           </Link>
         ))}
       </nav>
-      <p className="text-center text-xs text-ink/45 pb-6">
+      <p className="text-center text-xs text-ink/75 pb-6">
         {siteConfig.name} — منذ {siteConfig.foundedYear}
       </p>
     </footer>
