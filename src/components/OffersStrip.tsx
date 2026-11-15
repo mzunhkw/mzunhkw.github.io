@@ -2,6 +2,7 @@ import { Offer } from '@/lib/types';
 import { formatPrice } from '@/lib/catalog';
 import { products } from '@/data/products';
 import { whatsappLinkForProduct } from '@/data/site-config';
+import { getSrcSet } from '@/lib/image';
 
 export default function OffersStrip({ offers }: { offers: Offer[] }) {
   if (!offers.length) return null;
@@ -31,7 +32,17 @@ export default function OffersStrip({ offers }: { offers: Offer[] }) {
             >
               <div className="offer-media">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={o.image} alt={o.title} width={260} height={260} loading="lazy" />
+                {/* البطاقة عرضها 136px (160px من 640px) — نخدم نسخة مصغّرة عبر srcset بدل الأصل الكامل
+                    (PageSpeed: كان يُحمَّل ملف 1080px / 141 ك.ب لصورة تُعرض بعرض 136px). */}
+                <img
+                  src={o.image}
+                  srcSet={getSrcSet(o.image)}
+                  sizes="(min-width: 640px) 160px, 136px"
+                  alt={o.title}
+                  width={260}
+                  height={260}
+                  loading="lazy"
+                />
                 {isDiscounted && <span className="offer-discount">خصم {discountPct}٪</span>}
               </div>
               <div className="offer-body">

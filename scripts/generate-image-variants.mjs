@@ -29,6 +29,10 @@ const MANIFEST_PATH = join(ROOT, 'src', 'data', 'image-manifest.json');
 // (45vw × عرض شاشة نموذجي × كثافة بكسل)، فكانت تضطر تستخدم نسخة 600w
 // (فرق ~52% بايتات زيادة) بدل نسخة أقرب لحجمها الفعلي.
 const WIDTHS = [400, 500, 600, 800, 1200];
+// أحجام إضافية لمجلدات تُعرض صورها دائمًا مصغّرة جدًا. بطاقة العرض في الرئيسية
+// عرضها 136–160px، فأصغر حجم عام (400) يبقى أكبر من حاجتها بأكثر من الضعف.
+// مقصورة على المجلد حتى لا يتضاعف عدد الملفات المولَّدة لكل صور المنتجات.
+const EXTRA_WIDTHS_BY_DIR = { offers: [280] };
 // لا يستاهل نولّد نسخة إذا كانت لا تصغّر الأصل بشكل ملموس (أقل من 15%).
 const MIN_SAVING_RATIO = 1.15;
 // أقصى عرض نسمح نفسه يُخدَم عبر srcset حتى لو الصورة الأصلية أكبر —
@@ -91,7 +95,8 @@ async function run() {
     const publicOriginal = toPublicPath(absOriginal);
 
     const variants = [];
-    for (const width of WIDTHS) {
+    const extraWidths = EXTRA_WIDTHS_BY_DIR[basename(dirname(absOriginal))] ?? [];
+    for (const width of [...extraWidths, ...WIDTHS].sort((a, b) => a - b)) {
       if (originalWidth < width * MIN_SAVING_RATIO) continue; // ما يستاهل التصغير
       const outAbs = variantPath(absOriginal, width);
       if (!existsSync(outAbs)) {

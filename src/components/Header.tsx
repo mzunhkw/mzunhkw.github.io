@@ -11,13 +11,17 @@ export default function Header() {
               الموقع، فكان تحميل الملف الكامل (~52 كيلوبايت) على كل صفحة
               — بما فيها صفحات المنتجات والتصنيفات التي لا تحتوي شعار
               الهيرو الكبير أصلًا — هدرًا صافيًا في البايتات وتأخيرًا
-              لعنصر LCP في تلك الصفحات. النسخة الجديدة ~10 كيلوبايت فقط. */}
+              لعنصر LCP في تلك الصفحات. النسخة الجديدة ~10 كيلوبايت فقط.
+              2026-11-15: صُغّرت إلى 132×121 (3× عرضها الفعلي 44px على الجوال) وضُغطت
+              إلى ~3 كيلوبايت — PageSpeed كان يحسب 9 من 10 كيلوبايت هدرًا. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo-header.webp"
+            srcSet="/logo-header-88.webp 88w, /logo-header.webp 132w"
+            sizes="(max-width: 600px) 44px, 53px"
             alt={`شعار ${siteConfig.name} للأثاث والديكور`}
-            width={176}
-            height={161}
+            width={132}
+            height={121}
             fetchPriority="high"
             className="brand-logo"
           />

@@ -112,7 +112,7 @@ body {
 
 .eyebrow {
   display: inline-block;
-  color: var(--mazuna-sage);
+  color: var(--mazuna-sage-dark); /* تباين ≥ 4.5 على الخلفية الكريمية (كان 4.25) */
   font-size: 11px;
   font-weight: 700;
   letter-spacing: .03em;
@@ -446,7 +446,7 @@ body {
 }
 
 .upholstery-intro p {
-  color: rgba(79,74,64,.72);
+  color: rgba(79,74,64,.88);
   font-size: 12px;
   line-height: 2;
   max-width: 430px;
@@ -563,7 +563,7 @@ body {
 }
 
 .about-copy p {
-  color: rgba(79,74,64,.76);
+  color: rgba(79,74,64,.88);
   font-size: 12px;
   line-height: 2.15;
   margin-bottom: 10px;
@@ -806,7 +806,7 @@ body {
 .category-card:hover .category-card-media img { transform: scale(1.04); }
 .category-card-body { display: grid; gap: 3px; padding: 12px 14px 14px; }
 .category-card-body strong { font-size: 16px; }
-.category-card-body small { font-size: 12px; opacity: .65; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.category-card-body small { font-size: 12px; opacity: .82; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
 .category-card-body em { font-style: normal; font-size: 11px; color: var(--mazuna-sage-dark); }
 
 /* شريط تمرير أفقي سلس للمنتجات */

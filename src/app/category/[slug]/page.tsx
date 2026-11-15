@@ -93,7 +93,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
         ])}
       />
 
-      <nav aria-label="مسار التنقل" className="text-sm text-ink/55 mb-4">
+      <nav aria-label="مسار التنقل" className="text-sm text-ink/75 mb-4">
         <Link href="/" className="hover:text-sage">
           الرئيسية
         </Link>

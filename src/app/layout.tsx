@@ -144,7 +144,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             وهو عنصر LCP الفعلي في كل صفحات الموقع بعد حذف شعار الهيرو الكبير
             من الصفحة الرئيسية (كان هو عنصر LCP على الجوال بسبب ترتيبه أول
             عنصر مرئي هناك). */}
-        <link rel="preload" as="image" href="/logo-header.webp" fetchPriority="high" />
+        {/* imageSrcSet/imageSizes يجب أن تطابق تمامًا srcSet/sizes في Header.tsx، وإلا يُحمَّل الشعار مرتين. */}
+        <link
+          rel="preload"
+          as="image"
+          href="/logo-header.webp"
+          imageSrcSet="/logo-header-88.webp 88w, /logo-header.webp 132w"
+          imageSizes="(max-width: 600px) 44px, 53px"
+          fetchPriority="high"
+        />
       </head>
       <body className="bg-cream text-ink min-h-screen flex flex-col antialiased">
         <JsonLd data={jsonLd} />

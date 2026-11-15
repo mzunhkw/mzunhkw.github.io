@@ -87,7 +87,7 @@ export default function AboutPage() {
       <JsonLd data={faqLd} />
       <JsonLd data={breadcrumbLd([{ name: 'الرئيسية', path: '/' }, { name: 'من نحن', path }])} />
 
-      <nav aria-label="مسار التنقل" className="text-sm text-ink/55 mb-4">
+      <nav aria-label="مسار التنقل" className="text-sm text-ink/75 mb-4">
         <Link href="/" className="hover:text-sage">
           الرئيسية
         </Link>
@@ -115,7 +115,7 @@ export default function AboutPage() {
             <p className="text-xl sm:text-3xl text-sage" dir={s.ltr ? 'ltr' : undefined}>
               {s.value}
             </p>
-            <p className="text-xs sm:text-sm text-ink/65 mt-1">{s.label}</p>
+            <p className="text-xs sm:text-sm text-ink/75 mt-1">{s.label}</p>
           </div>
         ))}
       </div>
@@ -225,15 +225,15 @@ export default function AboutPage() {
         <h2 className="text-xl sm:text-2xl mb-4">موقعنا وساعات العمل</h2>
         <ul className="space-y-2 text-ink/80">
           <li>
-            <span className="text-ink/55">العنوان: </span>
+            <span className="text-ink/75">العنوان: </span>
             {siteConfig.address}
           </li>
           <li>
-            <span className="text-ink/55">الدوام: </span>
+            <span className="text-ink/75">الدوام: </span>
             {siteConfig.hours}
           </li>
           <li>
-            <span className="text-ink/55">واتساب: </span>
+            <span className="text-ink/75">واتساب: </span>
             <a href={whatsapp} target="_blank" rel="noreferrer" className="text-sage underline" dir="ltr">
               {siteConfig.phoneDisplay}
             </a>

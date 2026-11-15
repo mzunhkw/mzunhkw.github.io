@@ -52,7 +52,7 @@ export default function ProductsClient() {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="text-ink/55">ما فيه منتجات مطابقة حاليًا.</p>
+        <p className="text-ink/75">ما فيه منتجات مطابقة حاليًا.</p>
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
           {filtered.map((p) => (

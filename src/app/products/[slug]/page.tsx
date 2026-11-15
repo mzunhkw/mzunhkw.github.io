@@ -180,7 +180,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       <JsonLd data={structuredData} />
       <JsonLd data={breadcrumbLd(crumbs)} />
 
-      <nav aria-label="مسار التنقل" className="text-sm text-ink/55 mb-4">
+      <nav aria-label="مسار التنقل" className="text-sm text-ink/75 mb-4">
         <Link href="/" className="hover:text-sage">
           الرئيسية
         </Link>
@@ -212,8 +212,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         <p className="text-2xl mt-2 text-sage font-medium">
             {woodPriced ? `${bedroomPrice} د.ك للمتر المربع` : priceText(product)}
           </p>
-          {woodPriced && <p className="text-sm text-ink/60 mt-1">بخامة الميلامين — سعر تقديري ونتفق على السعر النهائي عبر واتساب</p>}
-        <p className="text-sm text-ink/60 mt-1">
+          {woodPriced && <p className="text-sm text-ink/75 mt-1">بخامة الميلامين — سعر تقديري ونتفق على السعر النهائي عبر واتساب</p>}
+        <p className="text-sm text-ink/75 mt-1">
           {product.size} · {product.region}
         </p>
         <p className="text-sm mt-3 inline-block bg-sand rounded-full px-3 py-1">
@@ -224,7 +224,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
         {product.materials && product.materials.length > 0 && (
           <div className="mt-6">
-            <p className="text-sm text-ink/55 mb-2">الخامات</p>
+            <p className="text-sm text-ink/75 mb-2">الخامات</p>
             <div className="flex flex-wrap gap-2">
               {product.materials.map((m) => (
                 <span key={m} className="text-sm bg-sage-mist rounded-full px-3 py-1">
@@ -244,14 +244,14 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                   {woodTiers.map((t) => (
                     <tr key={t.id} className="border-b border-sand last:border-0">
                       <th scope="row" className="text-start font-medium px-3 py-2 bg-cream">{t.name}</th>
-                      <td className="px-3 py-2 text-ink/60">{t.note}</td>
+                      <td className="px-3 py-2 text-ink/75">{t.note}</td>
                       <td className="px-3 py-2 text-sage font-medium whitespace-nowrap">{t.price} د.ك</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <p className="text-xs text-ink/55 mt-2">الإجمالي = المساحة بالمتر المربع × سعر المتر للخامة المختارة. نحدد المقاسات بدقة في زيارة القياس.</p>
+            <p className="text-xs text-ink/75 mt-2">الإجمالي = المساحة بالمتر المربع × سعر المتر للخامة المختارة. نحدد المقاسات بدقة في زيارة القياس.</p>
           </div>
         )}
 

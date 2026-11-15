@@ -60,7 +60,7 @@ export default function VerifyClient() {
     return () => window.removeEventListener('hashchange', run);
   }, []);
 
-  if (res.state === 'loading') return <p className="text-ink/60">جارٍ التحقق…</p>;
+  if (res.state === 'loading') return <p className="text-ink/75">جارٍ التحقق…</p>;
 
   if (res.state === 'empty')
     return (
@@ -124,7 +124,7 @@ export default function VerifyClient() {
         </table>
       </div>
 
-      <p className="text-sm text-ink/60 leading-relaxed">
+      <p className="text-sm text-ink/75 leading-relaxed">
         الضمان يشمل إصلاح عيوب التصنيع ولا يشمل الاستبدال.{' '}
         <a href="/warranty/" className="text-sage underline">تفاصيل الضمان</a>
       </p>

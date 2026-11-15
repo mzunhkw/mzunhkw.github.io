@@ -23,7 +23,7 @@ export default function TrustSection({ headingLevel = 'h2' }: { headingLevel?: '
         {points.map((p) => (
           <li key={p.t} className="bg-cream rounded-xl p-4">
             <strong className="block mb-1">{p.t}</strong>
-            <span className="text-sm text-ink/70 leading-relaxed">{p.d}</span>
+            <span className="text-sm text-ink/80 leading-relaxed">{p.d}</span>
           </li>
         ))}
       </ul>

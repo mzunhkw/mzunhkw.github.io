@@ -99,7 +99,7 @@ export default function WarrantyPage() {
       <JsonLd data={faqLd} />
       <JsonLd data={breadcrumbLd([{ name: 'الرئيسية', path: '/' }, { name: 'الضمان', path }])} />
 
-      <nav aria-label="مسار التنقل" className="text-sm text-ink/55 mb-4">
+      <nav aria-label="مسار التنقل" className="text-sm text-ink/75 mb-4">
         <Link href="/" className="hover:text-sage">الرئيسية</Link>
         <span className="mx-2">/</span>
         <span>الضمان</span>
@@ -201,7 +201,7 @@ export default function WarrantyPage() {
         </div>
       </section>
 
-      <p className="mt-10 text-sm text-ink/60">
+      <p className="mt-10 text-sm text-ink/75">
         تعرّف أكثر على منجرتنا وطريقة عملنا في صفحة <Link href="/about/" className="text-sage underline">من نحن</Link>.
       </p>
     </div>

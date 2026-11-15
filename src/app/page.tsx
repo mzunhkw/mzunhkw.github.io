@@ -219,7 +219,7 @@ export default function HomePage() {
                 <div key={copy} className="works-marquee-group" aria-hidden={copy === 1 ? true : undefined}>
                   {featuredWorks.map((product) => (
                     <div key={product.slug} className="works-marquee-item">
-                      <ProductCard product={product} compact />
+                      <ProductCard product={product} compact decorative={copy === 1} />
                     </div>
                   ))}
                 </div>

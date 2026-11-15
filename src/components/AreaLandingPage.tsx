@@ -55,7 +55,7 @@ export default function AreaLandingPage({ area }: { area: AreaPage }) {
       <JsonLd data={faqLd} />
       <JsonLd data={breadcrumbLd([{ name: 'الرئيسية', path: '/' }, { name: area.h1, path: area.path }])} />
 
-      <nav aria-label="مسار التنقل" className="text-sm text-ink/55 mb-4">
+      <nav aria-label="مسار التنقل" className="text-sm text-ink/75 mb-4">
         <Link href="/" className="hover:text-sage">الرئيسية</Link>
         <span className="mx-2">/</span>
         <span>نجار {area.governorate}</span>
@@ -75,13 +75,13 @@ export default function AreaLandingPage({ area }: { area: AreaPage }) {
           {AREA_SERVICES.map((sv) => (
             <Link key={sv.name} href={sv.href} className="block bg-white border border-sand rounded-2xl p-4 hover:border-sage-soft">
               <strong>تفصيل {sv.name}</strong>
-              <span className="block text-sm text-ink/60 mt-1">في {area.governorate} حسب المقاس</span>
+              <span className="block text-sm text-ink/75 mt-1">في {area.governorate} حسب المقاس</span>
             </Link>
           ))}
           {services.map((s) => (
             <Link key={s.slug} href={s.path} className="block bg-white border border-sand rounded-2xl p-4 hover:border-sage-soft">
               <strong>{s.h1.split(' — ')[0]}</strong>
-              <span className="block text-sm text-ink/60 mt-1">نخدم {area.governorate} وكل مناطق الكويت</span>
+              <span className="block text-sm text-ink/75 mt-1">نخدم {area.governorate} وكل مناطق الكويت</span>
             </Link>
           ))}
         </div>
