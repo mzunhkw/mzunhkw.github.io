@@ -1,14 +1,15 @@
 // أقسام التركيز في الموقع (طلب المالك 2026-10-26، وأُضيف وجار الديوانية أولًا 2026-11-04):
 // أغلب اتصالات الموقع كانت لأعمال بسيطة (تسريحة منفردة، طاولة)، والمطلوب أن يركّز الموقع على
 // تفصيل غرف النوم والكنب أولًا ثم المجالس والمساند. هذا الملف هو المصدر الوحيد لهذا الترتيب:
+// (طلب المالك 2026-11-23: التركيز الأول على غرف النوم والكنب وطاولات الطعام، ثم الوجار وبقية الأقسام.)
 // - يرتّب الأقسام في كل القوائم (الرئيسية، التذييل، فلتر المنتجات، خريطة الموقع).
 // - يرتّب المنتجات بحيث تظهر أعمال غرف النوم والكنب أولًا.
 // - الأقسام الثانوية تبقى منشورة ومفهرسة، لكن بظهور أخف وبدون صور كبيرة أو عروض في الرئيسية.
 // (ملف TS وليس categories.json حتى لا تمسحه لوحة الإدارة عند حفظ التصنيفات.)
-export const FOCUS_CATEGORY_SLUGS = ['coffee-wijar', 'bedrooms', 'sofas', 'majlis', 'cushions', 'tv-wall-decor', 'under-stairs'] as const;
+export const FOCUS_CATEGORY_SLUGS = ['bedrooms', 'sofas', 'tables', 'coffee-wijar', 'majlis', 'cushions', 'tv-wall-decor', 'under-stairs'] as const;
 
-// القسمان الرئيسيان اللذان تُبنى حولهما الرئيسية
-export const PRIMARY_FOCUS_SLUGS = ['coffee-wijar', 'bedrooms', 'sofas'] as const;
+// الأقسام الرئيسية التي تُبنى حولها الرئيسية
+export const PRIMARY_FOCUS_SLUGS = ['bedrooms', 'sofas', 'tables'] as const;
 
 export const isFocusCategory = (slug: string) => (FOCUS_CATEGORY_SLUGS as readonly string[]).includes(slug);
 

@@ -34,19 +34,11 @@ export default function HomePage() {
   const byNewest = [...visibleProducts].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
   const latestOf = (slug: string, n: number) => byNewest.filter((p) => p.categorySlug === slug).slice(0, n);
   const featuredWorks = categories.flatMap((c) =>
-    latestOf(c.slug, c.slug === 'coffee-wijar' || c.slug === 'bedrooms' || c.slug === 'sofas' ? 3 : 1)
+    latestOf(c.slug, c.slug === 'bedrooms' || c.slug === 'sofas' || c.slug === 'tables' ? 3 : 1)
   );
 
-  // القسمان الرئيسيان في الرئيسية: تفصيل غرف النوم وتفصيل الكنب، بأحدث أعمالهما الفعلية
+  // الأقسام الرئيسية في الرئيسية (طلب المالك 2026-11-23): غرف النوم ثم الكنب ثم طاولات الطعام، ثم الوجار
   const showcases = [
-    {
-      slug: 'coffee-wijar',
-      eyebrow: 'تجهيز الديوانيات',
-      title: 'تفصيل وجار ديوانية',
-      text: 'وجار خشب من الأرض للسقف بمقاس جدار الديوانية: مكان للشاشة، رفوف لعرض الدلال، إضاءة مخفية وقاعدة لركن القهوة. 45 د.ك للمتر، والتصنيع والتركيب من منجرتنا في الضجيج.',
-      cta: 'كل أعمال الوجار',
-      wa: 'تفصيل وجار ديوانية',
-    },
     {
       slug: 'bedrooms',
       eyebrow: 'تخصصنا الأول',
@@ -63,6 +55,22 @@ export default function HomePage() {
       cta: 'كل الكنب والقنفات',
       wa: 'تفصيل كنب',
     },
+    {
+      slug: 'tables',
+      eyebrow: 'تفصيل حسب المقاس',
+      title: 'تفصيل طاولات طعام',
+      text: 'طاولة طعام خشب أو رخام لـ4 و6 و7 أشخاص، مع كراسي منجّدة وطاولة بوفيه بالتصميم نفسه، بمقاس غرفة الطعام. التصنيع في منجرتنا في الضجيج والتوصيل مجاني.',
+      cta: 'كل طاولات الطعام',
+      wa: 'تفصيل طاولة طعام',
+    },
+    {
+      slug: 'coffee-wijar',
+      eyebrow: 'تجهيز الديوانيات',
+      title: 'تفصيل وجار ديوانية',
+      text: 'وجار خشب من الأرض للسقف بمقاس جدار الديوانية: مكان للشاشة، رفوف لعرض الدلال، إضاءة مخفية وقاعدة لركن القهوة. 45 د.ك للمتر، والتصنيع والتركيب من منجرتنا في الضجيج.',
+      cta: 'كل أعمال الوجار',
+      wa: 'تفصيل وجار ديوانية',
+    },
   ].filter((sc) => categories.some((c) => c.slug === sc.slug));
 
   const coverOf = (slug: string) => visibleProducts.find((p) => p.categorySlug === slug && p.images[0])?.images[0];
@@ -75,19 +83,19 @@ export default function HomePage() {
         <div className="hero-panel">
           <div className="hero-copy">
             <span className="eyebrow">منجرة مزونة · نجار وتفصيل أثاث في الكويت منذ {siteConfig.foundedYear}</span>
-            <h1>منجرة مزونة: نجار الكويت لتفصيل وجار الديوانية وغرف النوم وتفصيل وتنجيد الكنب</h1>
+            <h1>منجرة مزونة: نجار الكويت لتفصيل غرف النوم والكنب وطاولات الطعام ووجار الديوانية</h1>
             <p>{siteConfig.about}</p>
 
             <div className="hero-actions">
-              <Link href="/category/coffee-wijar/" className="primary-cta">
-                تفصيل وجار ديوانية
-                <span aria-hidden="true">←</span>
-              </Link>
-              <Link href="/category/bedrooms/" className="secondary-cta">
+              <Link href="/category/bedrooms/" className="primary-cta">
                 تفصيل غرف النوم
+                <span aria-hidden="true">←</span>
               </Link>
               <Link href="/category/sofas/" className="secondary-cta">
                 تفصيل الكنب
+              </Link>
+              <Link href="/category/tables/" className="secondary-cta">
+                طاولات الطعام
               </Link>
               <a href={whatsapp} target="_blank" rel="noreferrer" className="secondary-cta">
                 تواصل عبر واتساب
@@ -245,8 +253,8 @@ export default function HomePage() {
             <h2>أثاث وديكور بتفاصيل تناسب بيتك</h2>
             <p>
               مزونة منجرة ومعرض للأثاث والديكور في الكويت منذ {siteConfig.foundedYear}، ونفّذنا {siteConfig.projectsText}.
-              نوفّر <Link href="/category/coffee-wijar/">وجار ديوانية</Link>، <Link href="/category/sofas/">كنب وقنفات</Link>، <Link href="/category/majlis/">مجالس</Link>،
-              <Link href="/category/cushions/"> مساند</Link> و<Link href="/category/bedrooms/"> غرف نوم</Link>،
+              نوفّر <Link href="/category/bedrooms/">غرف نوم</Link>، <Link href="/category/sofas/">كنب وقنفات</Link>، <Link href="/category/tables/">طاولات طعام</Link>،
+              <Link href="/category/coffee-wijar/"> وجار ديوانية</Link>، <Link href="/category/majlis/">مجالس</Link> و<Link href="/category/cushions/"> مساند</Link>،
               جاهزة أو بالتفصيل حسب الطلب بالمقاس والقماش واللون المناسب.
             </p>
             <p>
