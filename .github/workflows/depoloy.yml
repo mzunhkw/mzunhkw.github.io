@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # النشر المجدول: بناء يومي 6:00 صباحًا بتوقيت الكويت يُظهر المنتجات التي حان publishDate لها
+  schedule:
+    - cron: "13 3 * * *"
 
 permissions:
   contents: read
@@ -100,3 +103,16 @@ jobs:
           mkdir -p .indexnow
           printf '%s\n' "$URLS" > .indexnow/urls.txt
           node scripts/indexnow.mjs submit
+
+  # GitHub يوقف الجداول تلقائيًا بعد 60 يومًا بلا commits؛ إعادة التفعيل عبر الـAPI تُبقي البناء اليومي يعمل
+  keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      actions: write
+    steps:
+      - name: إبقاء الجدول اليومي فعّالًا
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/depoloy.yml/enable"

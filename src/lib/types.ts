@@ -52,5 +52,7 @@ export type Product = {
   images: string[];
   featured?: boolean;
   published: boolean;
+  // النشر المجدول (YYYY-MM-DD): المنتج المنشور لا يظهر قبل صباح هذا اليوم بتوقيت الكويت (src/lib/catalog.ts)
+  publishDate?: string;
   updatedAt?: string; // ISO date — يُحدَّث تلقائيًا من لوحة الإدارة عند كل حفظ/نشر/إخفاء
 };
