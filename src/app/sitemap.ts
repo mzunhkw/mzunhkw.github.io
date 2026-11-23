@@ -94,7 +94,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // تاريخ حقيقي لكل منتج على حدة (يُختم تلقائيًا من admin.js عند كل
     // حفظ/نشر/إخفاء). المنتجات القديمة اللي ما انحفظت بعد التحديث تاخذ
     // fallback مؤقت لحد أول تعديل عليها من اللوحة.
-    lastModified: p.updatedAt ? new Date(p.updatedAt) : gitLastModified('src/data/products.json'),
+    // النشر المجدول: المنتج يُجهَّز قبل موعده، فتاريخه في الخريطة = الأحدث بين آخر حفظ ويوم ظهوره
+    lastModified:
+      p.publishDate && (!p.updatedAt || `${p.publishDate}T06:00:00+03:00` > p.updatedAt)
+        ? new Date(`${p.publishDate.slice(0, 10)}T06:00:00+03:00`)
+        : p.updatedAt
+          ? new Date(p.updatedAt)
+          : gitLastModified('src/data/products.json'),
     changeFrequency: 'monthly',
     priority: 0.6,
   }));

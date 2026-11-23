@@ -1,6 +1,7 @@
 import { Offer } from '@/lib/types';
 import { formatPrice } from '@/lib/catalog';
 import { products } from '@/data/products';
+import { isVisible } from '@/lib/catalog';
 import { whatsappLinkForProduct } from '@/data/site-config';
 import { getSrcSet } from '@/lib/image';
 
@@ -18,7 +19,7 @@ export default function OffersStrip({ offers }: { offers: Offer[] }) {
 
       <div className="offers-strip">
         {offers.map((o) => {
-          const linkedProduct = o.productSlug ? products.find((p) => p.slug === o.productSlug) : undefined;
+          const linkedProduct = o.productSlug ? products.find((p) => p.slug === o.productSlug && isVisible(p)) : undefined;
           const href = linkedProduct ? `/products/${linkedProduct.slug}/` : whatsappLinkForProduct(o.title);
           const isDiscounted = !!o.originalPrice && o.originalPrice > o.price;
           const discountPct = isDiscounted ? Math.round(100 - (o.price / (o.originalPrice as number)) * 100) : 0;
