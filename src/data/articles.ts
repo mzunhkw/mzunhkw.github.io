@@ -1,4 +1,6 @@
 import { HIDDEN_ARTICLE_SLUGS, isHiddenHref } from './hidden-sections';
+import { scheduledArticles } from './articles-scheduled';
+import { isDue } from '@/lib/catalog';
 // مقالات المرحلة 3 — محتوى مكتوب يدويًا عن خدمات منجرة مزونة الفعلية فقط
 // (كنب، غرف نوم، كبتات، طاولات، مجالس، مساند، تنجيد). لا أبواب ولا مطابخ.
 // الأسعار المذكورة هي أسعار مزونة المعتمدة فقط، ولا تُختلق أسعار لخدمات غير مسعّرة.
@@ -450,8 +452,11 @@ const allArticles: Article[] = [
 ];
 
 // المقالات الظاهرة: بدون مقالات الأقسام المخفية، وبدون أي رابط داخلي لصفحة مخفية (hidden-sections.ts)
-const keepLink = (l: { href: string }) => !isHiddenHref(l.href);
-export const articles: Article[] = allArticles
+// المقالات المجدولة (articles-scheduled.ts): لا تظهر قبل datePublished بتوقيت الكويت، ولا يُربط إليها قبل موعدها
+const notYetDue = new Set([...allArticles, ...scheduledArticles].filter((a) => !isDue(a.datePublished)).map((a) => a.path));
+const keepLink = (l: { href: string }) => !isHiddenHref(l.href) && !notYetDue.has(l.href.split(/[?#]/)[0]);
+export const articles: Article[] = [...allArticles, ...scheduledArticles]
+  .filter((a) => isDue(a.datePublished))
   .filter((a) => !HIDDEN_ARTICLE_SLUGS.includes(a.slug))
   .map((a) => ({
     ...a,

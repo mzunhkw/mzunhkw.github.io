@@ -189,7 +189,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const articleUrls: MetadataRoute.Sitemap = [
     {
       url: `${base}/articles/`,
-      lastModified: gitLastModified('src/data/articles.ts'),
+      lastModified: latest(gitLastModified('src/data/articles.ts'), ...articles.map((a) => new Date(a.dateModified))),
       changeFrequency: 'weekly',
       priority: 0.7,
     },
