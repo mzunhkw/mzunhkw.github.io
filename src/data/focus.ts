@@ -6,7 +6,7 @@
 // - يرتّب المنتجات بحيث تظهر أعمال غرف النوم والكنب أولًا.
 // - الأقسام الثانوية تبقى منشورة ومفهرسة، لكن بظهور أخف وبدون صور كبيرة أو عروض في الرئيسية.
 // (ملف TS وليس categories.json حتى لا تمسحه لوحة الإدارة عند حفظ التصنيفات.)
-export const FOCUS_CATEGORY_SLUGS = ['bedrooms', 'sofas', 'tables', 'coffee-wijar', 'majlis', 'cushions', 'tv-wall-decor', 'under-stairs'] as const;
+export const FOCUS_CATEGORY_SLUGS = ['bedrooms', 'sofas', 'tables', 'ready-pieces', 'coffee-wijar', 'majlis', 'cushions', 'tv-wall-decor', 'under-stairs'] as const;
 
 // الأقسام الرئيسية التي تُبنى حولها الرئيسية
 export const PRIMARY_FOCUS_SLUGS = ['bedrooms', 'sofas', 'tables'] as const;

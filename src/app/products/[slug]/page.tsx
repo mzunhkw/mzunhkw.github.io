@@ -64,6 +64,9 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     .slice(0, 3);
 
   const delivery = deliveryDays(product.categorySlug);
+  // قطعة جاهزة من مورد متفق معه: لها رقم وأجور توصيل خاصة، ولا تفصيل ولا زيارة قياس
+  const isReady = product.availability === 'ready-piece' && !!product.ref;
+  const deliveryFee = isReady ? product.deliveryFee ?? 0 : 0;
 
   const productLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
@@ -71,8 +74,13 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     name: product.title,
     description: product.shortDescription || product.description,
     url: absoluteUrl(path),
-    sku: productId(product.slug),
-    brand: { '@type': 'Brand', name: siteConfig.name },
+    sku: product.ref || productId(product.slug),
+    // القطع الجاهزة من موردين لا تُنسب لمزونة: علامتها الحقيقية إن عُرفت، وإلا بلا brand
+    ...(product.brand
+      ? { brand: { '@type': 'Brand', name: product.brand } }
+      : isReady
+        ? {}
+        : { brand: { '@type': 'Brand', name: siteConfig.name } }),
     ...(product.materials?.length ? { material: product.materials[0] } : {}),
     ...(product.images.length ? { image: product.images.map(absoluteUrl) } : {}),
     ...(product.price > 0
@@ -101,17 +109,22 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               : {}),
             itemCondition: 'https://schema.org/NewCondition',
             seller: { '@type': 'Organization', name: siteConfig.name },
-            // التوصيل مجاني داخل الكويت
+            // التوصيل مجاني داخل الكويت للتفصيل؛ القطع الجاهزة بأجور توصيلها المعلنة في الصفحة
             shippingDetails: {
               '@type': 'OfferShippingDetails',
-              shippingRate: { '@type': 'MonetaryAmount', value: 0, currency: 'KWD' },
+              shippingRate: { '@type': 'MonetaryAmount', value: deliveryFee, currency: 'KWD' },
               shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'KW' },
-              // مجموع التجهيز + التوصيل = المدة المؤكدة من المالك (يوم واحد للتوصيل داخل الكويت)
-              deliveryTime: {
-                '@type': 'ShippingDeliveryTime',
-                handlingTime: { '@type': 'QuantitativeValue', minValue: delivery.min - 1, maxValue: delivery.max - 1, unitCode: 'DAY' },
-                transitTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 1, unitCode: 'DAY' },
-              },
+              // مجموع التجهيز + التوصيل = المدة المؤكدة من المالك (يوم واحد للتوصيل داخل الكويت).
+              // القطع الجاهزة: لا مدة مؤكدة بعد فلا تُرسل لجوجل مدة غير صحيحة.
+              ...(isReady
+                ? {}
+                : {
+                    deliveryTime: {
+                      '@type': 'ShippingDeliveryTime',
+                      handlingTime: { '@type': 'QuantitativeValue', minValue: delivery.min - 1, maxValue: delivery.max - 1, unitCode: 'DAY' },
+                      transitTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 1, unitCode: 'DAY' },
+                    },
+                  }),
             },
             // التفصيل حسب الطلب لا يُسترجع، إلا في حالة العيوب المصنعية (بدون رسوم على العميل)
             hasMerchantReturnPolicy: {
@@ -255,16 +268,25 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           </div>
         )}
 
-        <ul className="mt-6 grid gap-2 text-sm text-ink/75">
-          <li>✓ تفصيل حسب المقاس والتصميم الذي تختاره</li>
-          <li>✓ زيارة لأخذ المقاسات ومعاينة العينات</li>
-          <li>✓ توصيل مجاني داخل الكويت</li>
-          <li>✓ مدة التنفيذ والتوصيل: من {delivery.min} إلى {delivery.max} يومًا</li>
-          <li>✓ الإرجاع في حالة العيوب المصنعية فقط</li>
-        </ul>
+        {isReady ? (
+          <ul className="mt-6 grid gap-2 text-sm text-ink/75">
+            <li>✓ رقم القطعة: <span dir="ltr" className="font-medium text-ink">{product.ref}</span> — اذكره عند الطلب</li>
+            <li>✓ قطعة جاهزة بدون تفصيل أو انتظار تصنيع</li>
+            <li>✓ التوصيل داخل الكويت: {formatPrice(deliveryFee)} د.ك</li>
+            <li>✓ الإرجاع في حالة العيوب المصنعية فقط</li>
+          </ul>
+        ) : (
+          <ul className="mt-6 grid gap-2 text-sm text-ink/75">
+            <li>✓ تفصيل حسب المقاس والتصميم الذي تختاره</li>
+            <li>✓ زيارة لأخذ المقاسات ومعاينة العينات</li>
+            <li>✓ توصيل مجاني داخل الكويت</li>
+            <li>✓ مدة التنفيذ والتوصيل: من {delivery.min} إلى {delivery.max} يومًا</li>
+            <li>✓ الإرجاع في حالة العيوب المصنعية فقط</li>
+          </ul>
+        )}
 
         <a
-          href={whatsappLinkForProduct(category?.name || product.title, path)}
+          href={whatsappLinkForProduct(isReady ? `${product.title} — ${product.ref}` : category?.name || product.title, path)}
           target="_blank"
           rel="noreferrer"
           className="hidden sm:inline-grid mt-8 min-h-12 px-8 place-items-center bg-sage text-white rounded-full"
@@ -301,7 +323,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       )}
       <div className="sm:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur border-t border-sand px-4 pt-3 pb-safe">
         <a
-          href={whatsappLinkForProduct(category?.name || product.title, path)}
+          href={whatsappLinkForProduct(isReady ? `${product.title} — ${product.ref}` : category?.name || product.title, path)}
           target="_blank"
           rel="noreferrer"
           className="min-h-12 grid place-items-center bg-sage text-white rounded-full font-medium"
