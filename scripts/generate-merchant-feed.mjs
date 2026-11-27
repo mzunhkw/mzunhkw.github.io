@@ -7,6 +7,9 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const SITE = 'https://mazunhkw.com';
+// التوصيل خلال يومين (تأكيد المالك 2026-11-27): تجهيز يوم + توصيل يوم — نفس deliveryTime في صفحة المنتج
+const HANDLING_DAYS = 1;
+const TRANSIT_DAYS = 1;
 const GROUP_NAMES = {
   tables: 'طاولات ومكاتب',
   storage: 'خزائن وبوفيهات',
@@ -57,10 +60,14 @@ ${rest.slice(0, 10).map((u) => `      <g:additional_image_link>${esc(u)}</g:addi
       <g:price>${money(p.price)}</g:price>
       ${p.brand ? `<g:brand>${esc(p.brand)}</g:brand>` : ''}
       <g:identifier_exists>no</g:identifier_exists>
+      <g:min_handling_time>${HANDLING_DAYS}</g:min_handling_time>
+      <g:max_handling_time>${HANDLING_DAYS}</g:max_handling_time>
       <g:product_type>${esc(`قطع جاهزة > ${GROUP_NAMES[p.group] || 'أخرى'}`)}</g:product_type>
       <g:shipping>
         <g:country>KW</g:country>
         <g:price>${money(p.deliveryFee ?? 0)}</g:price>
+        <g:min_transit_time>${TRANSIT_DAYS}</g:min_transit_time>
+        <g:max_transit_time>${TRANSIT_DAYS}</g:max_transit_time>
       </g:shipping>
     </item>`.replace(/\n\s*\n/g, '\n');
 });
