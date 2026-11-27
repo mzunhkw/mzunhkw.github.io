@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { Product, availabilityLabels } from '@/lib/types';
-import { priceText } from '@/lib/catalog';
+import { priceText, formatPrice } from '@/lib/catalog';
 import { bedroomPrice, isWoodPriced } from '@/data/wood-tiers';
+import { whatsappLink } from '@/data/site-config';
 import { getSrcSet } from '@/lib/image';
 
 type ProductCardProps = {
@@ -10,54 +11,86 @@ type ProductCardProps = {
   compact?: boolean;
   /** نسخة مكررة للزينة داخل حاوية aria-hidden (شريط الأعمال المتحرك): تُخرج من ترتيب Tab */
   decorative?: boolean;
+  /** شارة «جديد» (شريط وصل حديثاً في الرئيسية) */
+  isNew?: boolean;
+  /** بطاقة ضيقة للشرائط الأفقية: بدون زر واتساب */
+  rail?: boolean;
 };
 
-export default function ProductCard({ product, featured = false, compact = false, decorative = false }: ProductCardProps) {
+export default function ProductCard({ product, featured = false, compact = false, decorative = false, isNew = false, rail = false }: ProductCardProps) {
   const image = product.images[0];
-  // قطعة جاهزة للبيع والتوصيل (لها رقم MZ-…): نعرض السعر النهائي ورسوم التوصيل ورقم القطعة
+  const href = `/products/${product.slug}/`;
+  // قطعة جاهزة (لها رقم MZ-…): تصميم «سوق إلكتروني» — السعر النهائي ورسوم التوصيل وزر واتساب
   const isReady = product.availability === 'ready-piece' && !!product.ref;
+
+  const media = (
+    <div className="product-media">
+      {image ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={image}
+          srcSet={getSrcSet(image)}
+          sizes={
+            featured
+              ? '(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) 55vw, 620px'
+              : rail
+                ? '160px'
+                : '(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 300px'
+          }
+          alt={product.imageAlts?.[0] || product.title}
+          width={900}
+          height={900}
+          // lazy: عنصر LCP الفعلي هو شعار الهيدر (preload في layout.tsx) — انظر PERFORMANCE-LOG.md
+          loading="lazy"
+          className="product-image"
+        />
+      ) : (
+        <div className="product-placeholder">بدون صورة بعد</div>
+      )}
+      {isNew ? (
+        <span className="product-badge product-badge-new">جديد</span>
+      ) : (
+        !isReady && product.featured && <span className="product-badge">مختار من المعرض</span>
+      )}
+    </div>
+  );
+
+  if (isReady) {
+    return (
+      <div className={`product-card product-card-ready ${rail ? 'product-card-rail' : ''}`}>
+        <Link href={href} tabIndex={decorative ? -1 : undefined} className="ready-card-link">
+          {media}
+          <div className="ready-card-body">
+            <span className="ready-card-ref" dir="ltr">{product.ref}</span>
+            <h3>{product.title}</h3>
+            <p className="ready-card-price">
+              <b>{formatPrice(product.price)}</b> <span>د.ك</span>
+              <small>{product.deliveryFee ? `+ توصيل ${product.deliveryFee}` : 'توصيل مجاني'}</small>
+            </p>
+          </div>
+        </Link>
+        {!rail && (
+          <a
+            href={whatsappLink(`${product.title} — ${product.ref}`, href)}
+            target="_blank"
+            rel="noreferrer"
+            tabIndex={decorative ? -1 : undefined}
+            className="ready-card-wa"
+          >
+            اطلب عبر واتساب
+          </a>
+        )}
+      </div>
+    );
+  }
 
   return (
     <Link
-      href={`/products/${product.slug}/`}
+      href={href}
       tabIndex={decorative ? -1 : undefined}
-      className={`product-card ${featured ? 'product-card-featured' : ''} ${compact ? 'product-card-compact' : ''} ${isReady ? 'product-card-ready' : ''}`}
+      className={`product-card ${featured ? 'product-card-featured' : ''} ${compact ? 'product-card-compact' : ''}`}
     >
-      <div className="product-media">
-        {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={image}
-            srcSet={getSrcSet(image)}
-            sizes={
-              featured
-                ? // نطرح padding الحاوية (32px على الجوال) عشان لا نبالغ في
-                  // العرض المطلوب فيختار المتصفح نسخة أكبر من اللازم.
-                  '(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) 55vw, 620px'
-                : '(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 300px'
-            }
-            alt={product.imageAlts?.[0] || product.title}
-            width={900}
-            height={900}
-            // لا نستعجل تحميل هذه الصورة حتى لو كانت "featured": عنصر LCP
-            // الفعلي بالصفحة الرئيسية هو شعار الهيرو (له preload صريح في
-            // layout.tsx). تحميلها بـ eager كان يجعلها تنافس شعار الهيرو
-            // والخطوط على الشبكة المحدودة في أول ثانيتين، فيتأخر ظهور
-            // عنصر LCP الفعلي رغم أنه أصغر بكثير. lazy هنا لا تعني إخفاءها —
-            // هي غالبًا أسفل أول شاشة على الجوال، والمتصفح يحمّلها فور اقترابها.
-            loading="lazy"
-            className="product-image"
-          />
-        ) : (
-          <div className="product-placeholder">بدون صورة بعد</div>
-        )}
-        {isReady ? (
-          <span className="product-badge product-badge-ready">جاهز للتوصيل</span>
-        ) : (
-          product.featured && <span className="product-badge">مختار من المعرض</span>
-        )}
-        {isReady && <span className="product-ref" dir="ltr">{product.ref}</span>}
-      </div>
+      {media}
 
       <div className="product-body">
         <div className="product-title-row">
@@ -71,13 +104,7 @@ export default function ProductCard({ product, featured = false, compact = false
 
         <div className="product-meta">
           <span>{isWoodPriced(product) ? `${bedroomPrice} د.ك/م²` : priceText(product)}</span>
-          <span>
-            {isReady
-              ? product.deliveryFee
-                ? `التوصيل ${product.deliveryFee} د.ك`
-                : 'توصيل مجاني'
-              : availabilityLabels[product.availability]}
-          </span>
+          <span>{availabilityLabels[product.availability]}</span>
         </div>
       </div>
     </Link>

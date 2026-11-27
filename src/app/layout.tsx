@@ -154,7 +154,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           fetchPriority="high"
         />
       </head>
-      <body className="bg-cream text-ink min-h-screen flex flex-col antialiased">
+      <body className="bg-[#f3f4f6] text-ink min-h-screen flex flex-col antialiased">
         <JsonLd data={jsonLd} />
         <Header />
         <main className="flex-1">{children}</main>

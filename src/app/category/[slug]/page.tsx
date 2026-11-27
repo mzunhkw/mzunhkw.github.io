@@ -70,6 +70,16 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
     url: absoluteUrl(path),
     inLanguage: 'ar',
     isPartOf: { '@id': `${siteConfig.siteUrl}/#store` },
+    // قائمة منتجات القسم (صفحة ملخص): روابط صفحات المنتجات بترتيب العرض — كل صفحة منتج تحمل بيانات Product كاملة
+    ...(items.length
+      ? {
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: items.length,
+            itemListElement: items.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: absoluteUrl(`/products/${p.slug}/`) })),
+          },
+        }
+      : {}),
   };
 
   const faqLd = {
