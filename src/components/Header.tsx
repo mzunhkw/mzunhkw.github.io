@@ -29,13 +29,14 @@ export default function Header() {
 
         <nav className="desktop-nav" aria-label="التنقل الرئيسي">
           <Link href="/" className="nav-link">الرئيسية</Link>
+          <Link href="/category/ready-pieces/" className="nav-link">قطع جاهزة</Link>
           <Link href="/products/" className="nav-link">المنتجات</Link>
           <Link href="/#upholstery" className="nav-link">التنجيد</Link>
           <Link href="/about/" className="nav-link">من نحن</Link>
         </nav>
 
-        <Link href="/products/" className="header-cta">
-          المنتجات
+        <Link href="/category/ready-pieces/" className="header-cta">
+          قطع جاهزة
         </Link>
       </div>
     </header>

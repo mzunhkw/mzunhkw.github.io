@@ -378,6 +378,88 @@ body {
   display: none;
 }
 
+/* القطع الجاهزة للتوصيل */
+.product-badge-ready {
+  background: var(--mazuna-sage);
+  color: #fff;
+  font-weight: 600;
+}
+
+.product-ref {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  background: rgba(255,255,255,.92);
+  color: var(--mazuna-ink);
+  border-radius: 8px;
+  padding: 3px 7px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+
+.product-card-ready .product-meta {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.product-card-ready .product-meta span:first-child {
+  font-size: 15px;
+}
+
+.product-card-compact.product-card-ready .product-meta span:first-child {
+  font-size: 13px;
+}
+
+.product-card-compact.product-card-ready .product-meta span:last-child {
+  display: inline-block;
+  font-size: 9px;
+  padding: 3px 6px;
+}
+
+.ready-panel {
+  background: #fff;
+  border: 1px solid rgba(231,225,215,.95);
+  border-radius: 30px;
+  padding: clamp(16px, 3vw, 32px);
+}
+
+.ready-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  margin: -6px 0 16px;
+  font-size: 12px;
+  color: var(--mazuna-sage-dark);
+}
+
+.ready-points {
+  column-gap: 14px;
+}
+
+.ready-points li::before {
+  content: "✓";
+  margin-left: 5px;
+  font-weight: 700;
+}
+
+.ready-more {
+  display: grid;
+  place-items: center;
+  min-height: 48px;
+  margin-top: 18px;
+  border-radius: 999px;
+  background: var(--mazuna-sage);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ready-more:hover {
+  background: var(--mazuna-sage-dark);
+}
+
 /* Categories */
 .category-grid {
   display: grid;
@@ -630,15 +712,62 @@ body {
 
   .hero-panel {
     border-radius: 26px;
+    min-height: 0;
+    padding: 22px 18px;
+  }
+
+  .hero-copy {
+    min-width: 0;
+  }
+
+  .ready-panel .section-heading h2 {
+    font-size: 21px;
+  }
+
+  .hero-copy h1 {
+    font-size: 23px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .hero-copy > p {
+    font-size: 12px;
+    line-height: 1.9;
   }
 
   .hero-actions {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    margin-top: 16px;
+  }
+
+  .hero-copy .hero-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin: 14px -18px 0;
+    padding: 0 18px 2px;
+  }
+
+  .hero-copy .hero-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-copy .hero-chips a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .hero-trust {
+    margin-top: 14px;
   }
 
   .primary-cta,
   .secondary-cta {
     width: 100%;
+    padding: 0 12px;
   }
 
   .section-heading {

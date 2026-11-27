@@ -73,6 +73,13 @@ export default function HomePage() {
     },
   ].filter((sc) => categories.some((c) => c.slug === sc.slug));
 
+  // القطع الجاهزة للتوصيل (طلب المالك 2026-11-27): لها الأولوية في الرئيسية، الأحدث أولًا حسب رقم القطعة
+  const refNum = (ref?: string) => Number((ref || '').replace(/\D/g, '')) || 0;
+  const readyPieces = visibleProducts
+    .filter((p) => p.availability === 'ready-piece' && p.ref)
+    .sort((a, b) => refNum(b.ref) - refNum(a.ref));
+  const readyShown = readyPieces.slice(0, 8);
+
   const coverOf = (slug: string) => visibleProducts.find((p) => p.categorySlug === slug && p.images[0])?.images[0];
   const countOf = (slug: string) => visibleProducts.filter((p) => p.categorySlug === slug).length;
 
@@ -87,16 +94,18 @@ export default function HomePage() {
             <p>{siteConfig.about}</p>
 
             <div className="hero-actions">
-              <Link href="/category/bedrooms/" className="primary-cta">
-                تفصيل غرف النوم
-                <span aria-hidden="true">←</span>
-              </Link>
-              <Link href="/category/sofas/" className="secondary-cta">
-                تفصيل الكنب
-              </Link>
-              <Link href="/category/tables/" className="secondary-cta">
-                طاولات الطعام
-              </Link>
+              {readyPieces.length > 0 && (
+                <Link href="/category/ready-pieces/" className="primary-cta">
+                  تسوّق القطع الجاهزة
+                  <span aria-hidden="true">←</span>
+                </Link>
+              )}
+              {readyPieces.length === 0 && (
+                <Link href="/category/bedrooms/" className="primary-cta">
+                  تفصيل غرف النوم
+                  <span aria-hidden="true">←</span>
+                </Link>
+              )}
               <a href={whatsapp} target="_blank" rel="noreferrer" className="secondary-cta">
                 تواصل عبر واتساب
               </a>
@@ -116,6 +125,35 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {readyShown.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-8 sm:pt-12" aria-labelledby="ready-pieces-title">
+          <div className="ready-panel">
+            <div className="section-heading">
+              <div>
+                <span className="eyebrow">جديد في مزونة</span>
+                <h2 id="ready-pieces-title">قطع جاهزة للتوصيل في الكويت</h2>
+              </div>
+              <Link href="/category/ready-pieces/" className="section-link">
+                كل القطع الجاهزة ({readyPieces.length}) <span aria-hidden="true">←</span>
+              </Link>
+            </div>
+            <ul className="ready-points" aria-label="طريقة الطلب">
+              <li>سعر نهائي مكتوب لكل قطعة</li>
+              <li>رسوم التوصيل محددة في الصفحة</li>
+              <li>اطلب برقم القطعة عبر واتساب</li>
+            </ul>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+              {readyShown.map((p) => (
+                <ProductCard key={p.slug} product={p} compact />
+              ))}
+            </div>
+            <Link href="/category/ready-pieces/" className="ready-more">
+              عرض كل القطع الجاهزة ({readyPieces.length})
+            </Link>
+          </div>
+        </section>
+      )}
 
       <OffersStrip offers={visibleOffers} />
 

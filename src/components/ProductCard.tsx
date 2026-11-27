@@ -14,12 +14,14 @@ type ProductCardProps = {
 
 export default function ProductCard({ product, featured = false, compact = false, decorative = false }: ProductCardProps) {
   const image = product.images[0];
+  // قطعة جاهزة للبيع والتوصيل (لها رقم MZ-…): نعرض السعر النهائي ورسوم التوصيل ورقم القطعة
+  const isReady = product.availability === 'ready-piece' && !!product.ref;
 
   return (
     <Link
       href={`/products/${product.slug}/`}
       tabIndex={decorative ? -1 : undefined}
-      className={`product-card ${featured ? 'product-card-featured' : ''} ${compact ? 'product-card-compact' : ''}`}
+      className={`product-card ${featured ? 'product-card-featured' : ''} ${compact ? 'product-card-compact' : ''} ${isReady ? 'product-card-ready' : ''}`}
     >
       <div className="product-media">
         {image ? (
@@ -49,7 +51,12 @@ export default function ProductCard({ product, featured = false, compact = false
         ) : (
           <div className="product-placeholder">بدون صورة بعد</div>
         )}
-        {product.featured && <span className="product-badge">مختار من المعرض</span>}
+        {isReady ? (
+          <span className="product-badge product-badge-ready">جاهز للتوصيل</span>
+        ) : (
+          product.featured && <span className="product-badge">مختار من المعرض</span>
+        )}
+        {isReady && <span className="product-ref" dir="ltr">{product.ref}</span>}
       </div>
 
       <div className="product-body">
@@ -64,7 +71,13 @@ export default function ProductCard({ product, featured = false, compact = false
 
         <div className="product-meta">
           <span>{isWoodPriced(product) ? `${bedroomPrice} د.ك/م²` : priceText(product)}</span>
-          <span>{availabilityLabels[product.availability]}</span>
+          <span>
+            {isReady
+              ? product.deliveryFee
+                ? `التوصيل ${product.deliveryFee} د.ك`
+                : 'توصيل مجاني'
+              : availabilityLabels[product.availability]}
+          </span>
         </div>
       </div>
     </Link>
