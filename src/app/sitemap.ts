@@ -6,6 +6,7 @@ import { services } from '@/data/services';
 import { areaPages } from '@/data/area-pages';
 import { articles } from '@/data/articles';
 import { siteConfig } from '@/data/site-config';
+import { readyGroupsWithItems, readyGroupHref } from '@/data/ready-groups';
 
 // مطلوب مع output: 'export' (تصدير ساكن)
 export const dynamic = 'force-static';
@@ -87,6 +88,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ),
     changeFrequency: 'weekly',
     priority: 0.9,
+  }));
+
+  // صفحات أنواع القطع الجاهزة /ready/<slug>/
+  const readyTypeUrls: MetadataRoute.Sitemap = readyGroupsWithItems.map((g) => ({
+    url: `${base}${readyGroupHref(g.slug)}`,
+    lastModified: latest(gitLastModified('src/data/ready-groups.ts'), newestProduct(g.items)),
+    changeFrequency: 'weekly',
+    priority: 0.8,
   }));
 
   const productUrls: MetadataRoute.Sitemap = visibleProducts.map((p) => ({
@@ -201,5 +210,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   ];
 
-  return [...staticUrls, ...categoryUrls, ...serviceUrls, ...wardrobeUrls, ...areaUrls, ...articleUrls, ...productUrls];
+  return [...staticUrls, ...categoryUrls, ...readyTypeUrls, ...serviceUrls, ...wardrobeUrls, ...areaUrls, ...articleUrls, ...productUrls];
 }
