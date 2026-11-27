@@ -56,6 +56,9 @@ products.forEach((p, i) => {
   if (!isStr(p.description) || !p.description.trim()) err(`${at}: الوصف فارغ.`);
   if (p.shortDescription !== undefined && !isStr(p.shortDescription)) err(`${at}: shortDescription لازم نص.`);
   if (p.materials !== undefined && !(Array.isArray(p.materials) && p.materials.every(isStr))) err(`${at}: materials لازم قائمة نصوص.`);
+  if (p.ref !== undefined && !(isStr(p.ref) && /^MZ-\d{3,}$/.test(p.ref))) err(`${at}: ref لازم بصيغة MZ-001.`);
+  if (p.deliveryFee !== undefined && (typeof p.deliveryFee !== 'number' || !(p.deliveryFee >= 0))) err(`${at}: deliveryFee لازم رقم ≥ 0.`);
+  if (p.availability === 'ready-piece' && p.ref && !(p.price > 0)) err(`${at}: القطعة الجاهزة لازم لها سعر.`);
   if (typeof p.published !== 'boolean') err(`${at}: published لازم true/false.`);
   if (p.featured !== undefined && typeof p.featured !== 'boolean') err(`${at}: featured لازم true/false.`);
   // غرف النوم لدى مزونة ميلامين أو خشب مع صبغ فقط — لا توجد غرف نوم زان (تأكيد المالك 2026-10-11)
