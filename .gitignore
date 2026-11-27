@@ -8,3 +8,4 @@ out/
 # عبر scripts/generate-image-variants.mjs، ما نحتاج نلتزمها بالمستودع.
 public/images/**/*@*w.webp
 src/data/image-manifest.json
+public/merchant-feed.xml

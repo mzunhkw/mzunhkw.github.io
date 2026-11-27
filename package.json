@@ -6,7 +6,7 @@
     "dev": "next dev",
     "predev": "node scripts/generate-image-variants.mjs",
     "validate": "node scripts/validate-data.mjs",
-    "prebuild": "node scripts/generate-image-variants.mjs && node scripts/validate-data.mjs",
+    "prebuild": "node scripts/generate-image-variants.mjs && node scripts/validate-data.mjs && node scripts/generate-merchant-feed.mjs",
     "build": "next build",
     "postbuild": "node scripts/inline-critical-css.mjs && node scripts/write-redirects.mjs",
     "start": "next start"

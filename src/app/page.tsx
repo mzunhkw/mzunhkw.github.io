@@ -9,6 +9,8 @@ import ProductCard from '@/components/ProductCard';
 import OffersStrip from '@/components/OffersStrip';
 import { visibleOffers } from '@/data/offers';
 import { getSrcSet } from '@/lib/image';
+import { formatPrice } from '@/lib/catalog';
+import { readyPieces, readyGroupsWithItems } from '@/data/ready-groups';
 import TrustSection from '@/components/TrustSection';
 
 export const metadata: Metadata = {
@@ -74,84 +76,123 @@ export default function HomePage() {
   ].filter((sc) => categories.some((c) => c.slug === sc.slug));
 
   // القطع الجاهزة للتوصيل (طلب المالك 2026-11-27): لها الأولوية في الرئيسية، الأحدث أولًا حسب رقم القطعة
-  const refNum = (ref?: string) => Number((ref || '').replace(/\D/g, '')) || 0;
-  const readyPieces = visibleProducts
-    .filter((p) => p.availability === 'ready-piece' && p.ref)
-    .sort((a, b) => refNum(b.ref) - refNum(a.ref));
-  const readyShown = readyPieces.slice(0, 8);
+  const readyGroups = readyGroupsWithItems;
+  const newest = readyPieces.slice(0, 8);
+  // بانرات الأقسام: أقل سعر يُحسب من البيانات الفعلية (لا أرقام مكتوبة يدويًا)
+  const bannerOrder: { slug: string; tone: string }[] = [
+    { slug: 'heating', tone: 'yellow' },
+    { slug: 'lighting', tone: 'dark' },
+    { slug: 'storage', tone: 'sage' },
+    { slug: 'tables', tone: 'yellow' },
+  ];
+  const banners = bannerOrder
+    .map((b) => ({ ...b, ...readyGroups.find((g) => g.slug === b.slug)! }))
+    .filter((b) => b.name && b.count > 0);
+  const inBand = (min: number, max: number) => readyPieces.filter((p) => p.price >= min && p.price < max).length;
+  const priceBands = [
+    { pre: 'تحت', label: '20', href: '/products/?max=20', count: inBand(0, 20), highlight: true },
+    { pre: 'من', label: '20–50', href: '/products/?min=20&max=50', count: inBand(20, 50) },
+    { pre: 'من', label: '50–100', href: '/products/?min=50&max=100', count: inBand(50, 100) },
+    { pre: 'فوق', label: '100', href: '/products/?min=100', count: inBand(100, Infinity) },
+  ].filter((b) => b.count > 0);
 
   const coverOf = (slug: string) => visibleProducts.find((p) => p.categorySlug === slug && p.images[0])?.images[0];
   const countOf = (slug: string) => visibleProducts.filter((p) => p.categorySlug === slug).length;
 
   return (
     <div className="home-page">
-      {/* SEO-friendly H1 remains a real heading and the page remains fully server-rendered. */}
-      <section className="home-hero max-w-6xl mx-auto px-4 sm:px-8 pt-5 sm:pt-8">
-        <div className="hero-panel">
-          <div className="hero-copy">
-            <span className="eyebrow">منجرة مزونة · نجار وتفصيل أثاث في الكويت منذ {siteConfig.foundedYear}</span>
-            <h1>منجرة مزونة: نجار الكويت لتفصيل غرف النوم والكنب وطاولات الطعام ووجار الديوانية</h1>
-            <p>{siteConfig.about}</p>
-
-            <div className="hero-actions">
-              {readyPieces.length > 0 && (
-                <Link href="/category/ready-pieces/" className="primary-cta">
-                  تسوّق القطع الجاهزة
-                  <span aria-hidden="true">←</span>
-                </Link>
-              )}
-              {readyPieces.length === 0 && (
-                <Link href="/category/bedrooms/" className="primary-cta">
-                  تفصيل غرف النوم
-                  <span aria-hidden="true">←</span>
-                </Link>
-              )}
-              <a href={whatsapp} target="_blank" rel="noreferrer" className="secondary-cta">
-                تواصل عبر واتساب
-              </a>
-            </div>
-
-            <nav className="hero-chips" aria-label="تصفح سريع للأقسام">
-              {categories.map((c) => (
-                <Link key={c.slug} href={`/category/${c.slug}/`}>{c.name}</Link>
-              ))}
-            </nav>
-
-            <div className="hero-trust">
-              <span><b>{siteConfig.projectsCount}</b> عمل منفّذ</span>
-              <span><b>{siteConfig.foundedYear}</b> منذ التأسيس</span>
-              <span>تفصيل حسب الطلب</span>
-            </div>
-          </div>
+      {/* تصميم «سوق إلكتروني» (اعتمده المالك 2026-11-27): القطع الجاهزة أولًا.
+          نص H1 والعنوان والوصف كما هي حرفيًا (لا تغيير على كلمات البحث الحالية). */}
+      <section className="store-intro" aria-label="منجرة مزونة">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8">
+          <h1>منجرة مزونة: نجار الكويت لتفصيل غرف النوم والكنب وطاولات الطعام ووجار الديوانية</h1>
+          <p>{readyPieces.length} قطعة جاهزة بسعر نهائي ورسوم توصيل مكتوبة، وتفصيل حسب الطلب من منجرتنا في الضجيج منذ {siteConfig.foundedYear}.</p>
         </div>
       </section>
 
-      {readyShown.length > 0 && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-8 pt-8 sm:pt-12" aria-labelledby="ready-pieces-title">
-          <div className="ready-panel">
-            <div className="section-heading">
-              <div>
-                <span className="eyebrow">جديد في مزونة</span>
-                <h2 id="ready-pieces-title">قطع جاهزة للتوصيل في الكويت</h2>
-              </div>
-              <Link href="/category/ready-pieces/" className="section-link">
-                كل القطع الجاهزة ({readyPieces.length}) <span aria-hidden="true">←</span>
+      {readyGroups.length > 0 && (
+        <nav className="store-groups" aria-label="أنواع القطع الجاهزة">
+          <div className="store-groups-row max-w-6xl mx-auto">
+            {readyGroups.map((g) => (
+              <Link key={g.slug} href={`/products/?type=${g.slug}`} className="store-group">
+                <span className="store-group-img">
+                  {g.cover && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={g.cover} srcSet={getSrcSet(g.cover)} sizes="68px" alt="" width={68} height={68} loading="lazy" decoding="async" />
+                  )}
+                </span>
+                <span className="store-group-name">{g.name}</span>
               </Link>
-            </div>
-            <ul className="ready-points" aria-label="طريقة الطلب">
-              <li>سعر نهائي مكتوب لكل قطعة</li>
-              <li>رسوم التوصيل محددة في الصفحة</li>
-              <li>اطلب برقم القطعة عبر واتساب</li>
-            </ul>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-              {readyShown.map((p) => (
-                <ProductCard key={p.slug} product={p} compact />
-              ))}
-            </div>
-            <Link href="/category/ready-pieces/" className="ready-more">
-              عرض كل القطع الجاهزة ({readyPieces.length})
-            </Link>
+            ))}
           </div>
+        </nav>
+      )}
+
+      {banners.length > 0 && (
+        <section className="store-banners max-w-6xl mx-auto" aria-label="عروض الأقسام">
+          <div className="store-banners-track">
+            {banners.map((b) => (
+              <Link key={b.slug} href={`/products/?type=${b.slug}`} className={`store-banner store-banner-${b.tone}`}>
+                <span className="store-banner-copy">
+                  <small>{b.name}</small>
+                  <strong>من {formatPrice(b.minPrice)} د.ك</strong>
+                  <em>تسوّق الآن</em>
+                </span>
+                {b.cover && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={b.cover} srcSet={getSrcSet(b.cover)} sizes="180px" alt="" width={180} height={180} loading="lazy" decoding="async" />
+                )}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {newest.length > 0 && (
+        <section className="store-block max-w-6xl mx-auto" aria-labelledby="store-new-title">
+          <div className="store-head">
+            <h2 id="store-new-title">وصل حديثاً</h2>
+            <Link href="/category/ready-pieces/">عرض الكل</Link>
+          </div>
+          <div className="store-rail">
+            {newest.map((p) => (
+              <ProductCard key={p.slug} product={p} rail isNew />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {readyPieces.length > 0 && (
+        <section className="store-block max-w-6xl mx-auto" aria-labelledby="store-price-title">
+          <div className="store-head">
+            <h2 id="store-price-title">تسوّق حسب السعر</h2>
+          </div>
+          <div className="store-prices">
+            {priceBands.map((b) => (
+              <Link key={b.label} href={b.href} className={`store-price ${b.highlight ? 'is-hot' : ''}`}>
+                <small>{b.pre}</small>
+                <b dir="ltr">{b.label}</b>
+                <small>د.ك · {b.count} قطعة</small>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {readyPieces.length > 0 && (
+        <section className="store-block max-w-6xl mx-auto" aria-labelledby="store-all-title">
+          <div className="store-head">
+            <h2 id="store-all-title">كل القطع الجاهزة</h2>
+            <span>{readyPieces.length} قطعة</span>
+          </div>
+          <div className="store-grid">
+            {readyPieces.slice(0, 12).map((p) => (
+              <ProductCard key={p.slug} product={p} />
+            ))}
+          </div>
+          <Link href="/category/ready-pieces/" className="store-more">
+            عرض كل القطع الجاهزة ({readyPieces.length})
+          </Link>
         </section>
       )}
 

@@ -5,6 +5,7 @@ import { join } from 'node:path';
 
 const root = process.cwd();
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const READY_GROUPS = ['tables', 'storage', 'lighting', 'heating', 'outdoor', 'bath-kitchen', 'smart-home'];
 const AVAILABILITY = ['custom-order', 'ready-piece', 'temporarily-unavailable', 'archived'];
 const errors = [];
 const warnings = [];
@@ -58,6 +59,7 @@ products.forEach((p, i) => {
   if (p.materials !== undefined && !(Array.isArray(p.materials) && p.materials.every(isStr))) err(`${at}: materials لازم قائمة نصوص.`);
   if (p.ref !== undefined && !(isStr(p.ref) && /^MZ-\d{3,}$/.test(p.ref))) err(`${at}: ref لازم بصيغة MZ-001.`);
   if (p.deliveryFee !== undefined && (typeof p.deliveryFee !== 'number' || !(p.deliveryFee >= 0))) err(`${at}: deliveryFee لازم رقم ≥ 0.`);
+  if (p.group !== undefined && !READY_GROUPS.includes(p.group)) err(`${at}: group غير معروف (${p.group}).`);
   if (p.availability === 'ready-piece' && p.ref && !(p.price > 0)) err(`${at}: القطعة الجاهزة لازم لها سعر.`);
   if (typeof p.published !== 'boolean') err(`${at}: published لازم true/false.`);
   if (p.featured !== undefined && typeof p.featured !== 'boolean') err(`${at}: featured لازم true/false.`);
