@@ -72,7 +72,9 @@ products.forEach((p, i) => {
     err(`${at}: images لازم قائمة نصوص.`);
   } else {
     for (const url of p.images) {
-      if (!url.startsWith('/images/') || url.includes('..')) err(`${at}: مسار الصورة «${url}» لازم يبدأ بـ /images/.`);
+      // صور القطع الجاهزة المعاد تصميمها تُخدم من Cloudinary بتحويل f_auto,q_auto,w_<عرض>
+      if (/^https:\/\/res\.cloudinary\.com\/erzoaatk\/image\/upload\/f_auto,q_auto,w_\d+\/[A-Za-z0-9_\-/.]+$/.test(url)) continue;
+      if (!url.startsWith('/images/') || url.includes('..')) err(`${at}: مسار الصورة «${url}» لازم يبدأ بـ /images/ أو يكون رابط Cloudinary بالصيغة المعتمدة.`);
       else if (!existsSync(join(root, 'public', url))) err(`${at}: ملف الصورة غير موجود بالمستودع: public${url}`);
     }
   }
