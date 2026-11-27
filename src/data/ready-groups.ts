@@ -28,6 +28,9 @@ export const readyGroupsWithItems = READY_GROUPS.map((g) => {
     items,
     count: items.length,
     minPrice: items.length ? Math.min(...items.map((p) => p.price)) : 0,
-    cover: items.find((p) => p.images[0])?.images[0],
+    // صورة الغلاف من صور الموقع نفسه أولًا (لا Cloudinary): الدوائر والبانرات أعلى الصفحة،
+    // وصورة من نطاق آخر تكلّف اتصالًا إضافيًا يؤخر LCP على الجوال.
+    cover:
+      items.flatMap((p) => p.images).find((src) => src.startsWith('/')) ?? items.find((p) => p.images[0])?.images[0],
   };
 }).filter((g) => g.count > 0);
