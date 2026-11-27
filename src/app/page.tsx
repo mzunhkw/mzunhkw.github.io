@@ -131,7 +131,7 @@ export default function HomePage() {
       {banners.length > 0 && (
         <section className="store-banners max-w-6xl mx-auto" aria-label="عروض الأقسام">
           <div className="store-banners-track">
-            {banners.map((b) => (
+            {banners.map((b, i) => (
               <Link key={b.slug} href={`/products/?type=${b.slug}`} className={`store-banner store-banner-${b.tone}`}>
                 <span className="store-banner-copy">
                   <small>{b.name}</small>
@@ -140,7 +140,19 @@ export default function HomePage() {
                 </span>
                 {b.cover && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={b.cover} srcSet={getSrcSet(b.cover)} sizes="180px" alt="" width={180} height={180} loading="lazy" decoding="async" />
+                  <img
+                    src={b.cover}
+                    srcSet={getSrcSet(b.cover)}
+                    sizes="150px"
+                    alt=""
+                    width={150}
+                    height={170}
+                    // صورة البانر الأول هي عنصر LCP في الرئيسية على الجوال (PageSpeed 2026-11-27: 3.5 ث بسبب lazy):
+                    // تُحمَّل فورًا وبأولوية عالية، وبقية البانرات (خارج الشاشة أفقيًا) lazy.
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    fetchPriority={i === 0 ? 'high' : 'auto'}
+                    decoding={i === 0 ? 'sync' : 'async'}
+                  />
                 )}
               </Link>
             ))}
