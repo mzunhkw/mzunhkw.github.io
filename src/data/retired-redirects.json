@@ -166,5 +166,21 @@
   {
     "from": "/articles/coffee-table-size-guide/",
     "to": "/category/tables/"
+  },
+  {
+    "from": "/products/ready-ethanol-tabletop-fireplace-glass/",
+    "to": "/category/ready-pieces/"
+  },
+  {
+    "from": "/products/ready-infrared-heater-2000w-tripod/",
+    "to": "/category/ready-pieces/"
+  },
+  {
+    "from": "/products/ready-portable-electric-fireplace-heater-1200w/",
+    "to": "/category/ready-pieces/"
+  },
+  {
+    "from": "/products/ready-quartz-electric-heater-800w/",
+    "to": "/category/ready-pieces/"
   }
 ]

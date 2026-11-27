@@ -15,6 +15,7 @@ const GROUP_NAMES = {
   storage: 'خزائن وبوفيهات',
   lighting: 'إضاءة وثريات',
   heating: 'مدافئ',
+  seating: 'كنب وكراسي',
   outdoor: 'رحلات وكشتة',
   'bath-kitchen': 'حمام ومطبخ',
   'smart-home': 'أقفال وأجراس',

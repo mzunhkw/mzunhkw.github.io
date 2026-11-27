@@ -5,7 +5,7 @@ import { join } from 'node:path';
 
 const root = process.cwd();
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const READY_GROUPS = ['tables', 'storage', 'lighting', 'heating', 'outdoor', 'bath-kitchen', 'smart-home'];
+const READY_GROUPS = ['tables', 'storage', 'lighting', 'heating', 'seating', 'outdoor', 'bath-kitchen', 'smart-home'];
 const AVAILABILITY = ['custom-order', 'ready-piece', 'temporarily-unavailable', 'archived'];
 const errors = [];
 const warnings = [];
