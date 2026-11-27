@@ -6,7 +6,7 @@ import { categories } from '@/data/categories';
 import { availabilityLabels } from '@/lib/types';
 import { formatPrice, priceText } from '@/lib/catalog';
 import { woodTiers, bedroomPrice, isWoodPriced, priceUnitCode, priceUnitText } from '@/data/wood-tiers';
-import { whatsappLinkForProduct, deliveryDays } from '@/data/site-config';
+import { whatsappLinkForProduct, deliveryDays, READY_DELIVERY_DAYS } from '@/data/site-config';
 import Gallery from '@/components/Gallery';
 import Link from 'next/link';
 import JsonLd from '@/components/JsonLd';
@@ -115,9 +115,15 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               shippingRate: { '@type': 'MonetaryAmount', value: deliveryFee, currency: 'KWD' },
               shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'KW' },
               // مجموع التجهيز + التوصيل = المدة المؤكدة من المالك (يوم واحد للتوصيل داخل الكويت).
-              // القطع الجاهزة: لا مدة مؤكدة بعد فلا تُرسل لجوجل مدة غير صحيحة.
+              // القطع الجاهزة: يومان (تأكيد المالك 2026-11-27) = تجهيز يوم + توصيل يوم.
               ...(isReady
-                ? {}
+                ? {
+                    deliveryTime: {
+                      '@type': 'ShippingDeliveryTime',
+                      handlingTime: { '@type': 'QuantitativeValue', minValue: READY_DELIVERY_DAYS - 1, maxValue: READY_DELIVERY_DAYS - 1, unitCode: 'DAY' },
+                      transitTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 1, unitCode: 'DAY' },
+                    },
+                  }
                 : {
                     deliveryTime: {
                       '@type': 'ShippingDeliveryTime',
@@ -272,7 +278,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <ul className="mt-6 grid gap-2 text-sm text-ink/75">
             <li>✓ رقم القطعة: <span dir="ltr" className="font-medium text-ink">{product.ref}</span> — اذكره عند الطلب</li>
             <li>✓ قطعة جاهزة بدون تفصيل أو انتظار تصنيع</li>
-            <li>✓ التوصيل داخل الكويت: {formatPrice(deliveryFee)} د.ك</li>
+            <li>✓ التوصيل داخل الكويت خلال يومين: {formatPrice(deliveryFee)} د.ك</li>
             <li>✓ الإرجاع في حالة العيوب المصنعية فقط</li>
           </ul>
         ) : (
