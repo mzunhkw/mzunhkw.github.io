@@ -6,9 +6,12 @@ import './globals.css';
  * خط Noto Kufi Arabic مستضاف محليًا (من حزمة @fontsource/noto-kufi-arabic)
  * بدل next/font/google — لا يوجد أي طلب لـ fonts.googleapis.com أو fonts.gstatic.com.
  *
- * - الأوزان المستخدمة فعليًا فقط: 400 (النص)، 500 (font-medium)، 600 (أزرار وعناوين البطاقات)،
- *   700 (strong/b والأسعار). باقي الأوزان (100–300، 800، 900) غير مضمّنة.
- * - الـ subset العربي فقط يُحمَّل مسبقًا (preload) كما كان سابقًا، فلا يتغير سلوك LCP.
+ * - وزنان فقط: 400 (النص) و700 (العناوين والأسعار). 2026-11-27 (PageSpeed جوال، LCP):
+ *   كانت 4 ملفات عربية (~45 كيلوبايت لكل منها) تُحمَّل مسبقًا بأولوية عالية وتنافس صورة LCP
+ *   على الشبكة البطيئة. الآن 500 يُعرض بـ400 و600/800 تُعرض بـ700 (قاعدة اختيار الوزن في المتصفح).
+ * - بدون preload (2026-11-27): التحميل المسبق كان ينافس صورة LCP (البانر الأول) على شبكة الجوال البطيئة.
+ *   قياس Lighthouse (جوال، 3 مرات): مع preload لوزنين LCP ≈ 2.9 ث، وبدونه ≈ 2.3 ث.
+ *   مع display: optional لا تغيير في CLS؛ أول زيارة على شبكة بطيئة قد تُعرض بخط الجهاز ثم الخط من الصفحة التالية.
  * - ملفات latin (أرقام وحروف لاتينية) بدون preload ومقيدة بـ unicode-range،
  *   فلا تُحمَّل إلا إذا احتاجتها الصفحة.
  * - display: optional يمنع أي swap متأخر (لا CLS)، و adjustFontFallback معطّل
@@ -17,12 +20,10 @@ import './globals.css';
 const notoKufiArabic = localFont({
   src: [
     { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-arabic-400-normal.woff2', weight: '400', style: 'normal' },
-    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-arabic-500-normal.woff2', weight: '500', style: 'normal' },
-    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-arabic-600-normal.woff2', weight: '600', style: 'normal' },
     { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-arabic-700-normal.woff2', weight: '700', style: 'normal' },
   ],
   display: 'optional',
-  preload: true,
+  preload: false,
   adjustFontFallback: false,
   variable: '--font-arabic',
   declarations: [
@@ -37,8 +38,6 @@ const notoKufiArabic = localFont({
 const notoKufiLatin = localFont({
   src: [
     { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-latin-400-normal.woff2', weight: '400', style: 'normal' },
-    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-latin-500-normal.woff2', weight: '500', style: 'normal' },
-    { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-latin-600-normal.woff2', weight: '600', style: 'normal' },
     { path: '../../node_modules/@fontsource/noto-kufi-arabic/files/noto-kufi-arabic-latin-700-normal.woff2', weight: '700', style: 'normal' },
   ],
   display: 'optional',

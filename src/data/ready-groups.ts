@@ -8,7 +8,7 @@ export const READY_GROUPS = [
   { slug: 'tables', name: 'طاولات ومكاتب' },
   { slug: 'storage', name: 'خزائن وبوفيهات' },
   { slug: 'lighting', name: 'إضاءة وثريات' },
-  { slug: 'heating', name: 'مدافئ' },
+  { slug: 'seating', name: 'كنب وكراسي' },
   { slug: 'outdoor', name: 'رحلات وكشتة' },
   { slug: 'bath-kitchen', name: 'حمام ومطبخ' },
   { slug: 'smart-home', name: 'أقفال وأجراس' },

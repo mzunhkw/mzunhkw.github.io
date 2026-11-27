@@ -80,7 +80,7 @@ export default function HomePage() {
   const newest = readyPieces.slice(0, 8);
   // بانرات الأقسام: أقل سعر يُحسب من البيانات الفعلية (لا أرقام مكتوبة يدويًا)
   const bannerOrder: { slug: string; tone: string }[] = [
-    { slug: 'heating', tone: 'yellow' },
+    { slug: 'seating', tone: 'yellow' },
     { slug: 'lighting', tone: 'dark' },
     { slug: 'storage', tone: 'sage' },
     { slug: 'tables', tone: 'yellow' },
