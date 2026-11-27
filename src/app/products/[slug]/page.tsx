@@ -13,6 +13,7 @@ import JsonLd from '@/components/JsonLd';
 import ProductCard from '@/components/ProductCard';
 import { siteConfig } from '@/data/site-config';
 import { absoluteUrl, breadcrumbLd } from '@/lib/seo';
+import { READY_GROUPS, readyGroupHref } from '@/data/ready-groups';
 import { areaPages } from '@/data/area-pages';
 import { articlesLinkingTo } from '@/data/articles';
 
@@ -59,9 +60,13 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
   const category = categories.find((c) => c.slug === product.categorySlug);
   const path = `/products/${product.slug}/`;
-  const related = visibleProducts
-    .filter((p) => p.categorySlug === product.categorySlug && p.slug !== product.slug)
-    .slice(0, 3);
+  // نوع القطعة الجاهزة (صفحة /ready/<slug>/): في مسار التنقل، والقطع المشابهة من النوع نفسه أولًا
+  const group = product.group ? READY_GROUPS.find((g) => g.slug === product.group) : undefined;
+  const sameCategory = visibleProducts.filter((p) => p.categorySlug === product.categorySlug && p.slug !== product.slug);
+  const related = (group
+    ? [...sameCategory.filter((p) => p.group === group.slug), ...sameCategory.filter((p) => p.group !== group.slug)]
+    : sameCategory
+  ).slice(0, group ? 4 : 3);
 
   const delivery = deliveryDays(product.categorySlug);
   // قطعة جاهزة من مورد متفق معه: لها رقم وأجور توصيل خاصة، ولا تفصيل ولا زيارة قياس
@@ -187,6 +192,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const crumbs = [
     { name: 'الرئيسية', path: '/' },
     ...(category ? [{ name: category.name, path: `/category/${category.slug}/` }] : []),
+    ...(group ? [{ name: group.name, path: readyGroupHref(group.slug) }] : []),
     { name: product.title, path },
   ];
 
@@ -208,6 +214,14 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
             <span className="mx-2">/</span>
             <Link href={`/category/${category.slug}/`} className="hover:text-sage">
               {category.name}
+            </Link>
+          </>
+        )}
+        {group && (
+          <>
+            <span className="mx-2">/</span>
+            <Link href={readyGroupHref(group.slug)} className="hover:text-sage">
+              {group.name}
             </Link>
           </>
         )}
@@ -319,7 +333,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
       {related.length > 0 && (
         <section className="mt-12">
-          <h2 className="text-lg sm:text-xl mb-4">قطع أخرى من {category?.name}</h2>
+          <h2 className="text-lg sm:text-xl mb-4">قطع أخرى من {group?.name || category?.name}</h2>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
             {related.map((p) => (
               <ProductCard key={p.slug} product={p} />

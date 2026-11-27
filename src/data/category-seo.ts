@@ -31,6 +31,15 @@ export const categorySeo: Record<string, CategorySeo> = {
       'لكل قطعة سعر ثابت مكتوب في صفحتها مع أجور التوصيل داخل الكويت، ولكل قطعة رقم يبدأ بـ MZ. أرسل رقم القطعة عبر واتساب ونؤكد لك توفرها وموعد التوصيل.',
       'إذا كنت تريد قطعة بمقاس أو تصميم خاص، فأقسام التفصيل في الموقع مخصصة لذلك من منجرتنا في الضجيج.',
     ],
+    links: [
+      { href: '/ready/seating/', label: 'كنب وكراسي مفردة' },
+      { href: '/ready/tables/', label: 'طاولات ومكاتب' },
+      { href: '/ready/storage/', label: 'مكتبات تلفزيون وبوفيهات' },
+      { href: '/ready/lighting/', label: 'ثريات وإضاءات' },
+      { href: '/ready/outdoor/', label: 'رحلات وكشتة' },
+      { href: '/ready/bath-kitchen/', label: 'حمام ومطبخ' },
+      { href: '/ready/smart-home/', label: 'أقفال وأجراس' },
+    ],
     faqs: [
       {
         q: 'كم أجور توصيل القطع الجاهزة؟',

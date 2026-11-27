@@ -10,7 +10,7 @@ import OffersStrip from '@/components/OffersStrip';
 import { visibleOffers } from '@/data/offers';
 import { getSrcSet } from '@/lib/image';
 import { formatPrice } from '@/lib/catalog';
-import { readyPieces, readyGroupsWithItems } from '@/data/ready-groups';
+import { readyPieces, readyGroupsWithItems, readyGroupHref } from '@/data/ready-groups';
 import TrustSection from '@/components/TrustSection';
 
 export const metadata: Metadata = {
@@ -114,7 +114,7 @@ export default function HomePage() {
         <nav className="store-groups" aria-label="أنواع القطع الجاهزة">
           <div className="store-groups-row max-w-6xl mx-auto">
             {readyGroups.map((g) => (
-              <Link key={g.slug} href={`/products/?type=${g.slug}`} className="store-group">
+              <Link key={g.slug} href={readyGroupHref(g.slug)} className="store-group">
                 <span className="store-group-img">
                   {g.cover && (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -132,7 +132,7 @@ export default function HomePage() {
         <section className="store-banners max-w-6xl mx-auto" aria-label="عروض الأقسام">
           <div className="store-banners-track">
             {banners.map((b, i) => (
-              <Link key={b.slug} href={`/products/?type=${b.slug}`} className={`store-banner store-banner-${b.tone}`}>
+              <Link key={b.slug} href={readyGroupHref(b.slug)} className={`store-banner store-banner-${b.tone}`}>
                 <span className="store-banner-copy">
                   <small>{b.name}</small>
                   <strong>من {formatPrice(b.minPrice)} د.ك</strong>
